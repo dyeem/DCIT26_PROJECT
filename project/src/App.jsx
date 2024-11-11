@@ -1,5 +1,8 @@
-import LoadingEffect from "./Components/LoadingEffect.jsx"
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import {useState, useEffect} from 'react'
+
+import LoadingEffect from "./Components/LoadingEffect.jsx"
 import MainContent from "./Components/MainContent.jsx";
 
 

@@ -1,9 +1,10 @@
-import NavBar from "./NavBar";
 
 export default function MainContent() {
     return (
        <>
-        <NavBar/>
+        <div>
+            <h1>HELLOW</h1>
+        </div>
        </>
     )
 }

@@ -1,8 +1,8 @@
-export default function Signup() {
+export default function About() {
     return (
         <>
             <div>
-                <h1>This is Signup</h1>
+                <h1>This is About Us</h1>
             </div>
         </>
     );

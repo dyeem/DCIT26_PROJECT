@@ -1,6 +1,15 @@
-import { BrowserRouter, Routes, Route, NavLink} from "react-router-dom";
+import { 
+  Route, 
+  createBrowserRouter,
+  createRoutesFromElements,
+  RouterProvider
+} from "react-router-dom";
+
+import RootLayout from './Layouts/RootLayout.jsx'
 import { useState, useEffect } from "react";
 
+
+//pages
 import LoadingEffect from "./Components/LoadingEffect.jsx";
 import MainContent from "./Components/MainContent.jsx";
 import AboutUs from "./Components/AboutUs.jsx";
@@ -13,52 +22,44 @@ import Sales from "./Components/Sales.jsx";
 import Signup from "./Components/Signup.jsx";
 import NavBar from "./Components/NavBar.jsx";
 
+const router = createBrowserRouter(createRoutesFromElements(
+  <Route path="/" element={<RootLayout/>}>
+    <Route index element={<MainContent />} />
+    <Route path="aboutus" element={<AboutUs />} />
+    <Route path="checkout" element={<CheckOut />} />
+    <Route path="contactus" element={<ContactUs />} />
+    <Route path="login" element={<Login />} />
+    <Route path="reviews" element={<Reviews />} />
+    <Route path="sales" element={<Sales />} />
+    <Route path="signup" element={<Signup />} />
+  </Route>
+))
+
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      console.log("Fade out started");
+      const timer = setTimeout(() => {
       setFadeOut(true);
-    }, 2500); // Start fade-out 2.5s after loading screen shows
+      }, 2500); // Start fade-out 2.5s after loading screen shows
 
-    const hideLoadingTimer = setTimeout(() => {
-      console.log("Hiding loading screen");
+      const hideLoadingTimer = setTimeout(() => {
       setIsLoading(false);
-    }, 3000); // Hide loading screen after 3s
+      }, 3000); // Hide loading screen after 3s
 
-    return () => {
+      return () => {
       clearTimeout(timer);
       clearTimeout(hideLoadingTimer);
-    };
+      };
   }, []);
 
   return (
-    <BrowserRouter>
+    <>
       {isLoading ? ( <LoadingEffect fadeOut={fadeOut} />) : (
-        <>
-          <header>
-            <nav>
-              <NavBar NavLink = {NavLink}/>
-            </nav>
-          </header>
-          <main>
-            <Routes>
-              <Route path="/" element={<MainContent />} />
-              <Route path="aboutus" element={<AboutUs />} />
-              <Route path="checkout" element={<CheckOut />} />
-              <Route path="contactus" element={<ContactUs />} />
-              <Route path="login" element={<Login />} />
-              <Route path="reviews" element={<Reviews />} />
-              <Route path="sales" element={<Sales />} />
-              <Route path="signup" element={<Signup />} />
-            </Routes>
-            <Footer />
-          </main>
-        </>
+            <RouterProvider router={router}/>
       )}
-    </BrowserRouter>
-  );
+    </>
+  )
 }
 export default App;

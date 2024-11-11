@@ -1,4 +1,6 @@
 import avatar from '../Assets/avatar.jpg'
+import logo from '../Assets/logo.png'
+
 
 export default function NavBar({NavLink}) {
     return (
@@ -40,6 +42,7 @@ export default function NavBar({NavLink}) {
                        
                     </ul>
                 </div>
+                <NavLink to="/" className="h-auto w-11"><img src={logo} alt="logo" /></NavLink>
                 <NavLink to="/" className="btn btn-ghost text-2xl">Crochet</NavLink>
             </div>
             <div className="navbar-center hidden lg:flex">

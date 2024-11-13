@@ -14,7 +14,7 @@ export default function RootLayout() {
             <main>
                 <Outlet/>
             </main>
-            <footer>
+            <footer className="bg-white dark:bg-gray-900">
                 <Footer/>
             </footer>
         </div>

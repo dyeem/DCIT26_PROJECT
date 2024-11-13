@@ -4,7 +4,7 @@ import logo from '../Assets/logo.png'
 
 export default function NavBar({NavLink}) {
     return (
-        <div className="navbar bg-base-100">
+        <div className="navbar bg-base-300">
             <div className="navbar-start">
                 <div className="dropdown">
                     <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">

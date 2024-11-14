@@ -7,7 +7,7 @@ export default function RootLayout() {
     return (
         <div className="root-layout">
             <header>
-                <nav>
+                <nav >
                     <NavBar NavLink={NavLink}/>
                 </nav>
             </header>

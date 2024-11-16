@@ -41,22 +41,22 @@ export default function Featured() {
     return (
         <>
             <div className="bg-white">
-                <div className="mx-auto max-w-2xl px-4 py-2 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8 text-center">
-                    <h2 className="text-2xl font-bold tracking-tight text-gray-900">Customers also purchased</h2>
-                    <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 xsm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+                <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8 text-center">
+                    <h2 className="text-2xl lg:text-5xl font-bold tracking-tight text-gray-900 lg:pb-10">Customers also purchased</h2>
+                    <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 xsm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 group">
                         {products.map((product) => (
                             <div
                                 key={product.id}
-                                className="group relative flex flex-col items-center border rounded-lg overflow-hidden shadow-sm"
+                                className="relative flex flex-col items-center rounded-sm overflow-hidden shadow-2xl group-hover:opacity-50 hover:!opacity-100 transition-opacity duration-300"
                             >
                                 <img
                                     alt={product.imageAlt}
                                     src={product.imageSrc}
-                                    className="aspect-square w-full bg-gray-200 object-cover group-hover:opacity-75"
+                                    className="aspect-square w-full bg-gray-200 object-cover"
                                 />
-                                <div className="absolute inset-0 bg-black/50 flex flex-col justify-end items-start p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <div className="absolute inset-0  flex flex-col justify-end items-start p-4 text-[#885b56]">
                                     <h3 className="text-lg font-bold mb-2">{product.name}</h3>
-                                    <button className="px-3 py-2 bg-[#885b56] text-white rounded-lg text-sm hover:bg-[#31201e]">
+                                    <button className="px-3 py-2 bg-white text-[#885b56] rounded-lg text-sm hover:bg-[#885b56] hover:text-white shadow-xl ">
                                         Buy Now
                                     </button>
                                 </div>
@@ -65,6 +65,7 @@ export default function Featured() {
                     </div>
                 </div>
             </div>
+
         </>
     );
 }

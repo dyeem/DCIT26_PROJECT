@@ -21,7 +21,7 @@ const product = {
 export default function Gallery() {
     return (
         <div className="text-center bg-white pt-6 pb-6">
-            <p className="text-black lg:text-5xl xsm:text-3xl p-4 font-bold">Gallery Styles are Finally Here!</p>
+            <p className="text-black lg:text-5xl xsm:text-3xl p-4 font-semibold">Gallery Styles are Finally Here!</p>
             <p className="lg:text-xl xsm:text-lg text-black font-normal text-center">
                 Explore our Featured Gallery, where artistry meets passion. Each showcased piece is a testament to the beauty of handwoven crochet, blending intricate designs with functionality.</p>
             <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8 bg-white">

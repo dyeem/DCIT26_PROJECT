@@ -1,59 +1,83 @@
+import { useState } from "react";
+
 export default function Banner() {
-    return (
+  const [isVisible, setIsVisible] = useState(true);
+
+  const handleDismiss = () => {
+    setIsVisible(false);
+  };
+
+  if (!isVisible) return null;
+
+  return (
+    <div className="relative isolate flex items-center gap-x-6 overflow-hidden bg-gray-50 px-6 py-2.5 sm:px-3.5 sm:before:flex-1 text-center">
+      {/* Left gradient blur */}
+      <div
+        className="absolute left-[max(-7rem,calc(50%-52rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl"
+        aria-hidden="true"
+      >
         <div
-            id="sticky-banner"
-            tabIndex="-1"
-            className="fixed top-0 start-0 z-50 flex justify-between w-full p-4 border-b border-gray-200 bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
+          className="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#fff780] to-[#ccce72] opacity-30"
+          style={{
+            clipPath:
+              'polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)',
+          }}
+        ></div>
+      </div>
+
+      {/* Right gradient blur */}
+      <div
+        className="absolute left-[max(45rem,calc(50%+8rem))] top-1/2 -z-10 -translate-y-1/2 transform-gpu blur-2xl"
+        aria-hidden="true"
+      >
+        <div
+          className="aspect-[577/310] w-[36.0625rem] bg-gradient-to-r from-[#748034] to-[#9089fc] opacity-30"
+          style={{
+            clipPath:
+              'polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)',
+          }}
+        ></div>
+      </div>
+
+      {/* Content */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 xsm:flex-col xsm:items-center lg:flex-row">
+        <p className="text-sm leading-6 text-gray-900 sm:text-center">
+            <strong className="font-semibold">Loop 2024</strong>
+            <svg
+            viewBox="0 0 2 2"
+            className="mx-2 inline h-1 w-1 fill-current"
+            aria-hidden="true"
+            >
+            <circle cx="1" cy="1" r="1" />
+            </svg>
+            Join us from December 21 – 22 to see what’s coming next.
+        </p>
+        <a
+            className="flex-none rounded-full bg-[#885b56] px-3.5 py-1 text-sm font-semibold text-white shadow-sm hover:bg-[#64413d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 "
         >
-            <div className="flex items-center mx-auto">
-                <p className="flex items-center text-sm font-normal text-gray-500 dark:text-gray-400">
-                    <span className="inline-flex p-1 me-3 bg-gray-200 rounded-full dark:bg-gray-600 w-6 h-6 items-center justify-center flex-shrink-0">
-                        <svg
-                            className="w-3 h-3 text-gray-500 dark:text-gray-400"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            viewBox="0 0 18 19"
-                        >
-                            <path d="M15 1.943v12.114a1 1 0 0 1-1.581.814L8 11V5l5.419-3.871A1 1 0 0 1 15 1.943ZM7 4H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2v5a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V4ZM4 17v-5h1v5H4ZM16 5.183v5.634a2.984 2.984 0 0 0 0-5.634Z" />
-                        </svg>
-                        <span className="sr-only">Light bulb</span>
-                    </span>
-                    <span>
-                        New brand identity has been launched for the{' '}
-                        <a
-                            href="https://flowbite.com"
-                            className="inline font-medium text-blue-600 underline dark:text-blue-500 underline-offset-2 decoration-600 dark:decoration-500 decoration-solid hover:no-underline"
-                        >
-                            Flowbite Library
-                        </a>
-                    </span>
-                </p>
-            </div>
-            <div className="flex items-center">
-                <button
-                    data-dismiss-target="#sticky-banner"
-                    type="button"
-                    className="flex-shrink-0 inline-flex justify-center w-7 h-7 items-center text-gray-400 hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 dark:hover:bg-gray-600 dark:hover:text-white"
-                >
-                    <svg
-                        className="w-3 h-3"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 14 14"
-                    >
-                        <path
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                        />
-                    </svg>
-                    <span className="sr-only">Close banner</span>
-                </button>
-            </div>
+            Register now <span aria-hidden="true">→</span>
+        </a>
         </div>
-    );
+
+
+      {/* Dismiss Button */}
+      <div className="flex flex-1 justify-end items-center">
+        <button
+          type="button"
+          className="-m-3 p-3 focus-visible:outline-offset-[-4px]"
+          onClick={handleDismiss}
+        >
+          <span className="sr-only">Dismiss</span>
+          <svg
+            className="h-5 w-5 text-gray-900"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
 }

@@ -1,11 +1,12 @@
 import avatar from '../Assets/avatar.jpg'
 import logo from '../Assets/logo.png'
+import Banner from '../Components/Banner.jsx'
 
 
 export default function NavBar({NavLink}) {
     return (
         <>
-            <div className="navbar bg-white sticky">
+            <div className="navbar bg-white sticky top-0 z-50">
                 <div className="navbar-center">
                     <div className="drawer lg:hidden bg-tranparent ">
                         <input id="my-drawer" type="checkbox" className="drawer-toggle" />
@@ -25,59 +26,89 @@ export default function NavBar({NavLink}) {
                             />
                             </svg>
                         </label>
-
-                        <div className="drawer-side">
+                        <div className="drawer-side z-50">
                             <label htmlFor="my-drawer" className="drawer-overlay "></label>
-                            <ul className="menu bg-white text-base-content min-h-full w-52 p-4 pt-5">
+                            <ul className="menu bg-white min-h-full w-52 p-4 pt-5">
                             <li>
-                                <NavLink to="/" className='text-black text-xl'>Home</NavLink>
+                                <NavLink to="/" className='text-black text-xl font-serif'>Home</NavLink>
                             </li>
                             <li>
-                                <NavLink to="sales" className='text-black text-xl'> Shop Now</NavLink>
+                                <NavLink to="sales" className='text-black text-xl font-serif'> Shop Now</NavLink>
                             </li>
                             <li>
-                                <NavLink to="reviews" className='text-black text-xl'>Reviews</NavLink>
+                                <NavLink to="reviews" className='text-black text-xl font-serif'>Reviews</NavLink>
                             </li>
                             <li>
-                                <a className='text-black text-xl'>More</a>
+                                <a className='text-black text-xl font-serif'>More</a>
                                 <ul className="p-2">
                                     <li>
-                                    <NavLink to="contactus" className="text-black text-xl">Contact Us</NavLink>
+                                    <NavLink to="contactus" className="text-black text-xl font-serif">Contact Us</NavLink>
                                     </li>
                                     <li>
-                                    <NavLink to="faq" className="text-black text-xl">FAQ</NavLink>
+                                    <NavLink to="faq" className="text-black text-xl font-serif">FAQ</NavLink>
                                     </li>
                                 </ul>
                             </li>
                             <li>
-                                <NavLink to="aboutus" className='text-black text-xl'>About Us</NavLink>
+                                <NavLink to="aboutus" className='text-black text-xl font-light relative group' >About Us
+                                    <span
+                                        className="absolute bottom-0 left-0 h-[2px] w-0 bg-black transition-all duration-300 group-hover:w-full"
+                                    />
+                                </NavLink>
                             </li>
                             </ul>
                         </div>
                     </div>
-
                 </div>
                 <div className="navbar-start hidden lg:flex">
                     <ul className="menu menu-horizontal px-1 ">
                         <li>
-                            <NavLink to="/" className='btn btn-ghost text-black text-xl  hover:bg-transparent focus:bg-transparent active:bg-transparent font-normal'>Home</NavLink>
+                            <NavLink
+                                to="/"
+                                className="btn btn-ghost text-black text-xl font-normal relative group hover:bg-transparent focus:bg-transparent active:bg-transparent"
+                                >
+                                Home
+                                <span
+                                    className="absolute bottom-0 left-0 h-[2px] w-0 bg-black transition-all duration-300 group-hover:w-full"
+                                />
+                            </NavLink>
                         </li>
                         <li>
-                            <NavLink to="aboutus" className='btn btn-ghost text-black text-xl  hover:bg-transparent focus:bg-transparent active:bg-transparent font-normal'>About Us</NavLink>
+                            <NavLink to="aboutus" className='btn btn-ghost text-black text-xl relative group hover:bg-transparent focus:bg-transparent active:bg-transparent font-normal'>About Us
+                                <span
+                                    className="absolute bottom-0 left-0 h-[2px] w-0 bg-black transition-all duration-300 group-hover:w-full"
+                                />
+                            </NavLink>
                         </li>
                         <li>
-                            <NavLink to="contactus" className='btn btn-ghost text-black text-xl  hover:bg-transparent focus:bg-transparent active:bg-transparent font-normal'>Contact Us</NavLink>
+                            <NavLink to="contactus" className='btn btn-ghost text-black text-xl relative group hover:bg-transparent focus:bg-transparent active:bg-transparent font-normal'>Contact Us
+                                <span
+                                    className="absolute bottom-0 left-0 h-[2px] w-0 bg-black transition-all duration-300 group-hover:w-full"
+                                />
+                            </NavLink>
                         </li>
                     </ul>
                 </div>
-                <NavLink to="/" className="btn btn-ghost lg:text-2xl xsm:text-xl sm:text-xl md:text-2xl hover:bg-transparent text-black lg:font-bold">LOOP</NavLink>
+                <NavLink to="/" className="btn btn-ghost lg:text-4xl xsm:text-2xl xsm:font-normal sm:text-xl md:text-2xl relative group hover:bg-transparent text-black lg:font-medium font-serif">LOOP
+                    <span
+                        className="absolute bottom-0 left-0 h-[2px] w-0 bg-black transition-all duration-300 group-hover:w-full"
+                    />
+                </NavLink>
                 <div className="navbar-end ">
                     <ul className="menu menu-horizontal px-1 hidden lg:flex">
                         <li>
-                            <NavLink to="sales" className=' btn btn-ghost text-black text-xl  hover:bg-transparent font-normal'>Shop Now</NavLink>
+                            <NavLink to="sales" className='relative group btn btn-ghost text-black text-xl  hover:bg-transparent font-normal'>Shop Now
+                                <span
+                                    className="absolute bottom-0 left-0 h-[2px] w-0 bg-black transition-all duration-300 group-hover:w-full"
+                                />
+                            </NavLink>
                         </li>
                         <li>
-                            <NavLink to="reviews" className=' btn btn-ghost text-black text-xl  hover:bg-transparent font-normal'>Reviews</NavLink>
+                            <NavLink to="reviews" className='relative group btn btn-ghost text-black text-xl  hover:bg-transparent font-normal'>Reviews
+                                <span
+                                    className="absolute bottom-0 left-0 h-[2px] w-0 bg-black transition-all duration-300 group-hover:w-full"
+                                />
+                            </NavLink>
                         </li>
                     </ul>
                     <div className='flex ipad:justify-end'>

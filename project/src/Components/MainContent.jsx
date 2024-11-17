@@ -1,7 +1,10 @@
-import bg from '../Assets/bg.png'
+import bg from '../Assets/bg.png' 
 import Featured from './Featured';
 import Gallery from './Gallery';
 import Banner from './Banner'
+import AboutUs from './AboutUs'
+import OurTeam from './OurTeam';
+
 export default function MainContent() {
     return (
         <>
@@ -33,6 +36,8 @@ export default function MainContent() {
             </div>
             <Featured />
             <Gallery />
+            <AboutUs/>
+            <OurTeam/>
         </>
     );
 }

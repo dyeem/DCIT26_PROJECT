@@ -11,7 +11,7 @@ export default function Featured() {
             color: 'Black',
         },
         {
-            id: 1,
+            id: 2,
             name: 'Basic Tee',
             href: '#',
             imageSrc: 'https://tailwindui.com/plus/img/ecommerce-images/product-page-01-related-product-01.jpg',
@@ -20,7 +20,7 @@ export default function Featured() {
             color: 'Black',
         },
         {
-            id: 1,
+            id: 3,
             name: 'Basic Tee',
             href: '#',
             imageSrc: 'https://tailwindui.com/plus/img/ecommerce-images/product-page-01-related-product-01.jpg',
@@ -29,7 +29,7 @@ export default function Featured() {
             color: 'Black',
         },
         {
-            id: 1,
+            id: 4,
             name: 'Basic Tee',
             href: '#',
             imageSrc: 'https://tailwindui.com/plus/img/ecommerce-images/product-page-01-related-product-01.jpg',
@@ -40,10 +40,10 @@ export default function Featured() {
         ]
     return (
         <>
-            <div className="bg-white">
+            <div className="bg-white ">
                 <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8 text-center">
                     <h2 className="text-3xl lg:text-5xl font-normal font-serif tracking-tight text-gray-900 lg:pb-10">Customers also purchased</h2>
-                    <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 xsm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 group">
+                    <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 xsm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8 group ">
                         {products.map((product) => (
                             <div
                                 key={product.id}

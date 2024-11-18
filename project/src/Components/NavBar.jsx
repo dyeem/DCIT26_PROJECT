@@ -50,7 +50,7 @@ export default function NavBar({NavLink}) {
                                 </ul>
                             </li>
                             <li>
-                                <NavLink to="aboutus" className='text-black text-xl font-light relative group' >About Us
+                                <NavLink to="aboutus" className='text-black text-xl font-serif relative group' >About Us
                                     <span
                                         className="absolute bottom-0 left-0 h-[2px] w-0 bg-black transition-all duration-300 group-hover:w-full"
                                     />

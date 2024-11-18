@@ -4,14 +4,14 @@ import google from '../Assets/google.png';
 
 export default function OurTeam() {
   return (
-    <div className="bg-white flex flex-col items-center justify-center min-h-screen p-8">
+    <div className="bg-white flex flex-col items-center justify-center min-h-screen p-8 pb-10">
       <div className="text-center max-w-2xl mb-12">
-        <h1 className="text-black text-5xl font-normal font-serif mb-6 relative group">Meet Our Team
+        <h1 className="text-black lg:text-5xl xsm:text-3xl font-normal font-serif mb-6 relative group">Meet Our Team
             <span 
                 className="absolute bottom-0 left-0 h-[2px] w-0 bg-[#845162] transition-all duration-300 group-hover:w-full"
                 />
         </h1>
-        <p className="text-gray-700 text-lg leading-relaxed">
+        <p className="text-gray-700 lg:text-lg xsm:text-md leading-relaxed">
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, officia expedita! Praesentium eligendi quam. Est nihil, ex fugiat ut maiores porro saepe amet! Iusto, amet. Reprehenderit amet repellendus repellat! Numquam.
         </p>
       </div>

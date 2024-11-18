@@ -19,7 +19,7 @@ export default function LoadingEffect({fadeOut}) {
 
     return (
         <>
-            <div style={loadingContainerStyle} className="">
+            <div style={loadingContainerStyle} className="bg-[#c25b7d]">
                 <img src={logo} alt="Logo" style={loadingLogoStyle} />
             </div>
         </>

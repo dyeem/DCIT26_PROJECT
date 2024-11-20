@@ -45,7 +45,7 @@ export default function NavBar({NavLink}) {
                                     <NavLink to="contactus" className="text-black text-xl font-serif">Contact Us</NavLink>
                                     </li>
                                     <li>
-                                    <NavLink to="faq" className="text-black text-xl font-serif">FAQ</NavLink>
+                                    <NavLink to="faqpage" className="text-black text-xl font-serif">FAQ</NavLink>
                                     </li>
                                 </ul>
                             </li>
@@ -137,7 +137,7 @@ export default function NavBar({NavLink}) {
                                     <span className="text-lg font-bold">8 Items</span>
                                     <span className="text-info">Subtotal: $999</span>
                                     <div className="card-actions">
-                                        <button className="btn #150016 btn-block">View cart</button>
+                                        <NavLink to="checkout" className="btn #150016 btn-block">View cart</NavLink>
                                     </div>
                                 </div>
                             </div>

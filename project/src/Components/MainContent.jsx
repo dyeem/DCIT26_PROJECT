@@ -1,11 +1,13 @@
+//pics
 import bg from '../Assets/bg.png' 
+import logo from '../Assets/logo.png'
+
+//pages
 import Featured from './Featured';
 import Gallery from './Gallery';
 import Banner from './Banner'
 import AboutUs from './AboutUs'
 import OurTeam from './OurTeam';
-import ContactUs from './ContactUs';
-
 export default function MainContent() {
     return (
         <>
@@ -17,14 +19,12 @@ export default function MainContent() {
                 >
                     <div className="absolute inset-0 bg-black bg-opacity-35 z-40 "></div>
                     <div className="relative z-50 slide-up">
-                    <h1 className="text-4xl font-medium leading-none tracking-tight text-white md:text-2xl lg:text-5xl xsm:text-3xl font-serif">
-                        Welcome to
+                    <h1 className="text-4xl font-thin leading-none tracking-widest text-white md:text-2xl lg:text-5xl xsm:text-3xl">
+                        WELCOME TO
                     </h1>
-                    <h1 className="mb-4 text-4xl font-thin leading-none tracking-tight text-white md:text-5xl lg:text-9xl xsm:text-8xl font-serif">
-                        Loop
-                    </h1>
-                    <p className="mb-6 text-lg font-normal text-white lg:text-4xl xsm:text-3xl sm:px-16 xl:px-48 font-serif">
-                        Your Hand Crafted <br /> Yarn Shop.
+                    <img src={logo} alt="" className='w-[25rem] h-auto place-self-center'/>
+                    <p className="mb-6 text-white lg:text-5xl xsm:text-3xl xl:px-48 font-playfair font-light leading-relaxed">
+                        Your Hand Crafted <br /> Yarn Shop
                     </p>
                     <a
                         href="#"
@@ -36,9 +36,9 @@ export default function MainContent() {
                 </div>
             </div>
             <Featured />
-            <Gallery />
+            <Gallery /> 
             <AboutUs/>
-            <OurTeam/>
+            <OurTeam/> 
         </>
     );
 }

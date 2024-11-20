@@ -9,8 +9,11 @@ module.exports = {
       },
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'], // Poppins as sans-serif font
-        merriweather: ['Merriweather', 'serif'], // Merriweather as serif font
+        merriweather: ['Merriweather', 'serif'],
+        serif: ['"Noto Serif"', 'serif'],
+        playfair: ['"Playfair Display"', 'serif'],
       },
+      
     },
     keyframes: {
       slide: {

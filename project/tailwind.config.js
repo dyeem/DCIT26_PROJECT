@@ -5,7 +5,7 @@ module.exports = {
     extend: {
       screens: {
         'xsm': '360px', // Custom extra-small breakpoint
-        'ipad': '768px'
+        'ipad': '1024px'
       },
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'], // Poppins as sans-serif font

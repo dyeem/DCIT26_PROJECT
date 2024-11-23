@@ -23,7 +23,7 @@ export default function MainContent() {
                         WELCOME TO
                     </h1>
                     <img src={logo} alt="" className='w-[25rem] h-auto place-self-center'/>
-                    <p className="mb-6 text-white lg:text-5xl xsm:text-3xl xl:px-48 font-playfair font-light leading-relaxed">
+                    <p className="mb-6 text-white lg:text-5xl xsm:text-3xl xl:px-48 font-thin leading-relaxed">
                         Your Hand Crafted <br /> Yarn Shop
                     </p>
                     <a

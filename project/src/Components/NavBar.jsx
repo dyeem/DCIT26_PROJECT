@@ -1,6 +1,4 @@
 import avatar from '../Assets/avatar.jpg'
-import logo from '../Assets/logo.png'
-import Banner from '../Components/Banner.jsx'
 
 
 export default function NavBar({NavLink}) {

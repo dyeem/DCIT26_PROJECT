@@ -1,0 +1,29 @@
+{
+  "Products": [
+    {
+      "id": 1,
+      "name": "Crochet Hat",
+      "price": 15.99,
+      "image": "/src/assets/products/",
+      "description": "A cozy handmade crochet hat.",
+      "category": "Accessories"
+    },
+    {
+      "id": 2,
+      "name": "Crochet Bag",
+      "price": 25.99,
+      "image": "/images/crochet-bag.jpg",
+      "description": "A stylish handmade crochet bag.",
+      "category": "Bags"
+    },
+    {
+      "id": 3,
+      "name": "Crochet Bag",
+      "price": 25.99,
+      "image": "/images/crochet-bag.jpg",
+      "description": "A stylish handmade crochet bag.",
+      "category": "Bags"
+    }
+  ]
+}
+  

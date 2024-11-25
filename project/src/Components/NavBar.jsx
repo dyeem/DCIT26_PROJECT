@@ -2,7 +2,7 @@ import { useState } from 'react';
 import avatar from '../Assets/avatar.jpg'
 import Cart from './Cart'
 
-export default function NavBar({NavLink}) {
+export default function NavBar({NavLink, cartItems, setCartItems}) {
     const [isCartOpen, setIsCartOpen] = useState(false);
 
     return (
@@ -145,7 +145,7 @@ export default function NavBar({NavLink}) {
                             
                         </div>
                         <div className="dropdown dropdown-end ">
-                            <div tabIndex={0} role="button" className="btn bg-[#150016] btn-circle avatar">
+                            <div tabIndex={0} role="button" className="btn bg-[#885b56] btn-circle avatar">
                                 <div className="w-11 rounded-full">
                                 <img
                                     alt="Tailwind CSS Navbar component"
@@ -180,7 +180,7 @@ export default function NavBar({NavLink}) {
                             </ul>
                         </div>
                     </div>
-                    <Cart open={isCartOpen} setOpen={setIsCartOpen} NavLink={NavLink}/>
+                    <Cart open={isCartOpen} setOpen={setIsCartOpen} NavLink={NavLink} cartItems={cartItems} setCartItems={setCartItems}/>
                 </div>
             </div>
         </>

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import avatar from '../Assets/avatar.jpg'
@@ -71,7 +70,7 @@ const products = [
     },
 ]
 
-export default function Cart({open, setOpen, NavLink}) {
+export default function Cart({open, setOpen, NavLink, cartItems, setCartItems}) {
 
   return (
     <Dialog open={open} onClose={() => setOpen(false)} className="relative z-50">
@@ -147,8 +146,9 @@ export default function Cart({open, setOpen, NavLink}) {
                                 <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                                 <div className="mt-6">
                                     <NavLink
-                                        href="#"
+                                        to="checkout"
                                         className="flex items-center justify-center rounded-md border border-transparent bg-[#885b56] px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-[#c78d87]"
+                                        onClick={() => setOpen(false)}
                                         >
                                         Checkout
                                     </NavLink>

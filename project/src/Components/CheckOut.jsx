@@ -62,7 +62,7 @@ export default function CheckOut() {
                     {/*grid container */}
                     <div className="grid lg:grid-cols-2 xsm:grid-cols-1 lg:grid-flow-col xsm:grid-flow-row text-center">
                         {/*left side */}
-                        <div className="lg:order-1 xsm:order-2 lg:p-20 xsm:p-10">
+                        <div className="lg:order-1 xsm:order-2 lg:p-10 xsm:p-10">
                                 {/*Payment details */}
                             <p className="text-balance lg:text-[1.5rem] font-normal tracking-tight text-gray-900 xsm:text-3xl text-left">Contact Information</p>
                             <form>
@@ -261,7 +261,7 @@ export default function CheckOut() {
                             </form>
                         </div>
                         {/*right side */}
-                        <div className="lg:order-2 xsm:order-1 lg:p-20 xsm:p-10 bg-gray-300 rounded-2xl shadow-xl">
+                        <div className="lg:order-2 xsm:order-1 lg:p-10 xsm:p-10 bg-gray-300 rounded-2xl shadow-xl">
                             <p className="text-balance lg:text-[1.5rem] font-normal tracking-tight text-gray-900 xsm:text-3xl text-left">Order Summary</p>
                             <div className="mt-5">
                                 <div className="divide-y divide-gray-200">

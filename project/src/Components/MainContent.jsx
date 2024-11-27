@@ -8,6 +8,7 @@ import Gallery from './Gallery';
 import Banner from './Banner'
 import AboutUs from './AboutUs'
 import OurTeam from './OurTeam';
+import ShopByCategory from './ShopByCategory'
 export default function MainContent() {
     return (
         <>
@@ -33,7 +34,8 @@ export default function MainContent() {
                     </div>
                 </div>
             </div>
-            <Featured />
+            {/* <Featured /> */}
+            <ShopByCategory/>
             <Gallery /> 
             <AboutUs/>
             <OurTeam/> 

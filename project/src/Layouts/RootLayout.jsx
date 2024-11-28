@@ -2,6 +2,8 @@ import { NavLink, Outlet} from "react-router-dom";
 import { useState } from 'react';
 import NavBar from "../Components/NavBar";
 import Footer from "../Components/Footer";
+import Banner from '../Components/Banner';
+
 
 export default function RootLayout() {
     const [cartItems, setCartItems] = useState([]);
@@ -14,6 +16,7 @@ export default function RootLayout() {
                 </nav>
             </header>
             <main>
+                <Banner />
                 <Outlet/>
             </main>
             <footer className="bg-white dark:bg-gray-900">

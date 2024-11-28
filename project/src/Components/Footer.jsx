@@ -2,7 +2,7 @@ import logo from '../Assets/logo.png'
 export default function Footer() {
     return (
         <>
-            <footer className="footer bg-base-200 text-base-content p-10 grid grid-cols-1 lg:grid-cols-3">
+            <footer className="border-base-300 border-t footer bg-base-200 text-base-content p-10 grid grid-cols-1 lg:grid-cols-3 ">
                 <nav className="justify-self-center justify-items-center">
                     <h6 className="footer-title font-serif text-xl lg:text-2xl relative group">Products
                     <span 
@@ -40,9 +40,9 @@ export default function Footer() {
                 <aside className="grid-flow-col items-center md:place-self-start md:justify-self-start xsm:justify-self-center">
                     <a href="#"><img src={logo} alt="" className='size-14'/></a>
                     <p>
-                    Loop.
+                        Loop.
                     <br />
-                    Providing reliable products since 2024.
+                        Providing reliable products since 2024.
                     </p>
                 </aside>
                 <nav className="md:place-self-center md:justify-self-end xsm:justify-self-center">

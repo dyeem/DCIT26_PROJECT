@@ -1,6 +1,6 @@
 import {useLoaderData, Link } from 'react-router-dom'
 
-import { useState } from 'react'
+import { useState} from 'react'
 import {
   Dialog,
   DialogBackdrop,
@@ -73,6 +73,8 @@ function classNames(...classes) {
 }
 
 export default function Sales() {
+  const product = useLoaderData()
+
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
 
   return (
@@ -157,7 +159,7 @@ export default function Sales() {
 
         <main className="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
           <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-5">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900">New Arrivals</h1>
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900">Products</h1>
 
             <div className="flex items-center">
               <Menu as="div" className="relative inline-block text-left">
@@ -261,7 +263,16 @@ export default function Sales() {
 
               {/* Product grid */}
               <div className="lg:col-span-3">
-                {/* Your content */}
+                <div className="">
+                    {product.map((prod) => (
+                        <Link to="/" key={prod.id}>
+                            <p>{prod.name}</p>
+                            <p>{prod.price}</p>
+                            <p>{prod.description}</p>
+                            <p>{prod.category}</p>
+                        </Link>
+                    ))}
+                  </div>
               </div>
             </div>
           </section>
@@ -271,11 +282,3 @@ export default function Sales() {
   )
 }
 
-
-export const productsLoader = async () => {
-    const res = await fetch('http://localhost:4000/Products');
-    if (!res.ok) {
-        throw new Error('Failed to fetch');
-    }
-    return res.json();
-};

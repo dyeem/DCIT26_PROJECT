@@ -1,3 +1,5 @@
+import {Link} from 'react-router-dom'
+
 //pics
 import bg from '../Assets/bg.png' 
 import logo from '../Assets/logo.png'
@@ -5,14 +7,13 @@ import logo from '../Assets/logo.png'
 //pages
 import Featured from './Featured';
 import Gallery from './Gallery';
-import Banner from './Banner'
 import AboutUs from './AboutUs'
 import OurTeam from './OurTeam';
 import ShopByCategory from './ShopByCategory'
+import FeaturedwVid from './FeaturedwVid';
 export default function MainContent() {
     return (
         <>
-           <Banner />
            <div className="relative z-10">
                 <div className="relative flex flex-col items-center justify-center min-h-screen text-center bg-cover bg-center"
                     style={{ backgroundImage: `url(${bg})` }}>
@@ -25,16 +26,17 @@ export default function MainContent() {
                         <p className="mb-6 text-white lg:text-5xl xsm:text-2xl xl:px-48 font-thin leading-relaxed">
                             Your Hand Crafted <br /> Yarn Shop
                         </p>
-                        <a
+                        <Link
                             href="#"
                             className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-[#885b56] underline rounded-none focus:ring-[#885b56] bg-white lg:w-52 hover:bg-[#885b56] hover:text-white"
                         >
                             Learn more {">"}
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>
             {/* <Featured /> */}
+            <FeaturedwVid/>
             <ShopByCategory/>
             <Gallery /> 
             <AboutUs/>

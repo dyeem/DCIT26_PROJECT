@@ -1,5 +1,6 @@
 import { NavLink, Outlet} from "react-router-dom";
 import { useState } from 'react';
+
 import NavBar from "../Components/NavBar";
 import Footer from "../Components/Footer";
 import Banner from '../Components/Banner';

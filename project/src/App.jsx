@@ -1,7 +1,11 @@
+import { Provider } from "react-redux";
+import store from "./Components/Redux/store.js";
 import { useState, useEffect } from "react";
 import { RouterProvider } from "react-router-dom";
 import LoadingEffect from "./Components/LoadingEffect.jsx";
 import router from "./Layouts/router.jsx";
+
+
 
 
 function App() {
@@ -25,9 +29,11 @@ function App() {
 
   return (
     <>
-      {isLoading ? ( <LoadingEffect fadeOut={fadeOut} />) : (
-        <RouterProvider router={router}/>
-      )}
+      <Provider store={store}>
+          {isLoading ? ( <LoadingEffect fadeOut={fadeOut} />) : (
+            <RouterProvider router={router}/>
+          )}
+      </Provider>
     </>
   )
 }

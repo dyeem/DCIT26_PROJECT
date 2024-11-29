@@ -15,7 +15,7 @@ import Sales from "../Components/Sales.jsx";
 import Signup from "../Components/Signup.jsx";
 import OurTeam from "../Components/OurTeam.jsx";
 import FaqPage from "../Components/FaqPage.jsx";
-import { productsLoader } from "../Components/Loader/ProductsLoader.js";
+// import { productsLoader } from "../Components/Loader/ProductsLoader.js";
 
 
 //Root Layout
@@ -30,7 +30,8 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route path="contactus" element={<ContactUs />} />
     <Route path="login" element={<Login />} />
     <Route path="reviews" element={<Reviews />} />
-    <Route path="sales" element={<Sales />} loader={productsLoader} />
+    {/* <Route path="sales" element={<Sales />} loader={productsLoader} /> */}
+    <Route path="sales" element={<Sales />}/>
     <Route path="signup" element={<Signup />} />
     <Route path="ourteam" element={<OurTeam />} />
     <Route path="checkout" element={<CheckOut />}/>

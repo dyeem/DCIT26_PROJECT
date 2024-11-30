@@ -4,8 +4,12 @@ module.exports = {
   theme: {
     extend: {
       screens: {
-        'xsm': '360px', // Custom extra-small breakpoint
-        'ipad': '1024px'
+        'xsm': '360px',
+        'sm': '480px',
+        'md': '768px',
+        'lg': '976px',
+        'bwlnx': '1156px',
+        'xl': '1440px',
       },
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'], // Poppins as sans-serif font

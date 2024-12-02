@@ -1,36 +1,40 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice } from '@reduxjs/toolkit';
+
 
 const initialState = {
+    currentUser: null, 
+    usersList: [], 
     loading: false,
-    crochet: [],
-    error: '',
+    errorEmail: '',
+    errorPass: '',
 };
 
-// Async Thunk for fetching products
-export const fetchProducts = createAsyncThunk('products/fetchProducts', async () => {
-    const response = await axios.get('http://localhost:4000/Products');
-    return response.data;
-});
-
-const productSlice = createSlice({
-    name: 'products',
+const userSlice = createSlice({
+    name: 'user',
     initialState,
-    extraReducers: (builder) => {
-        builder.addCase(fetchProducts.pending, (state) => {
-            state.loading = true;
-        });
-        builder.addCase(fetchProducts.fulfilled, (state, action) => {
-            state.loading = false;
-            state.crochet = action.payload;
-            state.error = '';
-        });
-        builder.addCase(fetchProducts.rejected, (state, action) => {
-            state.loading = false;
-            state.crochet = [];
-            state.error = action.error.message;
-        });
+    reducers: {
+        loginUser: (state, action) => {
+            const { email, password } = action.payload;
+            const user = state.usersList.find((user) => user.email === email);
+
+            if (!user) {
+                state.errorEmail = "Email does not exist!";
+            } else if (user.password !== password) {
+                state.errorPass = "Incorrect password!";
+            } else {
+                state.currentUser = user;
+                state.errorPass = null; 
+                state.errorEmail = null;
+            }
+        },
+        logoutUser: (state) => {
+            state.currentUser = null; 
+        },
+        setUsers: (state, action) => {
+            state.usersList = [...state.usersList, action.payload]; 
+        },
     },
 });
 
-export default productSlice.reducer;
+export const userActions = userSlice.actions;
+export default userSlice.reducer;

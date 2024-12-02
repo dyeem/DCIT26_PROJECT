@@ -18,8 +18,8 @@ const categories = [
 export default function Categories () {
   return (
     <div className="bg-white">
-        <div className="leading-relaxed text-black mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-24 lg:max-w-full lg:px-8">
-            <p className="text-3xl lg:text-5xl font-normal font-serif tracking-tight text-gray-900  lg:text-center">
+        <div className="leading-relaxed text-black mx-auto max-w-5xl px-4 xl:py-4 sm:px-6 sm:py-24 lg:max-w-full lg:px-8">
+            <p className="text-3xl lg:text-5xl font-normal font-serif tracking-tight text-gray-900  lg:text-center pb-6">
                 Shop By Category
             </p>
             <div className="lg:grid lg:grid-cols-5 xsm:hidden xsm:overflow-x-auto xsm:whitespace-nowrap gap-4 p-4 group place-self-center">

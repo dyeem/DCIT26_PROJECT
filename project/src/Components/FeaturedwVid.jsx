@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 export default function FeaturedVidComponent() {
     return (
         <>
-            <div className=" flex flex-col max-w-full justify-center items-center px-5 py-36  bg-white lg:gap-y-4">
+            <div className=" flex flex-col max-w-full justify-center items-center px-5 py-12  bg-white lg:gap-y-4">
                 <div className="flex flex-col justify-center lg:items-center xsm:items-start leading-relaxed -tracking-normal lg:text-center xsm:text-left lg:gap-y-7 xsm:gap-y-4 mb-10">
                     <p className="lg:text-6xl xsm:text-3xl xsm:font-semibold lg:font-medium text-gray-900 font-serif">
                         Discover the Art of Handmade Elegance

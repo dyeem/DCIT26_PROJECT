@@ -1,9 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { NavLink, Link } from 'react-router-dom';
+
 import avatar from '../Assets/avatar.jpg'
 import Cart from './Cart'
 
-export default function NavBar({NavLink, cartItems, setCartItems}) {
+//redux
+import { useSelector, useDispatch } from 'react-redux'
+import { userActions } from './RTK/user/userSlice';
+
+export default function NavBar() {
+
     const [isCartOpen, setIsCartOpen] = useState(false);
+
+    const dispatch = useDispatch()
+    const currentUser = useSelector((state) => state.user.currentUser)
 
     return (
         <>
@@ -150,11 +160,11 @@ export default function NavBar({NavLink, cartItems, setCartItems}) {
                     
                     </div>
                     <div className="dropdown dropdown-end ">
-                        <div tabIndex={0} role="button" className="btn bg-[#885b56] btn-circle avatar">
+                        <div tabIndex={0} role="button" className="">
                             <div className="w-11 rounded-full">
-                            <img
-                                alt="Tailwind CSS Navbar component"
-                                src={avatar} />
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="black" className="size-8">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                                </svg>
                             </div>
                         </div>
                         <ul
@@ -162,12 +172,12 @@ export default function NavBar({NavLink, cartItems, setCartItems}) {
                             className="menu menu-sm dropdown-content bg-[#150016] rounded-box z-[1] mt-3 lg:w-60 xsm:w-40 p-2 shadow">
                             <li>
                                 <a className="justify-between text-base">
-                                    Shehanna
+                                    {currentUser ? currentUser.email : "Sign in!"}
                                 </a>
                             </li>
                             <li>
                                 <a className="justify-between text-base">
-                                    She.02
+                                    {currentUser ? currentUser.firstname : "User"}
                                 </a>
                             </li>
                             <hr />
@@ -180,12 +190,20 @@ export default function NavBar({NavLink, cartItems, setCartItems}) {
                                 <a className='text-base'>Settings</a>
                             </li>
                             <li>
-                                <NavLink to="login" className='text-base'>Logout</NavLink>
+                                {currentUser ?  
+                                    <a onClick={() => dispatch(userActions.logoutUser())} className='text-base'>
+                                        Log out
+                                    </a>
+                                :
+                                    <Link to="/login" className='text-base'>
+                                        Sign in
+                                    </Link>
+                                }
                             </li>
                         </ul>
                     </div>
                 </div>
-                <Cart open={isCartOpen} setOpen={setIsCartOpen} NavLink={NavLink} cartItems={cartItems} setCartItems={setCartItems}/>
+                <Cart open={isCartOpen} setOpen={setIsCartOpen} NavLink={NavLink} />
             </div>
         </>
     );

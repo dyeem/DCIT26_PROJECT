@@ -1,7 +1,8 @@
+// REDUX
 import { useSelector, useDispatch} from "react-redux"
 import { useEffect } from "react"
-import { crochetActions } from './RTK/Crochet/crochetSlice'
-import { fetchProducts } from "./RTK/user/userSlice"
+import { fetchProducts } from "./RTK/Products/productSlice"
+import { cartActions } from './RTK/Cart/cartSlice'
 
 
 import { useState} from 'react'
@@ -77,10 +78,11 @@ function classNames(...classes) {
 
 export default function Sales() {
   
-  const numOfCrochet = useSelector((state) => state.crochet.numOfCrochet)
+  const carts = useSelector((state) => state.carts)
   const products = useSelector((state) => state.products)
-  const {ordered, restocked} = crochetActions
+
   const dispatch = useDispatch()
+  
   useEffect(() => {
     dispatch(fetchProducts())
   }, [])
@@ -275,7 +277,7 @@ export default function Sales() {
                 <div className="bg-white">
                   <div className="leading-relaxed text-black mx-auto px-4 sm:px-4 max-w-full flex justify-center items-center">
                     <div className="">
-                      {products.loading && <div>Loading...</div>}
+                      {products.loading && <div>Loading</div>}
                       {!products.loading && products.error &&
                         <div className="text-red-500">
                             Error: {products.error}
@@ -291,6 +293,7 @@ export default function Sales() {
                                       alt={product.image}
                                       className="w-full xsm:h-[10rem] xl:h-[17rem] lg:h-[14rem] md:h-[10rem] object-cover lg:rounded-xl xsm:rounded-lg"
                                   />
+                                  {/* USE ASPECT RATIO FOR RESPONSIVE IMAGE */}
                                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent lg:rounded-xl xsm:rounded-lg"></div>
                                   <div className="absolute inset-0 flex flex-col justify-end items-end p-4 text-white leading-relaxed">
                                       <p className="mb-2 text-2xl font-normal text-left text-white">₱ {product.price}</p>
@@ -299,7 +302,7 @@ export default function Sales() {
                                 <div className="flex flex-col gap-y-2">
                                   <div className="flex flex-col xsm:text-[.8rem] xl:text-base md:text-base">
                                     <p className="font-semibold text-gray-900 xl:text-lg md:text-base">{product.name}</p>
-                                    <p className="text-gray-500 font-normal">{product.size}</p>
+                                    <p className="text-gray-500 font-semibold">{product.size}</p>
                                     <p className="text-gray-500 font-normal">{product.color}</p>
                                   </div>
                                   <button className="w-full px-3 py-2 bg-[#885b56] hover:bg-[#c08e89]  hover:text-white text-white transition duration-300 font-medium text-sm">Shop Now</button>

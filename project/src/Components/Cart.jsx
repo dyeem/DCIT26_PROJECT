@@ -1,6 +1,8 @@
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import avatar from '../Assets/avatar.jpg'
+import { useDispatch, useSelector } from 'react-redux'
+import { cartActions } from './RTK/Cart/cartSlice'
 
 const products = [
     {
@@ -70,7 +72,11 @@ const products = [
     },
 ]
 
-export default function Cart({open, setOpen, NavLink, cartItems, setCartItems}) {
+export default function Cart({open, setOpen, NavLink}) {
+
+    const carts = useSelector((state) => state.carts)
+    const dispatch = useDispatch()
+
 
   return (
     <Dialog open={open} onClose={() => setOpen(false)} className="relative z-50">

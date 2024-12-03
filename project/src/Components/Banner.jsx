@@ -52,12 +52,12 @@ export default function Banner() {
             </svg>
             Join us from December 21 – 22 to see what’s coming next.
         </p>
-        <a
+        {/* <a
             className="flex-none rounded-full bg-[#885b56] px-3.5 py-1 text-sm font-semibold text-white shadow-sm hover:bg-[#64413d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 "
         >
             Register now <span aria-hidden="true">→</span>
-        </a>
-        </div>
+        </a> */}
+      </div>
 
 
       {/* Dismiss Button */}

@@ -33,6 +33,21 @@ const userSlice = createSlice({
         setUsers: (state, action) => {
             state.usersList = [...state.usersList, action.payload]; 
         },
+        addToUserListCart: (state, action) => {
+            const { email, product } = action.payload; 
+            const userIndex = state.usersList.findIndex(user => user.email === email);
+        
+            if (userIndex !== -1) {
+                const user = state.usersList[userIndex];
+        
+                const updatedCart = user.cart ? [...user.cart, product] : [product];
+                
+                state.usersList[userIndex] = { ...user, cart: updatedCart };
+            }
+        },
+        removeUserListCart: (state, action) => {
+            
+        }
     },
 });
 

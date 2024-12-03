@@ -162,22 +162,26 @@ export default function NavBar() {
                     <div className="dropdown dropdown-end ">
                         <div tabIndex={0} role="button" className="">
                             <div className="w-11 rounded-full">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="black" className="size-8">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                                </svg>
+                                {
+                                currentUser ? <img src={currentUser.avatar} alt={currentUser.avatar} className='w-16 h-12 rounded-xl'/> : 
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="black" className="size-8">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                                    </svg>
+                                }
+                                
                             </div>
                         </div>
                         <ul
                             tabIndex={0}
-                            className="menu menu-sm dropdown-content bg-[#150016] rounded-box z-[1] mt-3 lg:w-60 xsm:w-40 p-2 shadow">
+                            className="menu menu-sm dropdown-content bg-[#885b56] text-gray-100 rounded-box z-[1] mt-3 lg:w-64 xsm:w-44 p-2 shadow">
                             <li>
                                 <a className="justify-between text-base">
-                                    {currentUser ? currentUser.email : "Sign in!"}
+                                    {currentUser ? currentUser.email : ""}
                                 </a>
                             </li>
                             <li>
                                 <a className="justify-between text-base">
-                                    {currentUser ? currentUser.firstname : "User"}
+                                    {currentUser ? currentUser.firstname : ""}
                                 </a>
                             </li>
                             <hr />

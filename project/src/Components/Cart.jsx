@@ -1,81 +1,25 @@
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import avatar from '../Assets/avatar.jpg'
-import { useDispatch, useSelector } from 'react-redux'
-import { cartActions } from './RTK/Cart/cartSlice'
+import  emptyCartPic from '../Assets/empty-cart-pic.png'
 
-const products = [
-    {
-      id: 1,
-      name: 'Throwback Hip Bag',
-      href: '#',
-      color: 'Salmon',
-      price: '$90.00',
-      quantity: 1,
-      imageSrc: avatar,
-      imageAlt: 'Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.',
-    },
-    {
-      id: 2,
-      name: 'Medium Stuff Satchel',
-      href: '#',
-      color: 'Blue',
-      price: '$32.00',
-      quantity: 1,
-      imageSrc: avatar,
-      imageAlt:
-        'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
-    },
-    {
-      id: 3,
-      name: 'Medium Stuff Satchel',
-      href: '#',
-      color: 'Blue',
-      price: '$32.00',
-      quantity: 1,
-      imageSrc: avatar,
-      imageAlt:
-        'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
-    },
-    {
-        id: 3,
-        name: 'Medium Stuff Satchel',
-        href: '#',
-        color: 'Blue',
-        price: '$32.00',
-        quantity: 1,
-        imageSrc: avatar,
-        imageAlt:
-            'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
-    },
-    {
-        id: 3,
-        name: 'Medium Stuff Satchel',
-        href: '#',
-        color: 'Blue',
-        price: '$32.00',
-        quantity: 1,
-        imageSrc: avatar,
-        imageAlt:
-            'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
-    },
-    {
-        id: 3,
-        name: 'Medium Stuff Satchel',
-        href: '#',
-        color: 'Blue',
-        price: '$32.00',
-        quantity: 1,
-        imageSrc: avatar,
-        imageAlt:
-            'Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch.',
-    },
-]
+//redux
+import { useDispatch, useSelector } from 'react-redux'
 
 export default function Cart({open, setOpen, NavLink}) {
 
-    const carts = useSelector((state) => state.carts)
+    const userCart = useSelector((state) => {
+        const currentUserEmail = state.user.currentUser?.email; 
+        const user = state.user.usersList.find(user => user.email === currentUserEmail); 
+        return user?.cart || []; 
+      });
+
     const dispatch = useDispatch()
+
+    function handleRemoveCart () {
+        // handle remove cart next mo na to
+
+        dispatch()
+    }
 
 
   return (
@@ -110,35 +54,50 @@ export default function Cart({open, setOpen, NavLink}) {
 
                                 <div className="mt-8">
                                     <div className="flow-root">
-                                        <ul role="list" className="-my-6 divide-y divide-gray-200">
-                                            {products.map((product) => (
-                                            <li key={product.id} className="flex py-6">
-                                                <div className="lg:size-24 xsm:size-20 shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                                    <img alt={product.imageAlt} src={product.imageSrc} className="lg:size-full object-cover xsm:size-20"/>
-                                                </div>
-
-                                                <div className="ml-4 flex flex-1 flex-col">
-                                                    <div>
-                                                        <div className="flex justify-between lg:text-base font-medium text-gray-900 xsm:text-sm">
-                                                            <h3>
-                                                                <a href={product.href}>{product.name}</a>
-                                                            </h3>
-                                                            <p className="ml-4">{product.price}</p>
-                                                        </div>
-                                                        <p className="mt-1 text-sm text-gray-500">{product.color}</p>
+                                        <ul role="list" className="-my-6 divide-y divide-gray-200 ">
+                                            {
+                                                !userCart || userCart.length === 0 ? 
+                                                    <div className="text-center flex flex-col justify-center items-center">
+                                                        <img src={emptyCartPic} alt={emptyCartPic} className="xl:size-auto xsm:w-56" /> 
+                                                        <p className='p-3 text-gray-800 font-bold text-3xl'>Your cart is feeling lonely!</p>
+                                                        <p className='p-1 text-gray-500'>Add your favorite crochet products now and bring it to life!</p>
                                                     </div>
-                                                    <div className="flex flex-1 items-end justify-between text-sm">
-                                                        <p className="text-gray-500">Qty {product.quantity}</p>
-
-                                                        <div className="flex">
-                                                            <button type="button" className="font-medium text-[#885b56] hover:text-[#c78d87]">
-                                                                Remove
-                                                            </button>
-                                                        </div>
-                                                    </div>
+                                                : 
+                                                <div className="">
+                                                    {userCart.map((cart) => (
+                                                        <li key={cart.id} className="flex py-6">
+                                                            <div className="lg:size-24 xsm:size-20 shrink-0 overflow-hidden rounded-md border border-gray-200">
+                                                                <img alt={cart.img} src={cart.img} className="lg:size-full object-cover xsm:size-20"/>
+                                                            </div>
+                                                            <div className="ml-4 flex flex-1 flex-col">
+                                                                <div>
+                                                                    <div className="flex justify-between lg:text-base font-medium text-gray-900 xsm:text-sm">
+                                                                        <h3>
+                                                                            <a > {cart.name}</a>
+                                                                        </h3>
+                                                                        <p className="ml-4"> {cart ? `₱ ${cart.price}` : ""}</p>
+                                                                    </div>
+                                                                    <p className="mt-1 text-sm text-gray-500">{cart.color}</p>
+                                                                    <p className="mt-1 text-sm text-gray-500">{cart.size}</p>
+                                                                </div>
+                                                                <div className="flex flex-1 items-end justify-between text-sm">
+                                                                    <p className="text-gray-500">Qty {cart.quantity}</p>
+                                                                    <div className="flex">
+                                                                        <button 
+                                                                            type="button" 
+                                                                            className="font-medium text-[#885b56] hover:text-[#c78d87]"
+                                                                            // balikan mo to
+                                                                            onClick={() => handleRemoveCart()}
+                                                                        >
+                                                                            Remove
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    ))}
                                                 </div>
-                                            </li>
-                                            ))}
+                                            }
                                         </ul>
                                     </div>
                                 </div>
@@ -147,30 +106,34 @@ export default function Cart({open, setOpen, NavLink}) {
                             <div className="border-t border-gray-200 px-4 py-6 xsm:px-6 leading-relaxed">
                                 <div className="flex justify-between text-base font-medium text-gray-900">
                                     <p>Subtotal</p>
-                                    <p>$262.00</p>
+                                    <p>&#8369; {userCart.reduce((total, cart) => cart.price ? total + cart.price : total, 0)}</p>
                                 </div>
                                 <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                                 <div className="mt-6">
-                                    <NavLink
-                                        to="checkout"
-                                        className="flex items-center justify-center rounded-md border border-transparent bg-[#885b56] px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-[#c78d87]"
-                                        onClick={() => setOpen(false)}
-                                        >
-                                        Checkout
-                                    </NavLink>
-                                </div>
-                                <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
-                                    <p>
-                                    or{' '}
-                                    <button
-                                        type="button"
-                                        onClick={() => setOpen(false)}
-                                        className="font-medium text-[#885b56] hover:text-[#c78d87]"
-                                    >
-                                        Continue Shopping
-                                        <span aria-hidden="true"> &rarr;</span>
-                                    </button>
-                                    </p>
+                                    {userCart.length === 0 ? '' :
+                                        <div className="">
+                                            <NavLink
+                                                to="checkout"
+                                                className="flex items-center justify-center rounded-md border border-transparent bg-[#885b56] px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-[#c78d87]"
+                                                onClick={() => setOpen(false)}
+                                                >
+                                                Checkout
+                                            </NavLink>
+                                            <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
+                                                <p>
+                                                    or{' '}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setOpen(false)}
+                                                        className="font-medium text-[#885b56] hover:text-[#c78d87]"
+                                                    >
+                                                        Continue Shopping
+                                                        <span aria-hidden="true"> &rarr;</span>
+                                                    </button>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </div>

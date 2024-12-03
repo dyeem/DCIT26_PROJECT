@@ -5,6 +5,14 @@ import { useNavigate } from 'react-router-dom';
 import { userActions } from './RTK/user/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
+//avatar
+import boy from '../Assets/Avatar/boy.png'
+import girl from '../Assets/Avatar/girl.png'
+import manwithBeard from '../Assets/Avatar/man-with-beard.png'
+import manwithGlasses from '../Assets/Avatar/man-with-glasses.png'
+import womanwithGlasses from '../Assets/Avatar/woman-with-glasses.png'
+import woman from '../Assets/Avatar/woman.png'
+
 
 import loginPic from '../Assets/login.png' 
 
@@ -16,9 +24,21 @@ export default function Login() {
 
     const dispatch = useDispatch()
     
-    const [login, setLogin] = useState(null)  
+    const [login, setLogin] = useState(null)
+    const [profile, setProfile] = useState(null)  
+
     
     const navigate = useNavigate(); 
+
+    //avatar
+    const avatars = [
+        {   id: 1, src: boy, label: 'Mike'},
+        {   id: 2, src: girl, label: 'She'},
+        {   id: 3, src: manwithBeard, label: 'Wataoski'},
+        {   id: 4, src: manwithGlasses, label: 'Javis'},
+        {   id: 5, src: womanwithGlasses, label: 'Granny'},
+        {   id: 6, src: woman, label: 'Tanya'}
+    ]
 
     const [formValues, setFormValues] = useState({ 
         email: '',
@@ -26,11 +46,12 @@ export default function Login() {
         lastname: '',
         password: '',
         confirmPassword: '',
-        tel: ''
+        tel: '',
+        avatar: ''
     })
     
     useEffect(() => {
-        user.currentUser == null ? setLogin(false) : navigate('/')
+        user.currentUser == null ? setLogin(true) : navigate('/')
     }, [user.currentUser])
 
     function handleSubmit(e) {
@@ -49,7 +70,9 @@ export default function Login() {
                 firstname: formValues.firstname,
                 lastname: formValues.lastname,
                 password: formValues.password,
-                tel: formValues.tel
+                tel: formValues.tel,
+                avatar: formValues.avatar,
+                cart: null
             }));
             setLogin(true)
         }
@@ -60,7 +83,8 @@ export default function Login() {
             lastname: '',
             password: '',
             confirmPassword: '',
-            tel: ''
+            tel: '',
+            avatar: ''
         });
         console.log(formValues); 
     }
@@ -201,10 +225,11 @@ export default function Login() {
                                     class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-[#885b56] peer-focus:dark:text-[#885b56] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Confirm Password</label>
                                 </div>
                             </div>}
-
+                            
+                            {/* TELEPHONE */}
                             {!login ? 
                                 <div class="grid md:grid-cols-1 md:gap-6">
-                                    <div class="relative z-0 w-full mb-5 group">
+                                    <div class="relative z-0 w-full mb-6 group">
                                         <input 
                                         value={formValues.tel}
                                         onChange={(e) => setFormValues({ ...formValues, tel: e.target.value })}
@@ -220,7 +245,34 @@ export default function Login() {
                                     </div>
                                 </div>
                             : ""}
-                             <button
+                            {/* AVATAR */}
+                            {!login ? 
+                                <div class="grid md:grid-cols-1 md:gap-6">
+                                    <div class="relative z-0 w-full mb-5 group">
+                                        <label 
+                                            for="Avatar" 
+                                            class="peer-focus:font-medium absolute text-base text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-1 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-[#885b56] peer-focus:dark:text-[#885b56] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                                Choose your Avatar: 
+                                        </label>
+                                        <div className="grid xl:grid-cols-6 xsm:grid-cols-3 gap-4">
+                                            {avatars.map((av) => 
+                                                <div
+                                                    key={av.id}
+                                                    value={formValues.avatar = profile}
+                                                    onClick={() => setProfile(av.src)}
+                                                    className={`cursor-pointer p-2 rounded-lg ${
+                                                        profile === av.src ? 'ring-2 ring-[#885b56]' : ''}`}
+                                                    onChange={() => setFormValues({...formValues, avatar: e.target.value})}
+                                                >
+                                                    <img src={av.src} alt={av.label} className='w-16 h-16 rounded-full' />
+                                                    <p className='text-center font-medium text-gray-800'>{av.label}</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            : ""}
+                            <button
                                 onClick={(e) => handleSubmit(e)}
                                 type="submit" 
                                 class="text-white bg-[#885b56] hover:bg-[#cf9c96] focus:ring-4 focus:outline-none focus:ring-[#ce9993] font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center  place-self-center">

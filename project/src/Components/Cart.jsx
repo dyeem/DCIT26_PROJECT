@@ -4,6 +4,7 @@ import  emptyCartPic from '../Assets/empty-cart-pic.png'
 
 //redux
 import { useDispatch, useSelector } from 'react-redux'
+import { userActions } from './RTK/user/userSlice';
 
 export default function Cart({open, setOpen, NavLink}) {
 
@@ -15,10 +16,8 @@ export default function Cart({open, setOpen, NavLink}) {
 
     const dispatch = useDispatch()
 
-    function handleRemoveCart () {
-        // handle remove cart next mo na to
-
-        dispatch()
+    function handleRemoveCart (id) {
+        dispatch(userActions.removeUserListCart())
     }
 
 
@@ -87,7 +86,7 @@ export default function Cart({open, setOpen, NavLink}) {
                                                                             type="button" 
                                                                             className="font-medium text-[#885b56] hover:text-[#c78d87]"
                                                                             // balikan mo to
-                                                                            onClick={() => handleRemoveCart()}
+                                                                            onClick={() => handleRemoveCart(cart.id)}
                                                                         >
                                                                             Remove
                                                                         </button>

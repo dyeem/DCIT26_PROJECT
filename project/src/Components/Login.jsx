@@ -32,12 +32,12 @@ export default function Login() {
 
     //avatar
     const avatars = [
-        {   id: 1, src: boy, label: 'Mike'},
+        {   id: 1, src: boy, label: 'Merce'},
         {   id: 2, src: girl, label: 'She'},
         {   id: 3, src: manwithBeard, label: 'Wataoski'},
         {   id: 4, src: manwithGlasses, label: 'Javis'},
-        {   id: 5, src: womanwithGlasses, label: 'Granny'},
-        {   id: 6, src: woman, label: 'Tanya'}
+        {   id: 5, src: womanwithGlasses, label: 'Linda'},
+        {   id: 6, src: woman, label: 'Blair'}
     ]
 
     const [formValues, setFormValues] = useState({ 
@@ -92,7 +92,7 @@ export default function Login() {
     return (
         <>
             <div className="min-h-screen bg-gray-100 flex justify-center items-center leading-relaxed p-4">
-                <div className=" grid xl:grid-cols-2 lg:grid-cols-1 md:grid-cols-2 sm:grid-cols-1 xsm:grid-cols-1 justify-center items-center w-[90rem] p-4 bg-white rounded-xl shadow-xl m-1">
+                <div className=" grid xl:grid-cols-2 lg:grid-cols-1 bwlnx:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 xsm:grid-cols-1 justify-center items-center w-[90rem] p-4 bg-white rounded-xl shadow-xl m-1">
                     {/* left side */}
                     <div className="xsm:z-0 flex flex-col gap-y-2 justify-center items-center rounded-xl pb-11">
                         <form class="max-w-xl mx-auto">
@@ -254,13 +254,13 @@ export default function Login() {
                                             class="peer-focus:font-medium absolute text-base text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-1 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-[#885b56] peer-focus:dark:text-[#885b56] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                                                 Choose your Avatar: 
                                         </label>
-                                        <div className="grid xl:grid-cols-6 xsm:grid-cols-3 gap-4">
+                                        <div className="grid xl:grid-cols-6 xsm:grid-cols-2 sm:grid-cols-3 md:grid-cols-3 bwlnx:grid-col-4 lg:grid-cols-6 gap-4">
                                             {avatars.map((av) => 
                                                 <div
                                                     key={av.id}
                                                     value={formValues.avatar = profile}
                                                     onClick={() => setProfile(av.src)}
-                                                    className={`cursor-pointer p-2 rounded-lg ${
+                                                    className={`cursor-pointer p-2 rounded-lg flex flex-col justify-center items-center${
                                                         profile === av.src ? 'ring-2 ring-[#885b56]' : ''}`}
                                                     onChange={() => setFormValues({...formValues, avatar: e.target.value})}
                                                 >
@@ -272,12 +272,14 @@ export default function Login() {
                                     </div>
                                 </div>
                             : ""}
-                            <button
-                                onClick={(e) => handleSubmit(e)}
-                                type="submit" 
-                                class="text-white bg-[#885b56] hover:bg-[#cf9c96] focus:ring-4 focus:outline-none focus:ring-[#ce9993] font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center  place-self-center">
-                                    {login ? 'Login' : 'Signup'}
-                            </button>
+                            <div className="flex justify-center items-center">
+                                <button
+                                    onClick={(e) => handleSubmit(e)}
+                                    type="submit"
+                                    class="text-white bg-[#885b56] hover:bg-[#cf9c96] focus:ring-4 focus:outline-none focus:ring-[#ce9993] font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center  place-self-center">
+                                        {login ? 'Login' : 'Signup'}
+                                </button>
+                            </div>
                         </form>
                         <div className="text-gray-800 font-medium pt-20">
                             {
@@ -293,7 +295,7 @@ export default function Login() {
                         </div>  
                     </div>
                     {/* right side */}
-                    <div className="xsm:hidden sm:hidden md:block lg:block xl:block rounded-xl bg-[#CCCCCC] pb-11">
+                    <div className="xsm:hidden sm:hidden md:hidden bwlnx:block lg:hidden xl:block rounded-xl bg-[#CCCCCC] pb-11">
                         <div className=" xl:p-6 md:p-3 xsm:p-2 text-center flex flex-col gap-y-4">
                             <img src={loginPic} alt="" className='w-[70rem]'/>
                             <p className='text-gray-800 xl:text-4xl xsm:text-3xl font-bold'>{login ? 'Pick Where You Left Off!':'Become One Of Us!'}</p>

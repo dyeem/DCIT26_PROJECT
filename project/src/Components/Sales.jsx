@@ -5,6 +5,9 @@ import { fetchProducts } from "./RTK/Products/productSlice"
 import { cartActions } from './RTK/Cart/cartSlice'
 import { userActions } from "./RTK/user/userSlice"
 
+// TOASTER
+import toast, { Toaster } from 'react-hot-toast';
+
 
 import { useState} from 'react'
 import { Link } from "react-router-dom"
@@ -84,18 +87,19 @@ export default function Sales() {
 
   const dispatch = useDispatch()
 
-  
-  
-  
+  const AddToCart = () => toast.success('Successfully added to Cart!');
+  const [color, setColor] = useState("");
+
   useEffect(() => {
     dispatch(fetchProducts())
   }, [])
 
   function handleAddToCart(id, name, img, size, color, price) {
     dispatch(userActions.addToUserListCart({
-      email: currentUser.email, // Use the email of the logged-in user
-      product: { id, name, img, size, color, price }, // Pass product details
-  }));
+      email: currentUser.email, 
+      product: { id, name, img, size, color, price }, 
+    }));
+    AddToCart()
   }
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
@@ -312,10 +316,28 @@ export default function Sales() {
                                   <div className="flex flex-col xsm:text-[.8rem] xl:text-base md:text-base">
                                     <p className="font-semibold text-gray-900 xl:text-lg md:text-base">{product.name}</p>
                                     <p className="text-gray-500 font-normal">{product.size}</p>
-                                    <p className="text-gray-500 font-normal">{product.color}</p>
+
+                                    <select
+                                      name="color"
+                                      id="color-select"
+                                      onChange={(e) => setColor(e.target.value)}
+                                    >
+                                      <option value="" disabled selected>
+                                        Select a color
+                                      </option>
+                                      {product.color && Array.isArray(product.color) ? (
+                                        product.color.map((color, index) => (
+                                          <option key={index} value={color}>
+                                            {color}
+                                          </option>
+                                        ))
+                                      ) : (
+                                        <option disabled>No colors available</option>
+                                      )}
+                                    </select>
                                   </div>
                                   <button
-                                  onClick={() => handleAddToCart(product.id, product.name, product.image, product.size, product.color, product.price)} 
+                                  onClick={() => handleAddToCart(product.id, product.name, product.image, product.size, color, product.price)} 
                                   className="w-full px-3 py-2 bg-[#885b56] hover:bg-[#c08e89]  hover:text-white text-white transition duration-300 font-medium text-sm">Shop Now</button>
                                 </div>
                               </div>
@@ -327,6 +349,10 @@ export default function Sales() {
                 </div>
             </div>
           </section>
+          <Toaster
+            position="bottom-right"
+            reverseOrder={false}
+          />
         </main>
       </div>
     </div>

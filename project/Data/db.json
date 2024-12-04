@@ -2,11 +2,11 @@
   "Products": [
     {
       "id": 1,
-      "name": "Crochet Doll",
+      "name": "Baby Whale",
       "category": "Dolls",
-      "image": "./src/assets/avatar.jpg",
+      "image": "./src/assets/products/baby whale.png",
       "size": "Small",
-      "color": "Red",
+      "color": ["Red","Yellow","Black", "Pink", "Green"],
       "quantity": 10,
       "price": 25.00
     },

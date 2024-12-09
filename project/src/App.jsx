@@ -6,9 +6,6 @@ import store from "./Components/RTK/store.js";
 import LoadingEffect from "./Components/LoadingEffect.jsx";
 import router from "./Layouts/router.jsx";
 
-
-
-
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [fadeOut, setFadeOut] = useState(false);
@@ -16,11 +13,11 @@ function App() {
   useEffect(() => {
       const timer = setTimeout(() => {
       setFadeOut(true);
-      }, 2500); // Start fade-out 2.5s after loading screen shows
+      }, 2500); 
 
       const hideLoadingTimer = setTimeout(() => {
       setIsLoading(false);
-      }, 3000); // Hide loading screen after 3s
+      }, 3000); 
 
       return () => {
       clearTimeout(timer);
@@ -30,11 +27,11 @@ function App() {
 
   return (
     <>
-    <Provider store={store}>
-      {isLoading ? ( <LoadingEffect fadeOut={fadeOut} />) : (
-        <RouterProvider router={router}/>
-      )}
-    </Provider>
+      <Provider store={store}>
+        {isLoading ? ( <LoadingEffect fadeOut={fadeOut} />) : (
+          <RouterProvider router={router}/>
+        )}
+      </Provider>
 
     </>
   )

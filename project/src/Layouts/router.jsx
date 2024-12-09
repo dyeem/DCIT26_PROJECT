@@ -12,10 +12,8 @@ import ContactUs from "../Components/ContactUs.jsx";
 import Login from "../Components/Login.jsx";
 import Reviews from "../Components/Reviews.jsx";
 import Sales from "../Components/Sales.jsx";
-import Signup from "../Components/Signup.jsx";
 import OurTeam from "../Components/OurTeam.jsx";
 import FaqPage from "../Components/FaqPage.jsx";
-// import { productsLoader } from "../Components/Loader/ProductsLoader.js";
 
 //Root Layout
 import RootLayout from '../Layouts/RootLayout.jsx'

@@ -12,12 +12,15 @@ module.exports = {
         'xl': '1440px',
       },
       fontFamily: {
-        poppins: ['Poppins', 'sans-serif'], // Poppins as sans-serif font
+        poppins: ['Poppins', 'sans-serif'], 
         merriweather: ['Merriweather', 'serif'],
         serif: ['"Noto Serif"', 'serif'],
         playfair: ['"Playfair Display"', 'serif'],
+        lora: ['"Lora"', 'serif'],
+        roboto: ['"Roboto"', 'sans-serif'],
+        noto: ['"Noto Serif"', 'serif']
       },
-      
+    
     },
     keyframes: {
       slide: {

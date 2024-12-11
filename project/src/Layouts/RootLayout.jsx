@@ -18,7 +18,7 @@ export default function RootLayout() {
                     <NavBar NavLink={NavLink}/>
                 </nav>
             </header>
-            <main>
+            <main className="mt-[5rem]">
                 {!noBannerRoutes.includes(location.pathname) && <Banner />}
                 <Outlet />
             </main>

@@ -17,7 +17,7 @@ export default function NavBar() {
 
     return (
         <>
-            <div className="navbar bg-white sticky top-0 z-50 ">
+            <div className="navbar bg-white fixed top-0 z-20 ">
                 <div className="navbar-center">
                     <div className="drawer lg:hidden bg-tranparent ">
                         <input id="my-drawer" type="checkbox" className="drawer-toggle" />

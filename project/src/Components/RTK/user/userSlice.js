@@ -46,8 +46,14 @@ const userSlice = createSlice({
             }
         },
         removeUserListCart: (state, action) => {
-            
-        }
+            const { email, cartId } = action.payload; // Extract email and cart item ID
+            const user = state.usersList.find(user => user.email === email); // Find the user by email
+        
+            if (user) {
+                // If user found, filter out the item with the matching cartId
+                user.cart = user.cart.filter(item => item.id !== cartId);
+            }
+        },
     },
 });
 

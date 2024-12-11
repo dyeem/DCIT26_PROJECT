@@ -91,7 +91,7 @@ export default function Login() {
     
     return (
         <>
-            <div className="min-h-screen bg-gray-100 flex justify-center items-center leading-relaxed p-4">
+            <div className="mt-8 min-h-screen bg-gray-100 flex justify-center items-center leading-relaxed p-4">
                 <div className=" grid xl:grid-cols-2 lg:grid-cols-1 bwlnx:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 xsm:grid-cols-1 justify-center items-center w-[90rem] p-4 bg-white rounded-xl shadow-xl m-1">
                     {/* left side */}
                     <div className="xsm:z-0 flex flex-col gap-y-2 justify-center items-center rounded-xl pb-11">

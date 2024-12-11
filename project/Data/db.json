@@ -4,7 +4,7 @@
       "id": 1,
       "name": "Baby Whale",
       "category": "Dolls",
-      "image": "./src/assets/products/baby whale.png",
+      "image": "./src/assets/products/Keychain/baby whale.png",
       "size": "Small",
       "color": ["Red","Yellow","Black", "Pink", "Green"],
       "quantity": 10,

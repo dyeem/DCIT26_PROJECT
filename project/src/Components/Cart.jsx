@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { userActions } from './RTK/user/userSlice';
 
 export default function Cart({open, setOpen, NavLink}) {
+    const currentUseremail = useSelector((state) => state.user.currentUser?.email)
 
     const userCart = useSelector((state) => {
         const currentUserEmail = state.user.currentUser?.email; 
@@ -16,9 +17,15 @@ export default function Cart({open, setOpen, NavLink}) {
 
     const dispatch = useDispatch()
 
-    function handleRemoveCart (id) {
-        dispatch(userActions.removeUserListCart())
+    function handleRemoveCart(id) {
+        if (currentUseremail) {
+            dispatch(userActions.removeUserListCart({
+                email: currentUseremail, // User's email
+                cartId: id, // Item's id to remove
+            }));
+        }
     }
+    
 
 
   return (
@@ -71,8 +78,9 @@ export default function Cart({open, setOpen, NavLink}) {
                                                                         </h3>
                                                                         <p className="ml-4"> {cart ? `₱ ${cart.price}` : ""}</p>
                                                                     </div>
-                                                                    <p className="mt-1 text-sm text-gray-500">{cart.color}</p>
-                                                                    <p className="mt-1 text-sm text-gray-500">{cart.size}</p>
+                                                                    <p className="mt-1 text-sm text-gray-500">{cart.category}</p>
+                                                                    <p className="mt-1 text-sm text-gray-500">color: {cart.color}</p>
+                                                                    <p className="mt-1 text-sm text-gray-500">size: {cart.size}</p>
                                                                 </div>
                                                                 <div className="flex flex-1 items-end justify-between text-sm">
                                                                     <p className="text-gray-500">Qty {cart.quantity}</p>

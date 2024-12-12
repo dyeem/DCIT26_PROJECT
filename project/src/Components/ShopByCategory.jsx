@@ -43,8 +43,8 @@ export default function Categories () {
             {/* Carousel for xsm screens */}
             <div className="lg:hidden p-2">
                 <Swiper
-                spaceBetween={10}
-                slidesPerView={1}
+                spaceBetween={7}
+                slidesPerView={1.1}
                 loop={true}
                 className="w-full"
                 >

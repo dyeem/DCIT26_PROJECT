@@ -14,9 +14,14 @@ import Reviews from "../Components/Reviews.jsx";
 import Sales from "../Components/Sales.jsx";
 import OurTeam from "../Components/OurTeam.jsx";
 import FaqPage from "../Components/FaqPage.jsx";
+import OCPage from "../Components/OCPage.jsx";
+import Cart from "../Components/Cart.jsx";
+
 
 //Root Layout
 import RootLayout from '../Layouts/RootLayout.jsx'
+import SalesLayout from "./SalesLayout.jsx";
+import CheckoutLayout from "./CheckoutLayout.jsx";
 
 
 const router = createBrowserRouter(createRoutesFromElements(
@@ -25,13 +30,21 @@ const router = createBrowserRouter(createRoutesFromElements(
       <Route path="login" element={<Login />} />
       <Route index element={<MainContent />} />
       <Route path="aboutus" element={<AboutUs />} />
-      <Route path="checkout" element={<CheckOut />} />
       <Route path="contactus" element={<ContactUs />} />
       <Route path="reviews" element={<Reviews />} />
+
       {/* <Route path="sales" element={<Sales />} loader={productsLoader} /> */}
-      <Route path="sales" element={<Sales />}/>
+      <Route path="products" element={<SalesLayout />}>
+        <Route path="sales" element={<Sales />} />
+        <Route path="sales/checkout" element={<CheckoutLayout />}>
+          <Route path="" element={<CheckOut />} />
+          <Route path="orderconfirmationpage" element={<OCPage />} />
+        </Route>
+      </Route>
+
+
+
       <Route path="ourteam" element={<OurTeam />} />
-      <Route path="checkout" element={<CheckOut />}/>
       <Route path="faqpage" element={<FaqPage />}/>
     </Route>
   </>

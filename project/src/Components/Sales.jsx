@@ -5,12 +5,13 @@ import { fetchProducts } from "./RTK/Products/productSlice"
 import { cartActions } from './RTK/Cart/cartSlice'
 import { userActions } from "./RTK/user/userSlice"
 
+
 // TOASTER
 import toast, { Toaster } from 'react-hot-toast';
 
 import { HashLink } from 'react-router-hash-link';
 import { useState} from 'react'
-import { useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import {
   Dialog,
   Description,
@@ -124,7 +125,7 @@ export default function Sales() {
         {
           "id": 111,
           "name": "Baby Whale",
-          "image": "./src/assets/products/Keychain/baby whale.png",
+          "image": "/src/assets/products/Keychain/babywhale.png",
           "size": ["Small", "Medium", "Large"],
           "color": ["Red", "Yellow", "Black", "Pink", "Green"],
           "quantity": 10,
@@ -137,7 +138,7 @@ export default function Sales() {
         {
           "id": 112,
           "name": "Crochet Doll Clothes",
-          "image": "./src/assets/avatar.jpg",
+          "image": "/src/assets/avatar.jpg",
           "size": ["Small", "Medium", "Large"],
           "color": "Purple",
           "quantity": 14,
@@ -150,7 +151,7 @@ export default function Sales() {
         {
           "id": 113,
           "name": "Crochet Toy",
-          "image": "./src/assets/avatar.jpg",
+          "image": "/src/assets/avatar.jpg",
           "size": ["Small", "Medium", "Large"],
           "color": "Orange",
           "quantity": 4,
@@ -169,7 +170,7 @@ export default function Sales() {
         {
           "id": 211,
           "name": "Crochet Bouquet",
-          "image": "./src/assets/avatar.jpg",
+          "image": "/src/assets/avatar.jpg",
           "size": ["Small", "Medium", "Large"],
           "color": "Yellow",
           "quantity": 8,
@@ -182,7 +183,7 @@ export default function Sales() {
         {
           "id": 212,
           "name": "Crochet Flower Bouquet",
-          "image": "./src/assets/avatar.jpg",
+          "image": "/src/assets/avatar.jpg",
           "size": ["Small", "Medium", "Large"],
           "color": "Pink",
           "quantity": 13,
@@ -201,7 +202,7 @@ export default function Sales() {
         {
           "id": 311,
           "name": "Floral Hairclip",
-          "image": "./src/assets/avatar.jpg",
+          "image": "/src/assets/avatar.jpg",
           "size": ["Small", "Medium", "Large"],
           "color": "Pink",
           "quantity": 12,
@@ -214,7 +215,7 @@ export default function Sales() {
         {
           "id": 312,
           "name": "Pearl Hairpin",
-          "image": "./src/assets/avatar.jpg",
+          "image": "/src/assets/avatar.jpg",
           "size": ["Small", "Medium", "Large"],
           "color": "White",
           "quantity": 8,
@@ -227,7 +228,7 @@ export default function Sales() {
         {
           "id": 313,
           "name": "Bow Hairclip",
-          "image": "./src/assets/avatar.jpg",
+          "image": "/src/assets/avatar.jpg",
           "size": ["Small", "Medium", "Large"],
           "color": "Blue",
           "quantity": 10,
@@ -246,7 +247,7 @@ export default function Sales() {
         {
           "id": 411,
           "name": "Crochet Hat",
-          "image": "./src/assets/avatar.jpg",
+          "image": "/src/assets/avatar.jpg",
           "size": ["Small", "Medium", "Large"],
           "color": "Pink",
           "quantity": 6,
@@ -265,7 +266,7 @@ export default function Sales() {
         {
           "id": 511,
           "name": "Mini Teddy Bear Keychain",
-          "image": "./src/assets/avatar.jpg",
+          "image": "/src/assets/avatar.jpg",
           "size": ["Small", "Medium", "Large"],
           "color": "Brown",
           "quantity": 25,
@@ -278,7 +279,7 @@ export default function Sales() {
         {
           "id": 512,
           "name": "Leather Tassel Keychain",
-          "image": "./src/assets/avatar.jpg",
+          "image": "/src/assets/avatar.jpg",
           "size": ["Small", "Medium", "Large"],
           "color": "Black",
           "quantity": 18,
@@ -291,7 +292,7 @@ export default function Sales() {
         {
           "id": 513,
           "name": "Personalized Wooden Keychain",
-          "image": "./src/assets/avatar.jpg",
+          "image": "/src/assets/avatar.jpg",
           "size": ["Small", "Medium", "Large"],
           "color": "Natural Wood",
           "quantity": 15,
@@ -310,7 +311,7 @@ export default function Sales() {
         {
           "id": 611,
           "name": "Crochet Accessory",
-          "image": "./src/assets/avatar.jpg",
+          "image": "/src/assets/avatar.jpg",
           "size": ["Small", "Medium", "Large"],
           "color": "Green",
           "quantity": 15,
@@ -323,7 +324,7 @@ export default function Sales() {
         {
           "id": 612,
           "name": "Crochet Scarf",
-          "image": "./src/assets/avatar.jpg",
+          "image": "/src/assets/avatar.jpg",
           "size": ["Small", "Medium", "Large"],
           "color": "Black",
           "quantity": 7,
@@ -336,7 +337,7 @@ export default function Sales() {
         {
           "id": 613,
           "name": "Crochet Purse",
-          "image": "./src/assets/avatar.jpg",
+          "image": "/src/assets/avatar.jpg",
           "size": ["Small", "Medium", "Large"],
           "color": "Brown",
           "quantity": 20,
@@ -349,7 +350,7 @@ export default function Sales() {
         {
           "id": 614,
           "name": "Crochet Earrings",
-          "image": "./src/assets/avatar.jpg",
+          "image": "/src/assets/avatar.jpg",
           "size": ["Small", "Medium", "Large"],
           "color": "Gold",
           "quantity": 25,
@@ -368,7 +369,7 @@ export default function Sales() {
         {
           "id": 711,
           "name": "Crochet Jacket",
-          "image": "./src/assets/avatar.jpg",
+          "image": "/src/assets/avatar.jpg",
           "size": ["Small", "Medium", "Large"],
           "color": "Blue",
           "quantity": 5,
@@ -382,302 +383,302 @@ export default function Sales() {
     }
   ];
   
-  
-  
   const handleImageClick = (productId) => {
     setSelectedProductId(productId); 
     setIsOpen(true); 
   };
   
   return (
-    <div className="bg-white">
-      <div>
-        {/* Mobile filter dialog */}
-        <Dialog open={mobileFiltersOpen} onClose={setMobileFiltersOpen} className="relative z-40 lg:hidden">
-          <DialogBackdrop
-            transition
-            className="fixed inset-0 bg-black/25 transition-opacity duration-300 ease-linear data-[closed]:opacity-0"
-          />
-
-          <div className="fixed inset-0 z-40 flex">
-            <DialogPanel
+    <>
+      <div className="bg-white">
+        <div>
+          {/* Mobile filter dialog */}
+          <Dialog open={mobileFiltersOpen} onClose={setMobileFiltersOpen} className="relative z-40 lg:hidden">
+            <DialogBackdrop
               transition
-              className="relative ml-auto flex size-full max-w-xs transform flex-col overflow-y-auto bg-white py-4 pb-12 shadow-xl transition duration-300 ease-in-out data-[closed]:translate-x-full"
-            >
-              <div className="flex items-center justify-between px-4">
-                <h2 className="text-lg font-medium text-gray-900">Filters</h2>
-                <button
-                  type="button"
-                  onClick={() => setMobileFiltersOpen(false)}
-                  className="-mr-2 flex size-10 items-center justify-center rounded-md bg-white p-2 text-gray-400"
-                >
-                  <span className="sr-only">Close menu</span>
-                  <XMarkIcon aria-hidden="true" className="size-6" />
-                </button>
-              </div>
+              className="fixed inset-0 bg-black/25 transition-opacity duration-300 ease-linear data-[closed]:opacity-0"
+            />
 
-              {/* Filters */}
-              <form className="mt-4 border-t border-gray-200">
-                <h3 className="sr-only">Categories</h3>
-                <ul role="list" className="px-2 py-3 font-medium text-gray-900">
-                  {subCategories.map((category) => (
-                    <li key={category.name}>
-                      <a href={category.href} className="block px-2 py-3">
-                        {category.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-
-                {filters.map((section) => (
-                  <Disclosure key={section.id} as="div" className="border-t border-gray-200 px-4 py-6">
-                    <h3 className="-mx-2 -my-3 flow-root">
-                      <DisclosureButton className="group flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500">
-                        <span className="font-medium text-gray-900">{section.name}</span>
-                        <span className="ml-6 flex items-center">
-                          <PlusIcon aria-hidden="true" className="size-5 group-data-[open]:hidden" />
-                          <MinusIcon aria-hidden="true" className="size-5 [.group:not([data-open])_&]:hidden" />
-                        </span>
-                      </DisclosureButton>
-                    </h3>
-                    <DisclosurePanel className="pt-6">
-                      <div className="space-y-6">
-                        {section.options.map((option, optionIdx) => (
-                          <div key={option.value} className="flex items-center">
-                            <input
-                              defaultValue={option.value}
-                              defaultChecked={option.checked}
-                              id={`filter-mobile-${section.id}-${optionIdx}`}
-                              name={`${section.id}[]`}
-                              type="checkbox"
-                              className="size-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                            />
-                            <label
-                              htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
-                              className="ml-3 min-w-0 flex-1 text-gray-500"
-                            >
-                              {option.label}
-                            </label>
-                          </div>
-                        ))}
-                      </div>
-                    </DisclosurePanel>
-                  </Disclosure>
-                ))}
-              </form>
-            </DialogPanel>
-          </div>
-        </Dialog>
-
-        <main className="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
-          <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-5">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900">Products</h1>
-
-            <div className="flex items-center">
-              <Menu as="div" className="relative inline-block text-left">
-                <div>
-                  <MenuButton className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                    Sort
-                    <ChevronDownIcon
-                      aria-hidden="true"
-                      className="-mr-1 ml-1 size-5 shrink-0 text-gray-400 group-hover:text-gray-500"
-                    />
-                  </MenuButton>
+            <div className="fixed inset-0 z-40 flex">
+              <DialogPanel
+                transition
+                className="relative ml-auto flex size-full max-w-xs transform flex-col overflow-y-auto bg-white py-4 pb-12 shadow-xl transition duration-300 ease-in-out data-[closed]:translate-x-full"
+              >
+                <div className="flex items-center justify-between px-4">
+                  <h2 className="text-lg font-medium text-gray-900">Filters</h2>
+                  <button
+                    type="button"
+                    onClick={() => setMobileFiltersOpen(false)}
+                    className="-mr-2 flex size-10 items-center justify-center rounded-md bg-white p-2 text-gray-400"
+                  >
+                    <span className="sr-only">Close menu</span>
+                    <XMarkIcon aria-hidden="true" className="size-6" />
+                  </button>
                 </div>
 
-                <MenuItems
-                  transition
-                  className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
-                >
-                  <div className="py-1">
-                    {sortOptions.map((option) => (
-                      <MenuItem key={option.name}>
-                        <a
-                          href={option.href}
-                          className={classNames(
-                            option.current ? 'font-medium text-gray-900' : 'text-gray-500',
-                            'block px-4 py-2 text-sm data-[focus]:bg-gray-100 data-[focus]:outline-none',
-                          )}
-                        >
-                          {option.name}
-                        </a>
-                      </MenuItem>
-                    ))}
-                  </div>
-                </MenuItems>
-              </Menu>
-
-              <button type="button" className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7">
-                <span className="sr-only">View grid</span>
-                <Squares2X2Icon aria-hidden="true" className="size-5" />
-              </button>
-              <button
-                type="button"
-                onClick={() => setMobileFiltersOpen(true)}
-                className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
-              >
-                <span className="sr-only">Filters</span>
-                <FunnelIcon aria-hidden="true" className="size-5" />
-              </button>
-            </div>
-          </div>
-          <section aria-labelledby="products-heading" className="pb-24 pt-6" >
-            <h2 id="products-heading" className="sr-only">Products</h2>
-            <div className="flex flex-row gap-x-8 gap-y-10 ">
-              {/* Filters */}
-              <form className="hidden lg:block sticky top-0 right-0">
-                <h3 className="sr-only">Categories</h3>
-                <nav className="relative">
-                  <ul role="list" className="sticky top-0 space-y-4 border-b border-gray-200 pb-6 text-base font-medium text-gray-900">
-                    {products.map((category) => (
+                {/* Filters */}
+                <form className="mt-4 border-t border-gray-200">
+                  <h3 className="sr-only">Categories</h3>
+                  <ul role="list" className="px-2 py-3 font-medium text-gray-900">
+                    {subCategories.map((category) => (
                       <li key={category.name}>
-                        <HashLink smooth to={`#${category.name.replace(/\s+/g, '-')}`}>{category.name}</HashLink>
+                        <a href={category.href} className="block px-2 py-3">
+                          {category.name}
+                        </a>
                       </li>
                     ))}
                   </ul>
-                </nav>
-                {filters.map((section) => (
-                  <Disclosure key={section.id} as="div" className="border-b border-gray-200 py-6">
-                    <h3 className="-my-3 flow-root">
-                      <DisclosureButton className="group flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
-                        <span className="font-medium text-gray-900">{section.name}</span>
-                        <span className="ml-6 flex items-center">
-                          <PlusIcon aria-hidden="true" className="size-5 group-data-[open]:hidden" />
-                          <MinusIcon aria-hidden="true" className="size-5 [.group:not([data-open])_&]:hidden" />
-                        </span>
-                      </DisclosureButton>
-                    </h3>
-                    <DisclosurePanel className="pt-6">
-                      <div className="space-y-4">
-                        {section.options.map((option, optionIdx) => (
-                          <div key={option.value} className="flex items-center">
-                            <input
-                              defaultValue={option.value}
-                              defaultChecked={option.checked}
-                              id={`filter-${section.id}-${optionIdx}`}
-                              name={`${section.id}[]`}
-                              type="checkbox"
-                              className="size-4 rounded border-gray-300 text-[#885b56] focus:ring-[#885b56]"
-                            />
-                            <label htmlFor={`filter-${section.id}-${optionIdx}`} className="ml-3 text-sm text-gray-600">
-                              {option.label}
-                            </label>
+
+                  {filters.map((section) => (
+                    <Disclosure key={section.id} as="div" className="border-t border-gray-200 px-4 py-6">
+                      <h3 className="-mx-2 -my-3 flow-root">
+                        <DisclosureButton className="group flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500">
+                          <span className="font-medium text-gray-900">{section.name}</span>
+                          <span className="ml-6 flex items-center">
+                            <PlusIcon aria-hidden="true" className="size-5 group-data-[open]:hidden" />
+                            <MinusIcon aria-hidden="true" className="size-5 [.group:not([data-open])_&]:hidden" />
+                          </span>
+                        </DisclosureButton>
+                      </h3>
+                      <DisclosurePanel className="pt-6">
+                        <div className="space-y-6">
+                          {section.options.map((option, optionIdx) => (
+                            <div key={option.value} className="flex items-center">
+                              <input
+                                defaultValue={option.value}
+                                defaultChecked={option.checked}
+                                id={`filter-mobile-${section.id}-${optionIdx}`}
+                                name={`${section.id}[]`}
+                                type="checkbox"
+                                className="size-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                              />
+                              <label
+                                htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
+                                className="ml-3 min-w-0 flex-1 text-gray-500"
+                              >
+                                {option.label}
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+                      </DisclosurePanel>
+                    </Disclosure>
+                  ))}
+                </form>
+              </DialogPanel>
+            </div>
+          </Dialog>
+
+          <main className="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
+            <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-5">
+              <h1 className="text-4xl font-bold tracking-tight text-gray-900">Products</h1>
+
+              <div className="flex items-center">
+                <Menu as="div" className="relative inline-block text-left">
+                  <div>
+                    <MenuButton className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                      Sort
+                      <ChevronDownIcon
+                        aria-hidden="true"
+                        className="-mr-1 ml-1 size-5 shrink-0 text-gray-400 group-hover:text-gray-500"
+                      />
+                    </MenuButton>
+                  </div>
+
+                  <MenuItems
+                    transition
+                    className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                  >
+                    <div className="py-1">
+                      {sortOptions.map((option) => (
+                        <MenuItem key={option.name}>
+                          <a
+                            href={option.href}
+                            className={classNames(
+                              option.current ? 'font-medium text-gray-900' : 'text-gray-500',
+                              'block px-4 py-2 text-sm data-[focus]:bg-gray-100 data-[focus]:outline-none',
+                            )}
+                          >
+                            {option.name}
+                          </a>
+                        </MenuItem>
+                      ))}
+                    </div>
+                  </MenuItems>
+                </Menu>
+
+                <button type="button" className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7">
+                  <span className="sr-only">View grid</span>
+                  <Squares2X2Icon aria-hidden="true" className="size-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMobileFiltersOpen(true)}
+                  className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
+                >
+                  <span className="sr-only">Filters</span>
+                  <FunnelIcon aria-hidden="true" className="size-5" />
+                </button>
+              </div>
+            </div>
+            <section aria-labelledby="products-heading" className="pb-24 pt-6" >
+              <h2 id="products-heading" className="sr-only">Products</h2>
+              <div className="flex flex-row gap-x-8 gap-y-10 ">
+                {/* Filters */}
+                <form className="hidden lg:block sticky top-0 right-0">
+                  <h3 className="sr-only">Categories</h3>
+                  <nav className="relative">
+                    <ul role="list" className="sticky top-0 space-y-4 border-b border-gray-200 pb-6 text-base font-medium text-gray-900">
+                      {products.map((category) => (
+                        <li key={category.name}>
+                          <HashLink smooth to={`#${category.name.replace(/\s+/g, '-')}`}>{category.name}</HashLink>
+                        </li>
+                      ))}
+                    </ul>
+                  </nav>
+                  {filters.map((section) => (
+                    <Disclosure key={section.id} as="div" className="border-b border-gray-200 py-6">
+                      <h3 className="-my-3 flow-root">
+                        <DisclosureButton className="group flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                          <span className="font-medium text-gray-900">{section.name}</span>
+                          <span className="ml-6 flex items-center">
+                            <PlusIcon aria-hidden="true" className="size-5 group-data-[open]:hidden" />
+                            <MinusIcon aria-hidden="true" className="size-5 [.group:not([data-open])_&]:hidden" />
+                          </span>
+                        </DisclosureButton>
+                      </h3>
+                      <DisclosurePanel className="pt-6">
+                        <div className="space-y-4">
+                          {section.options.map((option, optionIdx) => (
+                            <div key={option.value} className="flex items-center">
+                              <input
+                                defaultValue={option.value}
+                                defaultChecked={option.checked}
+                                id={`filter-${section.id}-${optionIdx}`}
+                                name={`${section.id}[]`}
+                                type="checkbox"
+                                className="size-4 rounded border-gray-300 text-[#885b56] focus:ring-[#885b56]"
+                              />
+                              <label htmlFor={`filter-${section.id}-${optionIdx}`} className="ml-3 text-sm text-gray-600">
+                                {option.label}
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+                      </DisclosurePanel>
+                    </Disclosure>
+                  ))}
+                </form>
+
+                {/* Product grid */}
+                <div className="bg-white">
+                  <div className="leading-relaxed text-black mx-auto px-4 sm:px-4 max-w-full flex justify-center items-center">
+                    <div className="grid xl:grid-cols-1 lg:grid-cols-1 bwlnx:grid-cols-1 md:grid-cols-1 sm:grid-cols-1 xsm:grid-cols-1 xsm:gap-1 lg:p-4 group place-self-center">
+                        {products.map((product) => ( 
+                          <div className="" key={product.id} id={product.name.replace(/\s+/g, '-')}>
+                              <p className="text-4xl font-playfair">{product.name}</p>
+                              <div className="flex flex-wrap gap-x-4 p-4">
+                                {product.Items.map((prod) =>
+                                  <div className="bg-gray-100 p-4 " key={prod.id}>
+                                      <img onClick={() => handleImageClick(prod.id)} src={prod.image} alt="" className="w-56 cursor-pointer"/>
+                                      <p className="text-black text-lg font-noto">{prod.name}</p>
+                                      <p className="text-gray-800 font-noto">{prod.category}</p>
+                                      <p className="text-gray-800 ">₱{prod.price}.00</p>
+                                      <div className="flex flex-wrap">
+                                        <p>{prod.stars}</p>
+                                        <p>{prod.rating}</p>
+                                      </div>
+                                  </div>
+                                )}
+                              </div>
                           </div>
                         ))}
-                      </div>
-                    </DisclosurePanel>
-                  </Disclosure>
-                ))}
-              </form>
-
-              {/* Product grid */}
-              <div className="bg-white">
-                <div className="leading-relaxed text-black mx-auto px-4 sm:px-4 max-w-full flex justify-center items-center">
-                  <div className="grid xl:grid-cols-1 lg:grid-cols-1 bwlnx:grid-cols-1 md:grid-cols-1 sm:grid-cols-1 xsm:grid-cols-1 xsm:gap-1 lg:p-4 group place-self-center">
-                      {products.map((product) => ( 
-                        <div className="" key={product.id} id={product.name.replace(/\s+/g, '-')}>
-                            <p className="text-4xl font-playfair">{product.name}</p>
-                            <div className="flex flex-wrap gap-x-4 p-4">
-                              {product.Items.map((prod) =>
-                                <div className="bg-gray-100 p-4 " key={prod.id}>
-                                    <img onClick={() => handleImageClick(prod.id)} src={prod.image} alt="" className="w-56 cursor-pointer"/>
-                                    <p className="text-black text-lg font-noto">{prod.name}</p>
-                                    <p className="text-gray-800 font-noto">{prod.category}</p>
-                                    <p className="text-gray-800 ">₱{prod.price}.00</p>
-                                    <div className="flex flex-wrap">
-                                      <p>{prod.stars}</p>
-                                      <p>{prod.rating}</p>
-                                    </div>
-                                </div>
-                              )}
-                            </div>
-                        </div>
-                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
 
-          <div className={`${isOpen ? 'backdrop-blur-sm fixed z-30' : ''}  inset-0 bg-black/40 z-0`}>
-            <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50 text-gray-900">
-              <div className={`fixed inset-0 flex w-screen items-center justify-center transition-opacity duration-1000 ease-out 
-                ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-                }`}>
-                <DialogPanel className="max-w-5xl h-5xl space-y-2 border bg-gray-100 px-14 py-12 transform transition-all duration-300 ease-out">
-                  {selectedProductId && products.length > 0 ? (
-                    products
-                      .flatMap((category) => category.Items)
-                      .filter((prod) => prod.id === selectedProductId)
-                      .map((prod) => (
-                        <div key={prod.id}>
-                          <div className="flex flex-wrap justify-between">
-                            <DialogTitle className="font-noto text-base">Products {"/"} {prod.category} {"/"} {prod.name}</DialogTitle>
-                            <button title="close" className="text-2xl" onClick={() => setIsOpen(false)}>X</button>
-                          </div>
-                          <div className="flex flex-row gap-x-3">
-                            <img src={prod.image} alt="" className="w-96"/>
-                            <div className="p-3 flex flex-col gap-y-4">
-                              <p className="text-3xl font-noto">{prod.name}</p>
-                              <p>₱{prod.price}.00</p>
-                              <div className="flex flex-row gap-x-4">
-                                <select name="size" className="w-[10rem]" onChange={(e) => setSize(e.target.value)}>
-                                  <option value="none" disabled selected>
-                                    Select a size
-                                  </option>
-                                  {prod.size && Array.isArray(prod.size) ? (
-                                    prod.size.map((size, index) => (
-                                      <option key={index} value={size}>
-                                        {size}
-                                      </option>
-                                    ))
-                                  ) : (
-                                    <option disabled>No sizes available</option>
-                                  )}
-                                </select>
-                                <select name="color" className="w-[10rem]" onChange={(e) => setColor(e.target.value)}>
-                                  <option value="none" disabled selected>
-                                    Select a color
-                                  </option>
-                                  {prod.color && Array.isArray(prod.color) ? (
-                                    prod.color.map((color, index) => (
-                                      <option key={index} value={color}>
-                                        {color}
-                                      </option>
-                                    ))
-                                  ) : (
-                                    <option disabled>No colors available</option>
-                                  )}
-                                </select>
-                              </div>
-                              <div className="flex flex-wrap gap-x-2">
-                                <p className="text-yellow-400">{prod.stars}</p>
-                                <p >{prod.rating}</p>
-                              </div>
-                              <div className="">
-                                <p>Description</p>
-                                <p className="">{prod.description}</p>
-                              </div>
-                              <div className="flex self-center">
-                                <button onClick={() => handleAddToCart(prod.id, prod.name, prod.image, size, color, prod.price, prod.category)} className="bg-[#885B56] text-white font-light px-2 py-2 font-noto">Add To Cart</button>
+            <div className={`${isOpen ? 'backdrop-blur-sm fixed z-30' : ''}  inset-0 bg-black/40 z-0`}>
+              <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50 text-gray-900">
+                <div className={`fixed inset-0 flex w-screen items-center justify-center transition-opacity duration-1000 ease-out 
+                  ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                  }`}>
+                  <DialogPanel className="max-w-5xl h-5xl space-y-2 border bg-gray-100 px-14 py-12 transform transition-all duration-300 ease-out">
+                    {selectedProductId && products.length > 0 ? (
+                      products
+                        .flatMap((category) => category.Items)
+                        .filter((prod) => prod.id === selectedProductId)
+                        .map((prod) => (
+                          <div key={prod.id}>
+                            <div className="flex flex-wrap justify-between">
+                              <DialogTitle className="font-noto text-base">Products {"/"} {prod.category} {"/"} {prod.name}</DialogTitle>
+                              <button title="close" className="text-2xl" onClick={() => setIsOpen(false)}>X</button>
+                            </div>
+                            <div className="flex flex-row gap-x-3">
+                              <img src={prod.image} alt="" className="w-96"/>
+                              <div className="p-3 flex flex-col gap-y-4">
+                                <p className="text-3xl font-noto">{prod.name}</p>
+                                <p>₱{prod.price}.00</p>
+                                <div className="flex flex-row gap-x-4">
+                                  <select name="size" className="w-[10rem]" onChange={(e) => setSize(e.target.value)}>
+                                    <option value="none" disabled selected>
+                                      Select a size
+                                    </option>
+                                    {prod.size && Array.isArray(prod.size) ? (
+                                      prod.size.map((size, index) => (
+                                        <option key={index} value={size}>
+                                          {size}
+                                        </option>
+                                      ))
+                                    ) : (
+                                      <option disabled>No sizes available</option>
+                                    )}
+                                  </select>
+                                  <select name="color" className="w-[10rem]" onChange={(e) => setColor(e.target.value)}>
+                                    <option value="none" disabled selected>
+                                      Select a color
+                                    </option>
+                                    {prod.color && Array.isArray(prod.color) ? (
+                                      prod.color.map((color, index) => (
+                                        <option key={index} value={color}>
+                                          {color}
+                                        </option>
+                                      ))
+                                    ) : (
+                                      <option disabled>No colors available</option>
+                                    )}
+                                  </select>
+                                </div>
+                                <div className="flex flex-wrap gap-x-2">
+                                  <p className="text-yellow-400">{prod.stars}</p>
+                                  <p >{prod.rating}</p>
+                                </div>
+                                <div className="">
+                                  <p>Description</p>
+                                  <p className="">{prod.description}</p>
+                                </div>
+                                <div className="flex self-center">
+                                  <button onClick={() => handleAddToCart(prod.id, prod.name, prod.image, size, color, prod.price, prod.category)} className="bg-[#885B56] text-white font-light px-2 py-2 font-noto">Add To Cart</button>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      ))
-                  ) : (
-                    <p>No products available</p>
-                  )}
-                </DialogPanel>
-              </div>
-            </Dialog>
-          </div>
-          <Toaster
-            position="bottom-right"
-            reverseOrder={false}
-          />
-        </main>
+                        ))
+                    ) : (
+                      <p>No products available</p>
+                    )}
+                  </DialogPanel>
+                </div>
+              </Dialog>
+            </div>
+            <Toaster
+              position="top-right"
+              reverseOrder={false}
+            />
+          </main>
+        </div>
       </div>
-    </div>
+    </>
   )
 }

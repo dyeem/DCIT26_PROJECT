@@ -44,7 +44,7 @@ export default function NavBar() {
                                 <NavLink to="/" className='text-black text-xl font-serif'>Home</NavLink>
                             </li>
                             <li>
-                                <NavLink to="sales" className='text-black text-xl font-serif'> Shop Now</NavLink>
+                                <NavLink to="products/sales" className='text-black text-xl font-serif'> Shop Now</NavLink>
                             </li>
                             <li>
                                 <NavLink to="reviews" className='text-black text-xl font-serif'>Reviews</NavLink>
@@ -101,7 +101,7 @@ export default function NavBar() {
                     </ul>
                 </div>
                 <div className="navbar-center">
-                    <NavLink to="/" className="btn btn-ghost lg:text-4xl xsm:text-2xl xsm:font-normal sm:text-xl md:text-2xl relative group hover:bg-transparent text-black lg:font-medium font-serif text-center">LOOP
+                    <NavLink to="/" className="btn btn-ghost lg:text-4xl xsm:text-2xl xsm:font-normal sm:text-xl md:text-2xl relative group hover:bg-transparent text-black lg:font-medium font-serif text-center lg:ml-20 xsm:ml-12">LOOPS
                         <span
                             className="absolute bottom-0 left-0 h-[2px] w-0 bg-black transition-all duration-300 group-hover:w-full"
                         />
@@ -111,7 +111,7 @@ export default function NavBar() {
                 <div className='navbar-end'>
                     <ul className="menu menu-horizontal px-1 hidden lg:flex">
                         <li>
-                            <NavLink to="sales" className='relative group btn btn-ghost text-black text-xl  hover:bg-transparent font-normal'>Shop Now
+                            <NavLink to="products/sales" className='relative group btn btn-ghost text-black text-xl  hover:bg-transparent font-normal'>Shop Now
                                 <span
                                     className="absolute bottom-0 left-0 h-[2px] w-0 bg-black transition-all duration-300 group-hover:w-full"
                                 />

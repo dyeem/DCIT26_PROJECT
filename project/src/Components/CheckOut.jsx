@@ -1,99 +1,68 @@
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
+//assets
 import avatar from '../Assets/avatar.jpg'
+import carticon from '../Assets/cart.png'
 export default function CheckOut() {
-        const items = [
-          {
-            id: 1,
-            name: 'Micro Backpack',
-            description: 'Moss',
-            size: '5L',
-            price: 70.0,
-            image: avatar, // Replace with actual image URL
-          },
-          {
-            id: 2,
-            name: 'Small Stuff Satchel',
-            description: 'Sand',
-            size: '18L',
-            price: 180.0,
-            image: avatar, // Replace with actual image URL
-          },
-          {
-            id: 3,
-            name: 'Carry Clutch',
-            description: 'White and Black',
-            size: 'Small',
-            price: 70.0,
-            image: avatar, // Replace with actual image URL
-          },
-          {
-            id: 3,
-            name: 'Carry Clutch',
-            description: 'White and Black',
-            size: 'Small',
-            price: 70.0,
-            image: avatar, // Replace with actual image URL
-          },
-          {
-            id: 3,
-            name: 'Carry Clutch',
-            description: 'White and Black',
-            size: 'Small',
-            price: 70.0,
-            image: avatar, // Replace with actual image URL
-          },
-          {
-            id: 3,
-            name: 'Carry Clutch',
-            description: 'White and Black',
-            size: 'Small',
-            price: 70.0,
-            image: avatar, // Replace with actual image URL
-          },
-        ];
-      
-        const subtotal = items.reduce((sum, item) => sum + item.price, 0);
-        const shipping = 15.0;
-        const taxes = 26.8;
-        const total = subtotal + shipping + taxes;
+    const navigate = useNavigate()
+
+    const userCart = useSelector((state) => {
+        const currentUserEmail = state.user.currentUser?.email; 
+        const user = state.user.usersList.find(user => user.email === currentUserEmail); 
+        return user?.cart || []; 
+    });
+
+    const userCartlength = userCart.length;
+
     return(
         <>
-            <div className="min-h-screen flex justify-center items-center bg-white">
-                <div className="max-w-[90rem] w-full m-5 rounded-2xl shadow-xl bg-gray-100">
+            <div className="min-h-screen flex flex-col justify-center items-center bg-white">
+                <div className="w-full container p-4">
+                    <p onClick={() => navigate("/products/sales")} className='text-gray-800 cursor-pointer px-2 py-2 font-semibold'>{"<"} Back to Products</p>
+                </div>
+                <div className="max-w-[90rem] w-full m-5 rounded-2xl shadow-xl bg-white">
                     {/*grid container */}
-                    <div className="grid lg:grid-cols-2 xsm:grid-cols-1 lg:grid-flow-col xsm:grid-flow-row text-center">
+                    <div className="grid lg:grid-cols-2 xsm:grid-cols-1 lg:grid-flow-col xsm:grid-flow-row">
                         {/*left side */}
                         <div className="lg:order-1 xsm:order-2 lg:p-10 xsm:p-10">
                                 {/*Payment details */}
-                            <p className="text-balance lg:text-[1.5rem] font-normal tracking-tight text-gray-900 xsm:text-3xl text-left">Contact Information</p>
-                            <form>
+                            <p className="text-balance xl:text-[2rem] font-normal tracking-tight text-gray-900 xsm:text-3xl text-left">Contact Information</p>
+                            <form className="max-w-lg mx-auto">
                                 <div className="mt-[2rem]">
-                                    <div className="">
-                                        <label htmlFor="first-name" className="block text-left text-sm/6 font-semibold text-gray-600">
+                                    <div class="relative z-0 w-full mb-5 group">
+                                        <input 
+                                            type="email" 
+                                            name="floating_email" 
+                                            id="floating_email" 
+                                            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
+                                            placeholder=" " 
+                                            required 
+                                        />
+                                    
+                                        <label 
+                                            for="floating_email" 
+                                            class="peer-focus:font-medium text-left absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-[#885b56] peer-focus:dark:text-[#885b56] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                            >
                                             Email Address
                                         </label>
-                                        <div className="mt-2.5">
-                                            <input
-                                                id="first-name"
-                                                name="first-name"
-                                                type="text"
-                                                autoComplete="given-name"
-                                                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                                            />
-                                        </div>
                                     </div>
-                                    <div className="">
-                                        <label htmlFor="phone-number" className="block text-left text-sm/6 font-semibold text-gray-600">
+                                    <div class="relative z-0 w-full mb-5 group">
+                                        <input 
+                                            type="tel" 
+                                            name="floating_email" 
+                                            id="floating_email" 
+                                            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
+                                            placeholder=" " 
+                                            required 
+                                        />
+                                    
+                                        <label 
+                                            for="floating_email" 
+                                            class="peer-focus:font-medium text-left absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-[#885b56] peer-focus:dark:text-[#885b56] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                            >
                                             Phone Number
                                         </label>
-                                        <div className="mt-2.5">
-                                            <input
-                                                id="phone-number"
-                                                name="phone-number"
-                                                type="text"
-                                                autoComplete="given-name"
-                                                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                                            />
-                                        </div>
                                     </div>
                                 </div>
                                 {/*Payment details */}
@@ -110,7 +79,7 @@ export default function CheckOut() {
                                                     name="payment-method"
                                                     type="radio"
                                                     value="cash"
-                                                    className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                                    className="h-4 w-4 border-gray-300 text-[#885b56] focus:ring-[#885b56]"
                                                 />
                                                 <label htmlFor="cash" className="ml-3 block text-sm font-medium text-gray-700">
                                                     Cash
@@ -122,7 +91,7 @@ export default function CheckOut() {
                                                     name="payment-method"
                                                     type="radio"
                                                     value="gcash"
-                                                    className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                                    className="h-4 w-4 border-gray-300 text-[#885b56] focus:ring-[#885b56]"
                                                 />
                                                 <label htmlFor="gcash" className="ml-3 block text-sm font-medium text-gray-700">
                                                     GCash
@@ -134,7 +103,7 @@ export default function CheckOut() {
                                                     name="payment-method"
                                                     type="radio"
                                                     value="credit-card"
-                                                    className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                                    className="h-4 w-4 border-gray-300 text-[#885b56] focus:ring-[#885b56]"
                                                 />
                                                 <label htmlFor="credit-card" className="ml-3 block text-sm font-medium text-gray-700">
                                                     Credit Card
@@ -149,87 +118,101 @@ export default function CheckOut() {
                                             Shipping Address
                                         </p>
                                     </div>
-
                                     {/* Address */}
-                                    <div>
-                                        <label htmlFor="address" className="block text-left text-sm/6 font-semibold text-gray-600">
+                                    <div class="relative z-0 w-full mb-5 group">
+                                        <input 
+                                            type="tel" 
+                                            name="floating_email" 
+                                            id="floating_email" 
+                                            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
+                                            placeholder=" " 
+                                            required 
+                                        />
+                                    
+                                        <label 
+                                            for="floating_email" 
+                                            class="peer-focus:font-medium text-left absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-[#885b56] peer-focus:dark:text-[#885b56] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                            >
                                             Address
                                         </label>
-                                        <div className="mt-2.5">
-                                            <input
-                                                id="address"
-                                                name="address"
-                                                type="text"
-                                                autoComplete="address"
-                                                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                                            />
-                                        </div>
                                     </div>
 
                                     {/* Street */}
-                                    <div className="mt-4">
-                                        <label htmlFor="street" className="block text-left text-sm/6 font-semibold text-gray-600">
-                                            Street, Apartment, etc.
+                                    <div class="relative z-0 w-full mb-5 group">
+                                        <input 
+                                            type="tel" 
+                                            name="address" 
+                                            id="floating_email" 
+                                            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
+                                            placeholder=" " 
+                                            required 
+                                        />
+                                    
+                                        <label 
+                                            for="floating_email" 
+                                            class="peer-focus:font-medium text-left absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-[#885b56] peer-focus:dark:text-[#885b56] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                            >
+                                            Street, Address, Etc.
                                         </label>
-                                        <div className="mt-2.5">
-                                            <input
-                                                id="street"
-                                                name="street"
-                                                type="text"
-                                                autoComplete="street-address"
-                                                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                                            />
-                                        </div>
                                     </div>
 
                                     {/* City, Province, Postal Code */}
                                     <div className="mt-4 flex xms:flex-wrap gap-2">
                                         {/* City */}
-                                        <div className="lg:w-[33%] xsm:w-full">
-                                            <label htmlFor="city" className="block text-left text-sm/6 font-semibold text-gray-600">
+                                        <div class="relative z-0 w-full mb-5 group">
+                                            <input 
+                                                type="tel" 
+                                                name="floating_email" 
+                                                id="floating_email" 
+                                                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
+                                                placeholder=" " 
+                                                required 
+                                            />
+                                        
+                                            <label 
+                                                for="floating_email" 
+                                                class="peer-focus:font-medium text-left absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-[#885b56] peer-focus:dark:text-[#885b56] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                                >
                                                 City
                                             </label>
-                                            <div className="mt-2.5">
-                                                <input
-                                                    id="city"
-                                                    name="city"
-                                                    type="text"
-                                                    autoComplete="address-level2"
-                                                    className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                                                />
-                                            </div>
                                         </div>
 
                                         {/* Province */}
-                                        <div className="lg:w-[33%] xsm:w-full">
-                                            <label htmlFor="province" className="block text-left text-sm/6 font-semibold text-gray-600">
-                                                Province
+                                        <div class="relative z-0 w-full mb-5 group">
+                                            <input 
+                                                type="tel" 
+                                                name="floating_email" 
+                                                id="floating_email" 
+                                                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
+                                                placeholder=" " 
+                                                required 
+                                            />
+                                        
+                                            <label 
+                                                for="floating_email" 
+                                                class="peer-focus:font-medium text-left absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-[#885b56] peer-focus:dark:text-[#885b56] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                                >
+                                            Province
                                             </label>
-                                            <div className="mt-2.5">
-                                                <input
-                                                    id="province"
-                                                    name="province"
-                                                    type="text"
-                                                    autoComplete="address-level1"
-                                                    className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                                                />
-                                            </div>
                                         </div>
 
                                         {/* Postal Code */}
-                                        <div className="lg:w-[33%] xsm:w-full">
-                                            <label htmlFor="postal-code" className="block text-left text-sm/6 font-semibold text-gray-600">
+                                        <div class="relative z-0 w-full mb-5 group">
+                                            <input 
+                                                type="tel" 
+                                                name="floating_email" 
+                                                id="floating_email" 
+                                                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
+                                                placeholder=" " 
+                                                required 
+                                            />
+                                        
+                                            <label 
+                                                for="floating_email" 
+                                                class="peer-focus:font-medium text-left absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-[#885b56] peer-focus:dark:text-[#885b56] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                                                >
                                                 Postal Code
                                             </label>
-                                            <div className="mt-2.5">
-                                                <input
-                                                    id="postal-code"
-                                                    name="postal-code"
-                                                    type="text"
-                                                    autoComplete="postal-code"
-                                                    className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
-                                                />
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -244,7 +227,7 @@ export default function CheckOut() {
                                             name="billing-info"
                                             type="checkbox"
                                             value="save-billing-info"
-                                            className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600 rounded-xl"
+                                            className="h-4 w-4 border-gray-300 text-[#885b56] focus:ring-[#885b56] rounded-xl"
                                         />
                                         <label htmlFor="save-billing-info" className="ml-2 block text-sm font-medium text-gray-700">
                                             Save as billing information
@@ -252,51 +235,56 @@ export default function CheckOut() {
                                     </div>
                                 </div>
                                 <div className="mt-[2rem]">
-                                    <hr className="my-6 border-t-2 border-gray-400" />
+                                    <hr className="my-6 border-t-2 border-[#885b56]" />
                                 </div>
-                                <div className="mt-[2rem] flex justify-between p-10">
-                                    <p className="tracking-light text-gray-500 text-base">You wont be charged until the next step</p>
-                                    <button className="btn ng-indigo-600">Next</button>
+                                <div className="mt-[2rem] flex justify-center items-center">
+                                    <button onClick={() => navigate("/products/sales/checkout/orderconfirmationpage")} className="bg-[#885b56] text-lg text-white px-3 py-2 font-noto">Checkout</button>
                                 </div>
                             </form>
                         </div>
                         {/*right side */}
-                        <div className="lg:order-2 xsm:order-1 lg:p-10 xsm:p-10 bg-gray-300 rounded-2xl shadow-xl">
-                            <p className="text-balance lg:text-[1.5rem] font-normal tracking-tight text-gray-900 xsm:text-3xl text-left">Order Summary</p>
+                        <div className="lg:order-2 xsm:order-1 lg:p-10 xsm:p-10 bg-gray-100 rounded-2xl shadow-xl">
+                            <p className="text-balance xl:text-[2] font-normal tracking-tight text-gray-900 xsm:text-3xl text-left">Order Summary</p>
+                            <hr className="my-4 border-t-2 border-[#885b56]" />
+                            <div className="flex flex-wrap items-center">
+                                <img src={carticon} alt="" className="w-8"/>
+                                <p className='text-gray-800 font-semibold text-base'>{userCartlength} item(s) in cart</p>
+                            </div>
                             <div className="mt-5">
-                                <div className="divide-y divide-gray-200">
-                                    {items.map((item) => (
-                                        <div key={item.id} className="flex items-center py-4">
-                                            <img
-                                            src={item.image}
-                                            alt={item.name}
-                                            className="lg:h-20 lg:w-20 xsm:h-14 xsm:w-14 object-cover rounded-md"
-                                            />
-                                            <div className="ml-4 flex-grow text-left">
-                                                    <p className="lg:text-lg xsm:text-base font-semibold text-gray-900">{item.name}</p>
-                                                    <p className="lg:text-sm xsm:text-sm text-gray-500">{item.description}</p>
-                                                    <p className="lg:text-sm xsm:text-sm text-gray-500">{item.size}</p>
+                                <div className="divide-y divide-[#885b56]">
+                                    {!userCart || userCart.length === 0 ? 
+                                        navigate("/login")
+                                    :
+                                        userCart.map((cart) => (
+                                            <div key={cart.id} className="flex items-center py-4">
+                                                <img
+                                                    src={cart.img}
+                                                    alt={cart.name}
+                                                    className="lg:h-20 lg:w-20 xsm:h-14 xsm:w-14 object-cover rounded-md"/>
+                                                <div className="ml-4 flex-grow text-left">
+                                                        <p className="lg:text-lg xsm:text-base font-semibold text-gray-900">{cart.name}</p>
+                                                        <p className="lg:text-sm xsm:text-sm text-gray-500">{cart.category}</p>
+                                                        <p className="lg:text-sm xsm:text-sm text-gray-500">{cart.size}</p>
+                                                        <p className="lg:text-sm xsm:text-sm text-gray-500">{cart.color}</p>
+                                                </div>
+                                                <p className="lg:text-lg xsm:text-base font-medium text-gray-900">₱{cart.price.toFixed(2)}</p>
                                             </div>
-                                            <p className="lg:text-lg xsm:text-base font-medium text-gray-900">${item.price.toFixed(2)}</p>
+                                            
+                                        ))
+                                    }
+                                    <div className="py-3">
+                                        <div className="flex justify-between text-base text-gray-800">
+                                            <p className='font-semibold'>Subtotal: </p>
+                                            <p>₱{userCart.reduce((total, cart) => cart.price ? total + cart.price : total, 0)}.00</p>
                                         </div>
-                                    ))}
-                                    <div className="py-4">
-                                        <div className="flex justify-between text-base text-gray-600">
-                                            <p>Subtotal</p>
-                                            <p>${subtotal.toFixed(2)}</p>
-                                        </div>
-                                        <div className="flex justify-between text-base text-gray-600">
-                                            <p>Shipping</p>
-                                            <p>${shipping.toFixed(2)}</p>
-                                        </div>
-                                        <div className="flex justify-between text-base text-gray-600">
-                                            <p>Taxes</p>
-                                            <p>${taxes.toFixed(2)}</p>
+                                        <div className="flex justify-between text-base text-gray-800">
+                                            <p className='font-semibold'>Shipping: </p>
+                                            <p>₱36.00</p>
                                         </div>
                                     </div>
-                                    <div className="border-t pt-4 flex justify-between text-lg font-semibold text-gray-900">
-                                        <p>Total</p>
-                                        <p>${total.toFixed(2)}</p>
+                                    <div className="pt-2 flex justify-between text-lg font-semibold text-gray-900">
+                                        <p>Total:</p>
+                                        <p>₱{userCart.reduce((total, cart) => cart.price ? total + cart.price : total, 0)}.00</p>
                                     </div>
                                 </div>
                             </div>

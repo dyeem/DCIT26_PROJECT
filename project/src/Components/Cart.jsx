@@ -6,14 +6,18 @@ import  emptyCartPic from '../Assets/empty-cart-pic.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { userActions } from './RTK/user/userSlice';
 
+import { useNavigate } from 'react-router-dom';
+
 export default function Cart({open, setOpen, NavLink}) {
+
+    const navigate = useNavigate()
     const currentUseremail = useSelector((state) => state.user.currentUser?.email)
 
     const userCart = useSelector((state) => {
         const currentUserEmail = state.user.currentUser?.email; 
         const user = state.user.usersList.find(user => user.email === currentUserEmail); 
         return user?.cart || []; 
-      });
+    });
 
     const dispatch = useDispatch()
 
@@ -26,7 +30,10 @@ export default function Cart({open, setOpen, NavLink}) {
         }
     }
     
-
+    function handleCheckout () {
+        setOpen(false)
+        navigate("products/sales/checkout")
+    }
 
   return (
     <Dialog open={open} onClose={() => setOpen(false)} className="relative z-50">
@@ -88,9 +95,7 @@ export default function Cart({open, setOpen, NavLink}) {
                                                                         <button 
                                                                             type="button" 
                                                                             className="font-medium text-[#885b56] hover:text-[#c78d87]"
-                                                                            // balikan mo to
-                                                                            onClick={() => handleRemoveCart(cart.id)}
-                                                                        >
+                                                                            onClick={() => handleRemoveCart(cart.id)}>
                                                                             Remove
                                                                         </button>
                                                                     </div>
@@ -114,13 +119,12 @@ export default function Cart({open, setOpen, NavLink}) {
                                 <div className="mt-6">
                                     {userCart.length === 0 ? '' :
                                         <div className="">
-                                            <NavLink
-                                                to="checkout"
+                                            <p
                                                 className="flex items-center justify-center rounded-md border border-transparent bg-[#885b56] px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-[#c78d87]"
-                                                onClick={() => setOpen(false)}
+                                                onClick={() => handleCheckout(false)}
                                                 >
                                                 Checkout
-                                            </NavLink>
+                                            </p>
                                             <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                                                 <p>
                                                     or{' '}

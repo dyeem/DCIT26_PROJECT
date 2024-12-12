@@ -95,7 +95,7 @@ export default function Login() {
                 <div className=" grid xl:grid-cols-2 lg:grid-cols-1 bwlnx:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 xsm:grid-cols-1 justify-center items-center w-[90rem] p-4 bg-white rounded-xl shadow-xl m-1">
                     {/* left side */}
                     <div className="xsm:z-0 flex flex-col gap-y-2 justify-center items-center rounded-xl pb-11">
-                        <form class="max-w-xl mx-auto">
+                        <form className="max-w-xl mx-auto">
                             <div className="py-10 gap-y-3 flex flex-col sm:text-center xsm:text-center">
                                 <p className='text-gray-800 xl:text-5xl font-bold sm:text-4xl xsm:text-3xl'>
                                     {login ? "Welcome Back!" : "Welcome To Loop!"}

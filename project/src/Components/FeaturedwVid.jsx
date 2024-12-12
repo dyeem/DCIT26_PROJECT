@@ -17,7 +17,7 @@ export default function FeaturedVidComponent() {
                         every stitch tells a story.
                     </p>
                     <Link
-                        to="sales"
+                        to="products/sales"
                         className="bg-[#885b56] hover:bg-[#b8817b] text-white px-4 py-2 shadow-xl text-lg"
                     >
                         Shop Crochet

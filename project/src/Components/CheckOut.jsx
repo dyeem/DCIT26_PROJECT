@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 //assets
 import avatar from '../Assets/avatar.jpg'
 import carticon from '../Assets/cart.png'
+
 export default function CheckOut() {
     const navigate = useNavigate()
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 //redux
-import { userActions } from './RTK/user/userSlice';
+import { userActions } from './RTK/User/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 //avatar

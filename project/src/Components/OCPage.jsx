@@ -4,11 +4,16 @@ import tel from '../Assets/tel.png'
 
 import barcode from '../Assets/barcode.png'
 
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
+import { userActions } from './RTK/User/userSlice'
+
 export default function OCPage() {
+
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+
     const userCart = useSelector((state) => {
         const currentUserEmail = state.user.currentUser?.email; 
         const user = state.user.usersList.find(user => user.email === currentUserEmail); 
@@ -16,6 +21,15 @@ export default function OCPage() {
     });
 
     const currentUseremail = useSelector((state) => state.user.currentUser?.email)
+
+    function handleClearUserCart() {
+        dispatch(userActions.removeUserCart({
+            email: currentUseremail, // Email of the user whose cart you want to clear
+        }));
+        navigate("/"); // Navigate to the desired page after clearing the cart
+    }
+    
+
 
     return (
         <>
@@ -92,7 +106,7 @@ export default function OCPage() {
                             <button className='font-semibold rounded-md border border-gray-600 text-black w-full py-4 text-lg font-noto'>Print Order Details</button>
                             <button className='font-semibold rounded-md border border-gray-600 text-black w-full py-4 text-lg font-noto'>Cancel Order</button>
                             <button className='font-semibold flex flex-row justify-center gap-x-1 items-center rounded-md border border-gray-600 text-black w-full py-4 text-lg font-noto'><img src={tel} alt="" className='w-5 '/> +63 13456798</button>
-                            <button className='font-semibold rounded-md bg-[#885b56] text-white w-full py-4 text-lg font-noto'>Back to Home</button>
+                            <button onClick={() => handleClearUserCart() } className='font-semibold rounded-md bg-[#885b56] text-white w-full py-4 text-lg font-noto'>Back to Home</button>
                         </div>
                     </div>
                 </div>

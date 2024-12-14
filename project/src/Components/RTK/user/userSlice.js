@@ -2,7 +2,17 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     currentUser: null, 
-    usersList: [], 
+    usersList: [
+        {
+            email: "admin@test.com",
+            firstname: "john mark",
+            lastname: "navajas",
+            password: "123",
+            tel: "123",
+            avatar: null,
+            cart: null,
+        }
+    ], 
     loading: false,
     errorEmail: '',
     errorPass: '',
@@ -53,6 +63,14 @@ const userSlice = createSlice({
                 user.cart = user.cart.filter(item => item.id !== cartId);
             }
         },
+        removeUserCart: (state, action) => {
+            const {email} = action.payload;
+            const user = state.usersList.find(user => user.email === email)
+
+            if (user) {
+                user.cart = [];
+            }
+        }
     },
 });
 

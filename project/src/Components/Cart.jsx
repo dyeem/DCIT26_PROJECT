@@ -4,7 +4,7 @@ import  emptyCartPic from '../Assets/empty-cart-pic.png'
 
 //redux
 import { useDispatch, useSelector } from 'react-redux'
-import { userActions } from './RTK/user/userSlice';
+import { userActions } from './RTK/User/userSlice'
 
 import { useNavigate } from 'react-router-dom';
 

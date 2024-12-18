@@ -22,6 +22,7 @@ import Cart from "../Components/Cart.jsx";
 import RootLayout from '../Layouts/RootLayout.jsx'
 import SalesLayout from "./SalesLayout.jsx";
 import CheckoutLayout from "./CheckoutLayout.jsx";
+import HelpLayout from "./HelpLayout.jsx";
 
 
 const router = createBrowserRouter(createRoutesFromElements(
@@ -30,22 +31,23 @@ const router = createBrowserRouter(createRoutesFromElements(
       <Route path="login" element={<Login />} />
       <Route index element={<MainContent />} />
       <Route path="aboutus" element={<AboutUs />} />
-      <Route path="contactus" element={<ContactUs />} />
       <Route path="reviews" element={<Reviews />} />
 
       {/* <Route path="sales" element={<Sales />} loader={productsLoader} /> */}
       <Route path="products" element={<SalesLayout />}>
-        <Route path="sales" element={<Sales />} />
-        <Route path="sales/checkout" element={<CheckoutLayout />}>
-          <Route path="" element={<CheckOut />} />
+        <Route index element={<Sales />} />
+        <Route path="checkout" element={<CheckoutLayout />}>
+          <Route index element={<CheckOut />} />
           <Route path="orderconfirmationpage" element={<OCPage />} />
         </Route>
       </Route>
 
-
+      <Route path="help" element={<HelpLayout/>}>
+        <Route path="contactus" element={<ContactUs />} />
+        <Route path="faqpage" element={<FaqPage />}/>
+      </Route>
 
       <Route path="ourteam" element={<OurTeam />} />
-      <Route path="faqpage" element={<FaqPage />}/>
     </Route>
   </>
 ))

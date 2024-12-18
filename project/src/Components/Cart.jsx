@@ -32,7 +32,7 @@ export default function Cart({open, setOpen, NavLink}) {
     
     function handleCheckout () {
         setOpen(false)
-        navigate("products/sales/checkout")
+        navigate("products/checkout")
     }
 
   return (

@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 
-import avatar from '../Assets/avatar.jpg'
 import Cart from './Cart'
 
 //redux
 import { useSelector, useDispatch } from 'react-redux'
-import { userActions } from './RTK/user/userSlice';
+import { userActions } from './RTK/User/userSlice';
 
 export default function NavBar() {
 
@@ -14,6 +13,11 @@ export default function NavBar() {
 
     const dispatch = useDispatch()
     const currentUser = useSelector((state) => state.user.currentUser)
+    const userCart = useSelector((state) => {
+        const currentUserEmail = state.user.currentUser?.email; 
+        const user = state.user.usersList.find(user => user.email === currentUserEmail); 
+        return user?.cart || []; 
+    });
 
     return (
         <>
@@ -37,6 +41,7 @@ export default function NavBar() {
                             />
                             </svg>
                         </label>
+                        {/* PHONE */}
                         <div className="drawer-side z-50">
                             <label htmlFor="my-drawer" className="drawer-overlay "></label>
                             <ul className="menu bg-white min-h-full w-52 p-4 pt-5">
@@ -44,7 +49,7 @@ export default function NavBar() {
                                 <NavLink to="/" className='text-black text-xl font-serif'>Home</NavLink>
                             </li>
                             <li>
-                                <NavLink to="products/sales" className='text-black text-xl font-serif'> Shop Now</NavLink>
+                                <NavLink to="products" className='text-black text-xl font-serif'> Shop Now</NavLink>
                             </li>
                             <li>
                                 <NavLink to="reviews" className='text-black text-xl font-serif'>Reviews</NavLink>
@@ -53,10 +58,10 @@ export default function NavBar() {
                                 <a className='text-black text-xl font-serif'>More</a>
                                 <ul className="p-2">
                                     <li>
-                                    <NavLink to="contactus" className="text-black text-xl font-serif">Contact Us</NavLink>
+                                    <NavLink to="/help/contactus" className="text-black text-xl font-serif">Contact Us</NavLink>
                                     </li>
                                     <li>
-                                    <NavLink to="faqpage" className="text-black text-xl font-serif">FAQ</NavLink>
+                                    <NavLink to="/help/faqpage" className="text-black text-xl font-serif">FAQ</NavLink>
                                     </li>
                                 </ul>
                             </li>
@@ -91,13 +96,28 @@ export default function NavBar() {
                                 />
                             </NavLink>
                         </li>
-                        <li>
-                            <NavLink to="contactus" className='btn btn-ghost text-black text-xl relative group hover:bg-transparent focus:bg-transparent active:bg-transparent font-normal'>Contact Us
-                                <span
-                                    className="absolute bottom-0 left-0 h-[2px] w-0 bg-black transition-all duration-300 group-hover:w-full"
-                                />
-                            </NavLink>
-                        </li>
+                        <div className="relative group">
+                            <button className="btn btn-ghost text-black text-xl relative hover:bg-transparent focus:bg-transparent active:bg-transparent font-normal">
+                                Help
+                                <span className="absolute bottom-0 left-0 h-[2px] w-0 bg-black transition-all duration-300 group-hover:w-full" />
+                            </button>
+                            
+                            {/* Dropdown menu */}
+                            <div className="absolute left-0 top-10 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-opacity duration-300">
+                                <Link
+                                to="/help/faqpage"
+                                className="block px-4 py-4 text-black hover:bg-gray-100 text-base"
+                                >
+                                FAQ
+                                </Link>
+                                <Link
+                                to="/help/contactus"
+                                className="block px-4 py-4 text-black hover:bg-gray-100 text-base"
+                                >
+                                Contact Us
+                                </Link>
+                            </div>
+                        </div>
                     </ul>
                 </div>
                 <div className="navbar-center">
@@ -111,7 +131,7 @@ export default function NavBar() {
                 <div className='navbar-end'>
                     <ul className="menu menu-horizontal px-1 hidden lg:flex">
                         <li>
-                            <NavLink to="products/sales" className='relative group btn btn-ghost text-black text-xl  hover:bg-transparent font-normal'>Shop Now
+                            <NavLink to="products" className='relative group btn btn-ghost text-black text-xl  hover:bg-transparent font-normal'>Shop Now
                                 <span
                                     className="absolute bottom-0 left-0 h-[2px] w-0 bg-black transition-all duration-300 group-hover:w-full"
                                 />
@@ -143,7 +163,7 @@ export default function NavBar() {
                                     strokeWidth="1"
                                     d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                 </svg>
-                                <span className="badge badge-sm indicator-item #150016">0</span>
+                                <span className="badge badge-sm indicator-item #150016">{userCart.length}</span>
                             </div>
                         </div>
                         {/* <div

@@ -34,7 +34,7 @@ export default function CheckOut() {
                                     <div class="relative z-0 w-full mb-5 group">
                                         <input 
                                             type="email" 
-                                            name="floating_email" 
+                                            name="email" 
                                             id="floating_email" 
                                             class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
                                             placeholder=" " 
@@ -51,7 +51,7 @@ export default function CheckOut() {
                                     <div class="relative z-0 w-full mb-5 group">
                                         <input 
                                             type="tel" 
-                                            name="floating_email" 
+                                            name="tel" 
                                             id="floating_email" 
                                             class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
                                             placeholder=" " 
@@ -122,8 +122,8 @@ export default function CheckOut() {
                                     {/* Address */}
                                     <div class="relative z-0 w-full mb-5 group">
                                         <input 
-                                            type="tel" 
-                                            name="floating_email" 
+                                            type="address" 
+                                            name="address" 
                                             id="floating_email" 
                                             class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
                                             placeholder=" " 
@@ -142,7 +142,7 @@ export default function CheckOut() {
                                     <div class="relative z-0 w-full mb-5 group">
                                         <input 
                                             type="tel" 
-                                            name="address" 
+                                            name="street" 
                                             id="floating_email" 
                                             class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
                                             placeholder=" " 
@@ -163,7 +163,7 @@ export default function CheckOut() {
                                         <div class="relative z-0 w-full mb-5 group">
                                             <input 
                                                 type="tel" 
-                                                name="floating_email" 
+                                                name="city" 
                                                 id="floating_email" 
                                                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
                                                 placeholder=" " 
@@ -182,7 +182,7 @@ export default function CheckOut() {
                                         <div class="relative z-0 w-full mb-5 group">
                                             <input 
                                                 type="tel" 
-                                                name="floating_email" 
+                                                name="province" 
                                                 id="floating_email" 
                                                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
                                                 placeholder=" " 
@@ -201,7 +201,7 @@ export default function CheckOut() {
                                         <div class="relative z-0 w-full mb-5 group">
                                             <input 
                                                 type="tel" 
-                                                name="floating_email" 
+                                                name="postal code" 
                                                 id="floating_email" 
                                                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
                                                 placeholder=" " 
@@ -239,7 +239,7 @@ export default function CheckOut() {
                                     <hr className="my-6 border-t-2 border-[#885b56]" />
                                 </div>
                                 <div className="mt-[2rem] flex justify-center items-center">
-                                    <button onClick={() => navigate("/products/sales/checkout/orderconfirmationpage")} className="bg-[#885b56] text-lg text-white px-3 py-2 font-noto">Checkout</button>
+                                    <button onClick={() => navigate("/products/checkout/orderconfirmationpage")} className="bg-[#885b56] text-lg text-white px-3 py-2 font-noto">Checkout</button>
                                 </div>
                             </form>
                         </div>
@@ -285,7 +285,7 @@ export default function CheckOut() {
                                     </div>
                                     <div className="pt-2 flex justify-between text-lg font-semibold text-gray-900">
                                         <p>Total:</p>
-                                        <p>₱{userCart.reduce((total, cart) => cart.price ? total + cart.price : total, 0)}.00</p>
+                                        <p>₱{userCart.reduce((total, cart) => cart.price ? total + cart.price : total, 0) +36}.00</p>
                                     </div>
                                 </div>
                             </div>

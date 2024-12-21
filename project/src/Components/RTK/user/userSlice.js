@@ -60,7 +60,7 @@ const userSlice = createSlice({
         
             if (user) {
                 // If user found, filter out the item with the matching cartId
-                user.cart = user.cart.filter(item => item.id !== cartId);
+                user.cart = user.cart.filter(item => item.cartId !== cartId);
             }
         },
         removeUserCart: (state, action) => {

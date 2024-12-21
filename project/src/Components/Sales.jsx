@@ -1,8 +1,6 @@
+import { v4 as uuidv4 } from 'uuid'
 // REDUX
 import { useSelector, useDispatch} from "react-redux"
-import { useEffect } from "react"
-import { fetchProducts } from "./RTK/Products/productSlice"
-import { cartActions } from './RTK/Cart/cartSlice'
 import { userActions } from './RTK/User/userSlice'
 
 // TOASTER
@@ -10,7 +8,7 @@ import toast, { Toaster } from 'react-hot-toast';
 
 import { HashLink } from 'react-router-hash-link';
 import { useState} from 'react'
-import { Outlet, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Dialog,
   Description,
@@ -105,9 +103,10 @@ export default function Sales() {
     if(!currentUser){
       navigate('/login'); //redirect to login if theres no current user
     }else{
+      const cartId =  uuidv4();
       dispatch(userActions.addToUserListCart({
         email: currentUser.email, 
-        product: { id, name, img, size, color, price, category }, 
+        product: {cartId, id, name, img, size, color, price, category }, 
       }));
       AddToCart()
       setColor(null)

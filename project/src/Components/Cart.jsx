@@ -73,7 +73,7 @@ export default function Cart({open, setOpen, NavLink}) {
                                                 : 
                                                 <div className="">
                                                     {userCart.map((cart) => (
-                                                        <li key={cart.id} className="flex py-6">
+                                                        <li key={cart.cartId} className="flex py-6">
                                                             <div className="lg:size-24 xsm:size-20 shrink-0 overflow-hidden rounded-md border border-gray-200">
                                                                 <img alt={cart.img} src={cart.img} className="lg:size-full object-cover xsm:size-20"/>
                                                             </div>
@@ -95,7 +95,7 @@ export default function Cart({open, setOpen, NavLink}) {
                                                                         <button 
                                                                             type="button" 
                                                                             className="font-medium text-[#885b56] hover:text-[#c78d87]"
-                                                                            onClick={() => handleRemoveCart(cart.id)}>
+                                                                            onClick={() => handleRemoveCart(cart.cartId)}>
                                                                             Remove
                                                                         </button>
                                                                     </div>

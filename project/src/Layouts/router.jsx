@@ -25,6 +25,7 @@ import HelpLayout from "./HelpLayout.jsx";
 
 //error page
 import ErrorPage from '../Components/ErrorPage/PagenotFound.jsx'
+import CustomizePage from "../Components/CustomizePage.jsx";
 
 
 const router = createBrowserRouter(createRoutesFromElements(
@@ -34,6 +35,7 @@ const router = createBrowserRouter(createRoutesFromElements(
       <Route index element={<MainContent />} />
       <Route path="aboutus" element={<AboutUs />} />
       <Route path="reviews" element={<Reviews />} />
+      <Route path="customize" element={<CustomizePage/>}/>
       <Route path="products" element={<SalesLayout />}>
         <Route index element={<Sales />} />
         <Route path="checkout" element={<CheckoutLayout />}>

@@ -11,6 +11,7 @@ import AboutUs from './AboutUs'
 import OurTeam from './OurTeam';
 import ShopByCategory from './ShopByCategory'
 import FeaturedwVid from './FeaturedwVid';
+import CustomizePage from './CustomizePage';
 export default function MainContent() {
     return (
         <>
@@ -38,7 +39,8 @@ export default function MainContent() {
             {/* <Featured /> */}
             <FeaturedwVid/>
             <ShopByCategory/>
-            <Gallery /> 
+            <Gallery />
+            <CustomizePage/> 
             <AboutUs/>
             <OurTeam/> 
         </>

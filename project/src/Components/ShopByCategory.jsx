@@ -6,13 +6,14 @@ import 'swiper/css/pagination';  // Import pagination styles (if needed)
 import bouquet from '../Assets/Gallery/bouquet1.jpg'
 import {Link} from 'react-router-dom'
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { HashLink } from 'react-router-hash-link';
 
 const categories = [
-  { image: bouquet, label: "New Arrivals", link: ""},
-  { image: bouquet, label: "Bouquet", link: ""},
-  { image: bouquet, label: "Jackets", link: ""},
-  { image: bouquet, label: "Accessories", link: ""},
-  { image: bouquet, label: "Dolls", link: ""},
+  { image: bouquet, label: "Dolls", link: "Dolls".replace(/\s+/g, '-')},
+  { image: bouquet, label: "Flowers", link: "Flowers".replace(/\s+/g, '-')},
+  { image: bouquet, label: "Hairclips", link: "Hairclips".replace(/\s+/g, '-')},
+  { image: bouquet, label: "Hat", link: "Hat".replace(/\s+/g, '-')},
+  { image: bouquet, label: "Keychain", link: "Keychain".replace(/\s+/g, '-')},
 ];
 
 export default function Categories () {
@@ -24,7 +25,9 @@ export default function Categories () {
             </p>
             <div className="lg:grid lg:grid-cols-5 xsm:hidden xsm:overflow-x-auto xsm:whitespace-nowrap gap-4 p-4 group place-self-center">
                 {categories.map((category, index) => (  
-                    <Link
+                    <HashLink
+                        smooth
+                        to={`/products#${category.link}`}
                         key={index}
                         className="relative flex-shrink-0 flex flex-col items-center rounded-lg overflow-hidden shadow-md lg:group-hover:opacity-70 hover:!opacity-100 transition-opacity duration-300"
                     >
@@ -37,7 +40,7 @@ export default function Categories () {
                             <p className="mb-2 text-2xl font-normal text-left">{category.label}</p>
                             <button className="px-3 py-1 hover:bg-[#885b56] bg-white text-black hover:text-white transition duration-300 rounded-2xl font-semibold">Shop Now</button>
                         </div>
-                    </Link>
+                    </HashLink>
                 ))}
             </div>
             {/* Carousel for xsm screens */}

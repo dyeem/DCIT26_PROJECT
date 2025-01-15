@@ -2,153 +2,266 @@
   "Products": [
     {
       "id": 1,
-      "name": "Baby Whale",
-      "category": "Dolls",
-      "image": "./src/assets/products/Keychain/baby whale.png",
-      "size": "Small",
-      "color": ["Red","Yellow","Black", "Pink", "Green"],
-      "quantity": 10,
-      "price": 25.00
+      "name": "Dolls",
+      "Items": [
+        {
+          "id": 111,
+          "name": "Baby Whale",
+          "image": "/src/assets/products/Keychain/babywhale.png",
+          "size": ["Small", "Medium", "Large"],
+          "color": ["Red", "Yellow", "Black", "Pink", "Green"],
+          "quantity": 10,
+          "price": 25.00,
+          "category": "Dolls",
+          "rating": 4.5,
+          "stars": "★★★★★",
+          "description": "This adorable Baby Whale doll is made with soft crochet material and comes in a variety of colors, including Red, Yellow, Black, Pink, and Green. Perfect for kids or as a charming decoration."
+        },
+        {
+          "id": 112,
+          "name": "Crochet Doll Clothes",
+          "image": "/src/assets/avatar.jpg",
+          "size": ["Small", "Medium", "Large"],
+          "color": "Purple",
+          "quantity": 14,
+          "price": 22.00,
+          "category": "Dolls",
+          "rating": 4.0,
+          "stars": "★★★★☆",
+          "description": "These Crochet Doll Clothes in a beautiful purple color are perfect for dressing up your favorite doll. Handmade with care, they add a stylish touch to any collection."
+        },
+        {
+          "id": 113,
+          "name": "Crochet Toy",
+          "image": "/src/assets/avatar.jpg",
+          "size": ["Small", "Medium", "Large"],
+          "color": "Orange",
+          "quantity": 4,
+          "price": 28.00,
+          "category": "Dolls",
+          "rating": 3.5,
+          "stars": "★★★★☆",
+          "description": "This vibrant Crochet Toy in bright orange is a fun and unique addition to any playtime. Soft, safe, and perfect for young children, it’s a great gift idea."
+        }
+      ]
     },
     {
       "id": 2,
-      "name": "Crochet Jacket",
-      "category": "Jackets",
-      "image": "./src/assets/avatar.jpg",
-      "size": "Medium",
-      "color": "Blue",
-      "quantity": 5,
-      "price": 50.00
+      "name": "Flowers",
+      "Items": [
+        {
+          "id": 211,
+          "name": "Crochet Bouquet",
+          "image": "/src/assets/avatar.jpg",
+          "size": ["Small", "Medium", "Large"],
+          "color": "Yellow",
+          "quantity": 8,
+          "price": 35.00,
+          "category": "Flowers",
+          "rating": 4.7,
+          "stars": "★★★★★",
+          "description": "This Crochet Bouquet in yellow is a stunning handmade arrangement that adds a warm, cheerful touch to any home or event. A perfect gift for special occasions."
+        },
+        {
+          "id": 212,
+          "name": "Crochet Flower Bouquet",
+          "image": "/src/assets/avatar.jpg",
+          "size": ["Small", "Medium", "Large"],
+          "color": "Pink",
+          "quantity": 13,
+          "price": 40.00,
+          "category": "Flowers",
+          "rating": 4.8,
+          "stars": "★★★★★",
+          "description": "This elegant Crochet Flower Bouquet in soft pink is the perfect way to brighten someone's day. Crafted with love and attention to detail, it makes an ideal gift for any occasion."
+        }
+      ]
     },
     {
       "id": 3,
-      "name": "Crochet Bouquet",
-      "category": "Bouquet",
-      "image": "./src/assets/avatar.jpg",
-      "size": "Large",
-      "color": "Yellow",
-      "quantity": 8,
-      "price": 35.00
+      "name": "Hairclips",
+      "Items": [
+        {
+          "id": 311,
+          "name": "Floral Hairclip",
+          "image": "/src/assets/avatar.jpg",
+          "size": ["Small", "Medium", "Large"],
+          "color": "Pink",
+          "quantity": 12,
+          "price": 15.00,
+          "category": "Hairclips",
+          "rating": 4.6,
+          "stars": "★★★★★",
+          "description": "This Floral Hairclip in soft pink adds a touch of elegance and charm to any hairstyle. The beautiful flower design makes it perfect for special occasions or casual wear."
+        },
+        {
+          "id": 312,
+          "name": "Pearl Hairpin",
+          "image": "/src/assets/avatar.jpg",
+          "size": ["Small", "Medium", "Large"],
+          "color": "White",
+          "quantity": 8,
+          "price": 18.00,
+          "category": "Hairclips",
+          "rating": 4.4,
+          "stars": "★★★★☆",
+          "description": "This sophisticated Pearl Hairpin in white adds a chic, vintage flair to any look. Perfect for weddings, parties, or simply dressing up your everyday style."
+        },
+        {
+          "id": 313,
+          "name": "Bow Hairclip",
+          "image": "/src/assets/avatar.jpg",
+          "size": ["Small", "Medium", "Large"],
+          "color": "Blue",
+          "quantity": 10,
+          "price": 12.00,
+          "category": "Hairclips",
+          "rating": 4.3,
+          "stars": "★★★★☆",
+          "description": "This cute Bow Hairclip in blue is a fun and playful accessory for all ages. It adds a pop of color to your hair and is perfect for both casual and formal occasions."
+        }
+      ]
     },
     {
       "id": 4,
-      "name": "Crochet Accessory",
-      "category": "Accessories",
-      "image": "./src/assets/avatar.jpg",
-      "size": "One Size",
-      "color": "Green",
-      "quantity": 15,
-      "price": 15.00
+      "name": "Hat",
+      "Items": [
+        {
+          "id": 411,
+          "name": "Crochet Hat",
+          "image": "/src/assets/avatar.jpg",
+          "size": ["Small", "Medium", "Large"],
+          "color": "Pink",
+          "quantity": 6,
+          "price": 20.00,
+          "category": "Hat",
+          "rating": 4.3,
+          "stars": "★★★★☆",
+          "description": "This cute Crochet Hat in pink adds a stylish, cozy touch to any outfit. Perfect for cooler weather or as a fashionable accessory for everyday wear."
+        }
+      ]
     },
     {
       "id": 5,
-      "name": "Crochet Doily",
-      "category": "Doilies",
-      "image": "./src/assets/avatar.jpg",
-      "size": "Small",
-      "color": "White",
-      "quantity": 12,
-      "price": 12.00
+      "name": "Keychain",
+      "Items": [
+        {
+          "id": 511,
+          "name": "Mini Teddy Bear Keychain",
+          "image": "/src/assets/avatar.jpg",
+          "size": ["Small", "Medium", "Large"],
+          "color": "Brown",
+          "quantity": 25,
+          "price": 8.00,
+          "category": "Keychain",
+          "rating": 4.7,
+          "stars": "★★★★★",
+          "description": "This cute Mini Teddy Bear Keychain is the perfect accessory to add some charm to your keys or bag. Its adorable design and soft material make it a fun gift for all ages."
+        },
+        {
+          "id": 512,
+          "name": "Leather Tassel Keychain",
+          "image": "/src/assets/avatar.jpg",
+          "size": ["Small", "Medium", "Large"],
+          "color": "Black",
+          "quantity": 18,
+          "price": 12.00,
+          "category": "Keychain",
+          "rating": 4.5,
+          "stars": "★★★★☆",
+          "description": "This sleek Leather Tassel Keychain adds a touch of sophistication to your keys or purse. Its minimalist design and durable leather make it both stylish and practical."
+        },
+        {
+          "id": 513,
+          "name": "Personalized Wooden Keychain",
+          "image": "/src/assets/avatar.jpg",
+          "size": ["Small", "Medium", "Large"],
+          "color": "Natural Wood",
+          "quantity": 15,
+          "price": 10.00,
+          "category": "Keychain",
+          "rating": 4.8,
+          "stars": "★★★★★",
+          "description": "This Personalized Wooden Keychain allows you to customize it with initials or a special message. It’s a thoughtful and unique gift, perfect for any occasion."
+        }
+      ]
     },
     {
       "id": 6,
-      "name": "Crochet Hat",
-      "category": "Accessories",
-      "image": "./src/assets/avatar.jpg",
-      "size": "Medium",
-      "color": "Pink",
-      "quantity": 6,
-      "price": 20.00
+      "name": "Miscellaneous",
+      "Items": [
+        {
+          "id": 611,
+          "name": "Crochet Accessory",
+          "image": "/src/assets/avatar.jpg",
+          "size": ["Small", "Medium", "Large"],
+          "color": "Green",
+          "quantity": 15,
+          "price": 15.00,
+          "category": "Miscellaneous",
+          "rating": 4.0,
+          "stars": "★★★★☆",
+          "description": "This versatile Crochet Accessory in green is perfect for adding a pop of color to any outfit. Lightweight and stylish, it's a great addition to your accessory collection."
+        },
+        {
+          "id": 612,
+          "name": "Crochet Scarf",
+          "image": "/src/assets/avatar.jpg",
+          "size": ["Small", "Medium", "Large"],
+          "color": "Black",
+          "quantity": 7,
+          "price": 30.00,
+          "category": "Miscellaneous",
+          "rating": 4.5,
+          "stars": "★★★★★",
+          "description": "This Crochet Scarf in black is not only stylish but also incredibly cozy. A perfect accessory to keep warm during chilly weather while looking fashionable."
+        },
+        {
+          "id": 613,
+          "name": "Crochet Purse",
+          "image": "/src/assets/avatar.jpg",
+          "size": ["Small", "Medium", "Large"],
+          "color": "Brown",
+          "quantity": 20,
+          "price": 18.00,
+          "category": "Miscellaneous",
+          "rating": 4.3,
+          "stars": "★★★★☆",
+          "description": "This Crochet Purse in brown is a chic and practical accessory that adds a natural, earthy touch to any outfit. Spacious and stylish, it’s a perfect everyday carry."
+        },
+        {
+          "id": 614,
+          "name": "Crochet Earrings",
+          "image": "/src/assets/avatar.jpg",
+          "size": ["Small", "Medium", "Large"],
+          "color": "Gold",
+          "quantity": 25,
+          "price": 10.00,
+          "category": "Miscellaneous",
+          "rating": 4.2,
+          "stars": "★★★★☆",
+          "description": "These Crochet Earrings in gold are a beautiful blend of elegance and handmade craftsmanship. Lightweight and comfortable, they make a perfect accessory for any outfit."
+        }
+      ]
     },
     {
       "id": 7,
-      "name": "Crochet Scarf",
-      "category": "Accessories",
-      "image": "./src/assets/avatar.jpg",
-      "size": "Large",
-      "color": "Black",
-      "quantity": 7,
-      "price": 30.00
-    },
-    {
-      "id": 8,
-      "name": "Crochet Blanket",
-      "category": "Doilies",
-      "image": "./src/assets/avatar.jpg",
-      "size": "Large",
-      "color": "Blue",
-      "quantity": 3,
-      "price": 60.00
-    },
-    {
-      "id": 9,
-      "name": "Crochet Purse",
-      "category": "Accessories",
-      "image": "./src/assets/avatar.jpg",
-      "size": "One Size",
-      "color": "Brown",
-      "quantity": 20,
-      "price": 18.00
-    },
-    {
-      "id": 10,
-      "name": "Crochet Doll Clothes",
-      "category": "Dolls",
-      "image": "./src/assets/avatar.jpg",
-      "size": "Small",
-      "color": "Purple",
-      "quantity": 14,
-      "price": 22.00
-    },
-    {
-      "id": 11,
-      "name": "Crochet Earrings",
-      "category": "Accessories",
-      "image": "./src/assets/avatar.jpg",
-      "size": "One Size",
-      "color": "Gold",
-      "quantity": 25,
-      "price": 10.00
-    },
-    {
-      "id": 12,
-      "name": "Crochet Coasters",
-      "category": "Doilies",
-      "image": "./src/assets/avatar.jpg",
-      "size": "Small",
-      "color": "Red",
-      "quantity": 9,
-      "price": 8.00
-    },
-    {
-      "id": 13,
-      "name": "Crochet Headband",
-      "category": "Accessories",
-      "image": "./src/assets/avatar.jpg",
-      "size": "Medium",
-      "color": "Blue",
-      "quantity": 11,
-      "price": 15.00
-    },
-    {
-      "id": 14,
-      "name": "Crochet Flower Bouquet",
-      "category": "Bouquet",
-      "image": "./src/assets/avatar.jpg",
-      "size": "Large",
-      "color": "Pink",
-      "quantity": 13,
-      "price": 40.00
-    },
-    {
-      "id": 15,
-      "name": "Crochet Toy",
-      "category": "Dolls",
-      "image": "./src/assets/avatar.jpg",
-      "size": "Small",
-      "color": "Orange",
-      "quantity": 4,
-      "price": 28.00
+      "name": "Top",
+      "Items": [
+        {
+          "id": 711,
+          "name": "Crochet Jacket",
+          "image": "/src/assets/avatar.jpg",
+          "size": ["Small", "Medium", "Large"],
+          "color": "Blue",
+          "quantity": 5,
+          "price": 50.00,
+          "category": "Top",
+          "rating": 4.7,
+          "stars": "★★★★★",
+          "description": "This Crochet Jacket in blue is a perfect blend of style and comfort. Its medium size fits most body types, making it a versatile piece for both casual and semi-formal occasions."
+        }
+      ]
     }
   ]
 }

@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import { userActions } from './RTK/User/userSlice'
+import BreadCrumbs from './BreadCrumbs'
 
 export default function OCPage() {
 
@@ -34,7 +35,8 @@ export default function OCPage() {
     return (
         <>
             <div className='bg-white xsm:grid xsm:grid-cols-1 xl:flex flex-col justify-center items-center max-w-full leading-relaxed xl:space-y-10 xl:px-16 xsm:px-3 py-8'>
-                <div className="flex flex-row items-center justify-center gap-x-2 py-5">
+                <div className="self-start"><BreadCrumbs/></div>
+                <div className="flex flex-row items-center justify-center gap-x-2 py-1">
                     <img src={checkicon} alt="" className='xl:w-10 xsm:w-12'/>
                     <p className='text-gray-900 xl:text-3xl xsm:text-lg font-bold'>Thanks for your Order!</p>
                 </div>

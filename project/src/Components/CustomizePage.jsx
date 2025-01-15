@@ -1,11 +1,18 @@
 import pic from '../Assets/customized_picture.png'
 import file from '../Assets/file-icon.png'
 import calendar from '../Assets/calendar-icon.png'
+import attention from '../Assets/attention-icon.png'
+
+import { useState } from 'react'
+import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
+
 
 export default function CustomizePage() {
+    const [popUp, setPopup] = useState(false)
+
     return (
         <>
-            <div className="flex justify-center items-center bg-white text-gray-800 w-full">
+            <div className="flex justify-center items-center bg-white text-gray-800 w-full font-serif py-4">
                 <div className="rounded-md shadow-md p-4 w-[90rem]">
                     <div className="flex flex-row justify-center items-center">
                         <img src={pic} alt="" className='h-[35rem]'/>
@@ -67,7 +74,10 @@ export default function CustomizePage() {
                                     </div>
                                     <div className="flex flex-row justify-between">
                                         <p className="text-sm  mt-2">Add at least 3 reference images</p>
-                                        <button className="bg-purple-700 text-white px-4 py-2 rounded-2xl mt-4">Submit</button>
+                                        <button 
+                                            className="bg-purple-700 text-white px-4 py-2 rounded-2xl mt-4"
+                                            onClick={(e) => setPopup(true)}
+                                            >Submit</button>
                                     </div>
                                 </div>
                             </div>
@@ -75,6 +85,44 @@ export default function CustomizePage() {
                     </div>
                 </div>
             </div>
+            <Dialog open={popUp} onClose={() => setPopup(false)} className="relative z-50 font-serif">
+                {/* Backdrop */}
+                <DialogBackdrop className="fixed inset-0 bg-black bg-opacity-20" />
+                {/* Panel */}
+                <div className="fixed inset-0 flex items-center justify-center p-4">
+                    <DialogPanel className="w-full max-w-4xl p-6 bg-white rounded shadow-lg">
+                        <div className="flex flex-row gap-x-4 justify-center items-center">
+                            <img src={attention} alt="" className='size-16'/>
+                            <DialogTitle className="text-5xl font-semibold text-gray-800">Attention!</DialogTitle>
+                            <img src={attention} alt="" className='size-16'/>
+                        </div>
+                        <div className="text-gray-900">
+                            <p className="mt-2 text-lg mb-6">By submitting this request, you agree to the following:</p>
+                            <div className="text-lg px-5">
+                                <li>You will allow the seller some time to reply to your inquiry or commission.</li>
+                                <li>Upon approval of the commission, an upfront payment of 50% is required.</li>
+                                <li>The seller will provide regular updates on the progress of your order.</li>
+                                <li>Major changes requested after approval may incur additional charges.</li>
+                                <li>The final payment is required upon completion and prior to the item’s delivery.</li>
+                                <li>The seller retains the right to showcase the commissioned item in their portfolio or promotional materials.</li>
+                                <li>Cancellations after the initial payment are non-refundable unless agreed upon by the seller.</li>
+                            </div>
+                        </div>
+                        <div className="mt-10 flex flex-row justify-between">
+                            <div className="">
+                                <input type="checkbox" name="" id="check" className='mr-2'/>
+                                <label htmlFor="check" className='text-gray-900'>I agree to the following terms and conditions.</label>
+                            </div>
+                            <button
+                                className="px-4 py-2 text-white bg-red-500 rounded-2xl"
+                                onClick={() => setPopup(false)}
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </DialogPanel>
+                </div>
+            </Dialog>
         </>
     )
 }

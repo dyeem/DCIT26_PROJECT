@@ -1,14 +1,9 @@
-import { v4 as uuidv4 } from 'uuid'
-// REDUX
-import { useSelector, useDispatch} from "react-redux"
-import { userActions } from './RTK/User/userSlice'
-
-// TOASTER
-import toast, { Toaster } from 'react-hot-toast';
-
+// TOOLS
 import { HashLink } from 'react-router-hash-link';
 import { useState} from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useLoaderData, Link } from 'react-router-dom';
+
+//UI LIBRARY
 import {
   Dialog,
   Description,
@@ -80,311 +75,32 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
+import bg from '../Assets/bg.png'
+
 export default function Sales() {
-  const navigate = useNavigate();
-  
-  // const { loading, productsByCategory, error } = useSelector((state) => state.products);
-  const [isOpen, setIsOpen] = useState(false)
-  const [selectedProductId, setSelectedProductId] = useState(null); // Added state for selected product ID
-  const currentUser = useSelector((state) => state.user.currentUser)
-
-  const dispatch = useDispatch()
-
-  const AddToCart = () => toast.success('Successfully added to Cart!');
-  const [color, setColor] = useState("");
-  const [size, setSize] = useState("");
-
-  // useEffect(() => {
-  //   dispatch(fetchProducts())
-  // }, [])
-
-  function handleAddToCart(id, name, img, size, color, price, category) {
-
-    if(!currentUser){
-      navigate('/login'); //redirect to login if theres no current user
-    }else{
-      const cartId =  uuidv4();
-      dispatch(userActions.addToUserListCart({
-        email: currentUser.email, 
-        product: {cartId, id, name, img, size, color, price, category }, 
-      }));
-      AddToCart()
-      setColor(null)
-      setSize(null)
-    }
-  }
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
-  const products = [
-    {
-      "id": 1,
-      "name": "Dolls",
-      "Items": [
-        {
-          "id": 111,
-          "name": "Baby Whale",
-          "image": "/src/assets/products/Keychain/babywhale.png",
-          "size": ["Small", "Medium", "Large"],
-          "color": ["Red", "Yellow", "Black", "Pink", "Green"],
-          "quantity": 10,
-          "price": 25.00,
-          "category": "Dolls",
-          "rating": 4.5,
-          "stars": "★★★★★",
-          "description": "This adorable Baby Whale doll is made with soft crochet material and comes in a variety of colors, including Red, Yellow, Black, Pink, and Green. Perfect for kids or as a charming decoration."
-        },
-        {
-          "id": 112,
-          "name": "Crochet Doll Clothes",
-          "image": "/src/assets/avatar.jpg",
-          "size": ["Small", "Medium", "Large"],
-          "color": "Purple",
-          "quantity": 14,
-          "price": 22.00,
-          "category": "Dolls",
-          "rating": 4.0,
-          "stars": "★★★★☆",
-          "description": "These Crochet Doll Clothes in a beautiful purple color are perfect for dressing up your favorite doll. Handmade with care, they add a stylish touch to any collection."
-        },
-        {
-          "id": 113,
-          "name": "Crochet Toy",
-          "image": "/src/assets/avatar.jpg",
-          "size": ["Small", "Medium", "Large"],
-          "color": "Orange",
-          "quantity": 4,
-          "price": 28.00,
-          "category": "Dolls",
-          "rating": 3.5,
-          "stars": "★★★★☆",
-          "description": "This vibrant Crochet Toy in bright orange is a fun and unique addition to any playtime. Soft, safe, and perfect for young children, it’s a great gift idea."
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "name": "Flowers",
-      "Items": [
-        {
-          "id": 211,
-          "name": "Crochet Bouquet",
-          "image": "/src/assets/avatar.jpg",
-          "size": ["Small", "Medium", "Large"],
-          "color": "Yellow",
-          "quantity": 8,
-          "price": 35.00,
-          "category": "Flowers",
-          "rating": 4.7,
-          "stars": "★★★★★",
-          "description": "This Crochet Bouquet in yellow is a stunning handmade arrangement that adds a warm, cheerful touch to any home or event. A perfect gift for special occasions."
-        },
-        {
-          "id": 212,
-          "name": "Crochet Flower Bouquet",
-          "image": "/src/assets/avatar.jpg",
-          "size": ["Small", "Medium", "Large"],
-          "color": "Pink",
-          "quantity": 13,
-          "price": 40.00,
-          "category": "Flowers",
-          "rating": 4.8,
-          "stars": "★★★★★",
-          "description": "This elegant Crochet Flower Bouquet in soft pink is the perfect way to brighten someone's day. Crafted with love and attention to detail, it makes an ideal gift for any occasion."
-        }
-      ]
-    },
-    {
-      "id": 3,
-      "name": "Hairclips",
-      "Items": [
-        {
-          "id": 311,
-          "name": "Floral Hairclip",
-          "image": "/src/assets/avatar.jpg",
-          "size": ["Small", "Medium", "Large"],
-          "color": "Pink",
-          "quantity": 12,
-          "price": 15.00,
-          "category": "Hairclips",
-          "rating": 4.6,
-          "stars": "★★★★★",
-          "description": "This Floral Hairclip in soft pink adds a touch of elegance and charm to any hairstyle. The beautiful flower design makes it perfect for special occasions or casual wear."
-        },
-        {
-          "id": 312,
-          "name": "Pearl Hairpin",
-          "image": "/src/assets/avatar.jpg",
-          "size": ["Small", "Medium", "Large"],
-          "color": "White",
-          "quantity": 8,
-          "price": 18.00,
-          "category": "Hairclips",
-          "rating": 4.4,
-          "stars": "★★★★☆",
-          "description": "This sophisticated Pearl Hairpin in white adds a chic, vintage flair to any look. Perfect for weddings, parties, or simply dressing up your everyday style."
-        },
-        {
-          "id": 313,
-          "name": "Bow Hairclip",
-          "image": "/src/assets/avatar.jpg",
-          "size": ["Small", "Medium", "Large"],
-          "color": "Blue",
-          "quantity": 10,
-          "price": 12.00,
-          "category": "Hairclips",
-          "rating": 4.3,
-          "stars": "★★★★☆",
-          "description": "This cute Bow Hairclip in blue is a fun and playful accessory for all ages. It adds a pop of color to your hair and is perfect for both casual and formal occasions."
-        }
-      ]
-    },
-    {
-      "id": 4,
-      "name": "Hat",
-      "Items": [
-        {
-          "id": 411,
-          "name": "Crochet Hat",
-          "image": "/src/assets/avatar.jpg",
-          "size": ["Small", "Medium", "Large"],
-          "color": "Pink",
-          "quantity": 6,
-          "price": 20.00,
-          "category": "Hat",
-          "rating": 4.3,
-          "stars": "★★★★☆",
-          "description": "This cute Crochet Hat in pink adds a stylish, cozy touch to any outfit. Perfect for cooler weather or as a fashionable accessory for everyday wear."
-        }
-      ]
-    },
-    {
-      "id": 5,
-      "name": "Keychain",
-      "Items": [
-        {
-          "id": 511,
-          "name": "Mini Teddy Bear Keychain",
-          "image": "/src/assets/avatar.jpg",
-          "size": ["Small", "Medium", "Large"],
-          "color": "Brown",
-          "quantity": 25,
-          "price": 8.00,
-          "category": "Keychain",
-          "rating": 4.7,
-          "stars": "★★★★★",
-          "description": "This cute Mini Teddy Bear Keychain is the perfect accessory to add some charm to your keys or bag. Its adorable design and soft material make it a fun gift for all ages."
-        },
-        {
-          "id": 512,
-          "name": "Leather Tassel Keychain",
-          "image": "/src/assets/avatar.jpg",
-          "size": ["Small", "Medium", "Large"],
-          "color": "Black",
-          "quantity": 18,
-          "price": 12.00,
-          "category": "Keychain",
-          "rating": 4.5,
-          "stars": "★★★★☆",
-          "description": "This sleek Leather Tassel Keychain adds a touch of sophistication to your keys or purse. Its minimalist design and durable leather make it both stylish and practical."
-        },
-        {
-          "id": 513,
-          "name": "Personalized Wooden Keychain",
-          "image": "/src/assets/avatar.jpg",
-          "size": ["Small", "Medium", "Large"],
-          "color": "Natural Wood",
-          "quantity": 15,
-          "price": 10.00,
-          "category": "Keychain",
-          "rating": 4.8,
-          "stars": "★★★★★",
-          "description": "This Personalized Wooden Keychain allows you to customize it with initials or a special message. It’s a thoughtful and unique gift, perfect for any occasion."
-        }
-      ]
-    },
-    {
-      "id": 6,
-      "name": "Miscellaneous",
-      "Items": [
-        {
-          "id": 611,
-          "name": "Crochet Accessory",
-          "image": "/src/assets/avatar.jpg",
-          "size": ["Small", "Medium", "Large"],
-          "color": "Green",
-          "quantity": 15,
-          "price": 15.00,
-          "category": "Miscellaneous",
-          "rating": 4.0,
-          "stars": "★★★★☆",
-          "description": "This versatile Crochet Accessory in green is perfect for adding a pop of color to any outfit. Lightweight and stylish, it's a great addition to your accessory collection."
-        },
-        {
-          "id": 612,
-          "name": "Crochet Scarf",
-          "image": "/src/assets/avatar.jpg",
-          "size": ["Small", "Medium", "Large"],
-          "color": "Black",
-          "quantity": 7,
-          "price": 30.00,
-          "category": "Miscellaneous",
-          "rating": 4.5,
-          "stars": "★★★★★",
-          "description": "This Crochet Scarf in black is not only stylish but also incredibly cozy. A perfect accessory to keep warm during chilly weather while looking fashionable."
-        },
-        {
-          "id": 613,
-          "name": "Crochet Purse",
-          "image": "/src/assets/avatar.jpg",
-          "size": ["Small", "Medium", "Large"],
-          "color": "Brown",
-          "quantity": 20,
-          "price": 18.00,
-          "category": "Miscellaneous",
-          "rating": 4.3,
-          "stars": "★★★★☆",
-          "description": "This Crochet Purse in brown is a chic and practical accessory that adds a natural, earthy touch to any outfit. Spacious and stylish, it’s a perfect everyday carry."
-        },
-        {
-          "id": 614,
-          "name": "Crochet Earrings",
-          "image": "/src/assets/avatar.jpg",
-          "size": ["Small", "Medium", "Large"],
-          "color": "Gold",
-          "quantity": 25,
-          "price": 10.00,
-          "category": "Miscellaneous",
-          "rating": 4.2,
-          "stars": "★★★★☆",
-          "description": "These Crochet Earrings in gold are a beautiful blend of elegance and handmade craftsmanship. Lightweight and comfortable, they make a perfect accessory for any outfit."
-        }
-      ]
-    },
-    {
-      "id": 7,
-      "name": "Top",
-      "Items": [
-        {
-          "id": 711,
-          "name": "Crochet Jacket",
-          "image": "/src/assets/avatar.jpg",
-          "size": ["Small", "Medium", "Large"],
-          "color": "Blue",
-          "quantity": 5,
-          "price": 50.00,
-          "category": "Top",
-          "rating": 4.7,
-          "stars": "★★★★★",
-          "description": "This Crochet Jacket in blue is a perfect blend of style and comfort. Its medium size fits most body types, making it a versatile piece for both casual and semi-formal occasions."
-        }
-      ]
-    }
-  ];
-  
-  const handleImageClick = (productId) => {
-    setSelectedProductId(productId); 
-    setIsOpen(true); 
-  };
+  const { data: crochets, error } = useLoaderData();
+
+  if (error) {
+    return (
+        <div className="flex flex-col justify-center gap-y-5 items-center py-24 min-h-screen bg-cover bg-center" style={{ backgroundImage: `url(${bg})` }}>
+            <h1 className="text-6xl text-red-600">Oops {error.status}</h1>
+            <p className="text-xl">Error Message: {error.message}</p>
+            <Link to="/" className='px-4 py-3 bg-gray-400 hover:bg-gray-500 hover:text-white rounded-md shadow-lg'>Back to Home</Link>
+        </div>
+    );
+  }
+
+  if (!crochets || crochets.length === 0) {
+    return (
+        <div className="flex flex-col justify-center gap-y-5 items-center py-24 min-h-screen bg-cover bg-center" style={{ backgroundImage: `url(${bg})` }}>
+            <h1 className="text-6xl">No Recipes Found</h1>
+            <p className="text-xl">Please check back later!</p>
+            <Link to="/" className='px-4 py-3 bg-gray-400 hover:bg-gray-500 hover:text-white rounded-md shadow-lg'>Back to Home</Link>
+        </div>
+    );
+  }
   
   return (
     <>
@@ -418,7 +134,7 @@ export default function Sales() {
                 <form className="mt-4 border-t border-gray-200">
                   <h3 className="sr-only">Categories</h3>
                   <ul role="list" className="px-2 py-3 font-medium text-gray-900">
-                    {products.map((category) => (
+                    {crochets.map((category) => (
                       <li key={category.name}>
                         <HashLink smooth to={`#${category.name.replace(/\s+/g, '-')}`} className="block px-2 py-3">
                           {category.name}
@@ -527,7 +243,7 @@ export default function Sales() {
                   <h3 className="sr-only">Categories</h3>
                   <nav className="relative">
                     <ul role="list" className="sticky top-0 space-y-4 border-b border-gray-200 pb-6 text-base font-medium text-gray-900">
-                      {products.map((category) => (
+                      {crochets.map((category) => (
                         <li key={category.name}>
                           <HashLink smooth to={`#${category.name.replace(/\s+/g, '-')}`}>{category.name}</HashLink>
                         </li>
@@ -572,21 +288,24 @@ export default function Sales() {
                 <div className="bg-white">
                   <div className="leading-relaxed text-black mx-auto px-4 sm:px-4 max-w-full flex justify-center items-center">
                     <div className="grid xl:grid-cols-1 lg:grid-cols-1 bwlnx:grid-cols-1 md:grid-cols-1 sm:grid-cols-1 xsm:grid-cols-1 xsm:gap-y-8 lg:p-4 group place-self-center">
-                        {products.map((product) => ( 
+                        {crochets.map((product) => ( 
                           <div className="space-y-2" key={product.id} id={product.name.replace(/\s+/g, '-')}>
                               <p className="text-4xl font-playfair">{product.name}</p>
                               <div className="xsm:grid grid-cols-2 xl:flex flex-wrap gap-x-4 gap-y-2 xl:p-4">
                                 {product.Items.map((prod) =>
                                   <div className="bg-gray-100 p-4 " key={prod.id}>
-                                      <img onClick={() => handleImageClick(prod.id)} src={prod.image} alt="" className="w-56 cursor-pointer"/>
-                                      <p className="text-black xl:text-lg xsm:text-base font-noto">{prod.name}</p>
-                                      <p className="text-gray-800 xsm:text-sm font-noto">{prod.category}</p>
-                                      <p className="text-gray-800 xsm:text-sm">₱{prod.price}.00</p>
-                                      <div className="flex flex-wrap xsm:text-sm">
-                                        <p>{prod.stars}</p>
-                                        <p>{prod.rating}</p>
-                                      </div>
+                                    <Link to={prod.id.toString()}>
+                                      <img src={prod.image} alt="" className="w-56 cursor-pointer"/>
+                                    </Link>
+                                    <p className="text-black xl:text-lg xsm:text-base font-noto">{prod.name}</p>
+                                    <p className="text-gray-800 xsm:text-sm font-noto">{prod.category}</p>
+                                    <p className="text-gray-800 xsm:text-sm">₱{prod.price}.00</p>
+                                    <div className="flex flex-wrap xsm:text-sm">
+                                      <p>{prod.stars}</p>
+                                      <p>{prod.rating}</p>
+                                    </div>
                                   </div>
+                                  
                                 )}
                               </div>
                           </div>
@@ -597,7 +316,7 @@ export default function Sales() {
               </div>
             </section>
 
-            <div className={`${isOpen ? 'backdrop-blur-sm fixed z-30' : ''}  inset-0 bg-black/40 z-0`}>
+            {/* <div className={`${isOpen ? 'backdrop-blur-sm fixed z-30' : ''}  inset-0 bg-black/40 z-0`}>
               <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50 text-gray-900">
                 <div className={`fixed inset-0 flex w-screen items-center justify-center transition-opacity duration-1000 ease-out 
                   ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
@@ -673,7 +392,7 @@ export default function Sales() {
             <Toaster
               position="top-right"
               reverseOrder={false}
-            />
+            /> */}
           </main>
         </div>
       </div>

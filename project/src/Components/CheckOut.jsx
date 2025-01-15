@@ -2,8 +2,8 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 //assets
-import avatar from '../Assets/avatar.jpg'
 import carticon from '../Assets/cart.png'
+import BreadCrumbs from './BreadCrumbs';
 
 export default function CheckOut() {
     const navigate = useNavigate()
@@ -19,7 +19,9 @@ export default function CheckOut() {
     return(
         <>
             <div className="min-h-screen flex flex-col justify-center items-center bg-white">
-                <div className="w-full container p-4">
+                
+                <div className="w-full container p-4 flex flex-row justify-between">
+                    <BreadCrumbs/>
                     <p onClick={() => navigate("/products/sales")} className='text-gray-800 cursor-pointer px-2 py-2 font-semibold'>{"<"} Back to Products</p>
                 </div>
                 <div className="max-w-[90rem] w-full m-5 rounded-2xl shadow-xl bg-white">

@@ -53,10 +53,9 @@ const filters = [
     name: 'Category',
     options: [
       { value: 'Dolls', label: 'Dolls', checked: false },
-      { value: 'Jacket', label: 'Jacket', checked: false },
-      { value: 'Bouquet', label: 'Bouquet', checked: false },
-      { value: 'Sweater', label: 'Sweater', checked: false },
-      { value: 'Accessories', label: 'Accessories', checked: false },
+      { value: 'Flowers', label: 'Flowers', checked: false },
+      { value: 'Keychains', label: 'Keychains', checked: false },
+      { value: 'Wearables', label: 'Wearables', checked: false },
     ],
   },
   {
@@ -189,7 +188,7 @@ export default function Sales() {
 
               <div className="flex items-center">
                 <Menu as="div" className="relative inline-block text-left">
-                  <div>
+                  {/* <div>
                     <MenuButton className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
                       Sort
                       <ChevronDownIcon
@@ -197,7 +196,7 @@ export default function Sales() {
                         className="-mr-1 ml-1 size-5 shrink-0 text-gray-400 group-hover:text-gray-500"
                       />
                     </MenuButton>
-                  </div>
+                  </div> */}
 
                   <MenuItems
                     transition
@@ -295,8 +294,24 @@ export default function Sales() {
                                 {product.Items.map((prod) =>
                                   <div className="bg-gray-100 p-4 " key={prod.id}>
                                     <Link to={prod.id.toString()}>
-                                      <img src={prod.image} alt="" className="w-56 cursor-pointer"/>
+                                      {prod.image && Array.isArray(prod.image) ? (
+                                        <img 
+                                          src={prod.image[0]} 
+                                          alt="Product" 
+                                          className="w-56 cursor-pointer"
+                                          title={prod.name}
+                                        />
+                                      ) : (
+                                        prod.image && (
+                                          <img 
+                                            src={prod.image} 
+                                            alt="Product" 
+                                            className="w-56 cursor-pointer"
+                                          />
+                                        )
+                                      )}
                                     </Link>
+
                                     <p className="text-black xl:text-lg xsm:text-base font-noto">{prod.name}</p>
                                     <p className="text-gray-800 xsm:text-sm font-noto">{prod.category}</p>
                                     <p className="text-gray-800 xsm:text-sm">₱{prod.price}.00</p>

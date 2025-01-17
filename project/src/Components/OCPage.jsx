@@ -67,7 +67,7 @@ export default function OCPage() {
                                     :
                                         userCart.map((cart) => (
                                             <div className="flex flex-row gap-x-4" key={cart.id}>
-                                                <img src={cart.img} alt="" className='w-28 rounded-md'/>
+                                                <img src={cart.img[0]} alt="" className='w-28 rounded-md'/>
                                                 <div className="text-gray-900">
                                                     <p>{cart.name}</p>
                                                     <p>{cart.category}</p>

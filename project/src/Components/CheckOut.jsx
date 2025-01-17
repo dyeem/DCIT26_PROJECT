@@ -261,7 +261,7 @@ export default function CheckOut() {
                                         userCart.map((cart) => (
                                             <div key={cart.id} className="flex items-center py-4">
                                                 <img
-                                                    src={cart.img}
+                                                    src={cart.img[0]}
                                                     alt={cart.name}
                                                     className="lg:h-20 lg:w-20 xsm:h-14 xsm:w-14 object-cover rounded-md"/>
                                                 <div className="ml-4 flex-grow text-left">

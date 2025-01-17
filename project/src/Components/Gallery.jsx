@@ -7,14 +7,14 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import Pouch1 from '../Assets/Gallery/pouch1.jpg';
 import CatHood from '../Assets/Gallery/cathood.png';
 import Boquet1 from '../Assets/Gallery/bouquet1.jpg';
-import Domeboquet1 from '../Assets/Gallery/domebouquet.jpg';
+import vintage from '../Assets/Products/Wearables/vintagatop2.png'
 
 const product = {
   images: [
-    { src: Domeboquet1, alt: 'Dome bouquet hand woven crochet' },
-    { src: Pouch1, alt: 'Hand-woven crochet pouch' },
-    { src: CatHood, alt: 'Hand-woven crochet cat hood' },
-    { src: Boquet1, alt: 'Hand-woven crochet bouquet' },
+    { src: vintage, alt: 'Hand-woven Crochet Top' },
+    { src: Pouch1, alt: 'Hand-woven Crochet Pouch' },
+    { src: CatHood, alt: 'Hand-woven Crochet Cat Hood' },
+    { src: Boquet1, alt: 'Hand-woven Crochet Bouquet' },
   ],
 };
 
@@ -23,7 +23,7 @@ export default function Gallery() {
     <div className="bg-white pt-6 pb-16">
       <div className="flex flex-col lg:items-center justify-center xsm:items-start p-5 gap-y-3">
         <p className="lg:text-6xl xsm:text-3xl xsm:font-semibold lg:font-medium text-gray-900 font-serif">
-          Gallery Styles are Finally Here!
+          Gallery of Creations
         </p>
         <p className="lg:text-xl xsm:text-base lg:font-light text-gray-700 font-serif">
           Explore our Featured Gallery, where artistry meets passion. Each showcased piece is a testament to the beauty of handwoven crochet, blending intricate designs with functionality.

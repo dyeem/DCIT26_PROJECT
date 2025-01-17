@@ -12,19 +12,19 @@ export default function CustomizePage() {
 
     return (
         <>
-            <div className="flex justify-center items-center bg-white text-gray-800 w-full font-serif py-4">
-                <div className="rounded-md shadow-md p-4 w-[90rem]">
-                    <div className="flex flex-row justify-center items-center">
-                        <img src={pic} alt="" className='h-[35rem]'/>
+            <div className="flex justify-center items-center bg-[white] text-gray-800 w-full font-serif py-4 ">
+                <div className="rounded-md shadow-xl p-0 w-[90rem] bg-[#c29076]">
+                    <div className="flex flex-row justify-center items-center bg-[#c29076]">
+                        <img src={pic} alt="" className='h-[45rem] sm:hidden xsm:hidden xl:block'/>
                         <div className="flex flex-col text-center w-full p-3">
-                            <p className='text-5xl font-serif text-violet-900 mb-3'>Customize Order Request</p>
-                            <div className="flex flex-row items-center gap-x-14 px-10">
-                                <hr className='border-1 border-gray-400 w-full'/>
+                            <p className='xsm:text-3xl xl:text-5xl font-serif text-violet-900 mb-3 xsm:mt-4'>Customize Order Request</p>
+                            <div className="flex flex-row items-center xsm:gap-x-4 xl:gap-x-14 xl:px-10">
+                                <hr className='border-2 border-white-400 w-full'/>
                                 <p className='font-serif text-violet-700 text-nowrap'>Contact Information</p>
-                                <hr className='border-1 border-gray-400 w-full'/>
+                                <hr className='border-2 border-white-400 w-full'/>
                             </div>
                             {/* FORM */}
-                            <div className="mx-24 mt-4">
+                            <div className="xl:mx-24 mt-4 xsm:px-4">
                                 <div className="flex flex-col items-start">
                                     <p className='text-left text-lg font-semibold '>Name:</p>
                                     <input type="text" className='rounded-2xl w-full' placeholder='Name'/>
@@ -54,7 +54,7 @@ export default function CustomizePage() {
                                 </div>
                                 <div className="">
                                     <p className="text-lg font-semibold mb-2 text-left">Reference Image:</p>
-                                    <div className="border-4 border-dashed border-gray-500 rounded-2xl p-6 flex flex-col items-center justify-center">
+                                    <div className="border-4 border-dashed border-gray-500 rounded-2xl p-6 flex flex-col items-center justify-center bg-[#d3a683]">
                                         <div className="flex items-center justify-center">
                                             <label htmlFor="file-upload" className="cursor-pointer">
                                                 <img src={file} alt="" className='size-14'/>
@@ -117,8 +117,8 @@ export default function CustomizePage() {
                                 className="px-4 py-2 text-white bg-red-500 rounded-2xl"
                                 onClick={() => setPopup(false)}
                             >
-                                Close
-                            </button>
+                                Submit
+                            </button>  
                         </div>
                     </DialogPanel>
                 </div>

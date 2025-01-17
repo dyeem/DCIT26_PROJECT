@@ -8,12 +8,18 @@ import {Link} from 'react-router-dom'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { HashLink } from 'react-router-hash-link';
 
+import omen from '../Assets/Products/dolls/omen1.png'
+import top from '../Assets/Products/wearables/vintagatop1.png'
+import hat from '../Assets/Products/wearables/sprout_hat.png'
+import keychain from '../Assets/Products/keychain/greng2.jpg'
+
+
 const categories = [
-  { image: bouquet, label: "Dolls", link: "Dolls".replace(/\s+/g, '-')},
+  { image: omen, label: "Dolls", link: "Dolls".replace(/\s+/g, '-')},
   { image: bouquet, label: "Flowers", link: "Flowers".replace(/\s+/g, '-')},
-  { image: bouquet, label: "Hairclips", link: "Hairclips".replace(/\s+/g, '-')},
-  { image: bouquet, label: "Hat", link: "Hat".replace(/\s+/g, '-')},
-  { image: bouquet, label: "Keychain", link: "Keychain".replace(/\s+/g, '-')},
+  { image: top, label: "Wearables", link: "Wearables".replace(/\s+/g, '-')},
+  { image: hat, label: "Hat", link: "Hat".replace(/\s+/g, '-')},
+  { image: keychain, label: "Keychain", link: "Keychain".replace(/\s+/g, '-')},
 ];
 
 export default function Categories () {

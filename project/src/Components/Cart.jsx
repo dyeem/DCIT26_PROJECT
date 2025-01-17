@@ -75,7 +75,7 @@ export default function Cart({open, setOpen, NavLink}) {
                                                     {userCart.map((cart) => (
                                                         <li key={cart.cartId} className="flex py-6">
                                                             <div className="lg:size-24 xsm:size-20 shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                                                <img alt={cart.img} src={cart.img} className="lg:size-full object-cover xsm:size-20"/>
+                                                                <img alt={cart.img} src={cart.img[0]} className="lg:size-full object-cover xsm:size-20"/>
                                                             </div>
                                                             <div className="ml-4 flex flex-1 flex-col">
                                                                 <div>

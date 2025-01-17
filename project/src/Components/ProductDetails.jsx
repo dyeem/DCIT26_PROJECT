@@ -14,6 +14,7 @@ export default function ProductDetails() {
     const currentUser = useSelector((state) => state.user.currentUser)
 
     const product = useLoaderData()
+
     const navigate = useNavigate()
     const [color, setColor] = useState("");
     const [size, setSize] = useState("");
@@ -36,20 +37,28 @@ export default function ProductDetails() {
           setSize(null)
         }
     }
+
+    const [mainImage, setMainImage] = useState(Array.isArray(product.image) ? product.image[0] : product.image)
+
+    function handleClickImage (img) {
+        setMainImage(img)
+    }
+    
     return (
         <>
-            <div className="w-full flex justify-center items-center bg-white text-gray-900 py-20">
-                <div className="flex justify-center items-center w-[80rem]">
+            <div className="w-full flex justify-center items-center bg-white text-gray-900 py-24">
+                <div className="flex justify-center items-center w-[76rem]">
                     {product ? (
                         <div>
-                            <div className="flex flex-wrap justify-between xsm:px-3 xsm:py-2 xl:px-1 xl:py-1">
-                                {/* <p className="flex flex-row font-noto gap-x-2"><Link>Products</Link> {">"} <HashLink smooth to={`/products#${product.category.replace(/\s+/g, '-')}`}>{product.category}</HashLink> {">"} <p>{product.name}</p></p> */}
-                                <BreadCrumbs/>
+                            <div className="flex flex-wrap justify-between xsm:px-3 xsm:py-2 xl:px-1 xl:py-1 mb-8">
+                                <p className="flex flex-row font-noto gap-x-2"><Link>Products</Link> {">"} <HashLink smooth to={`/products#${product.category.replace(/\s+/g, '-')}`}>{product.category}</HashLink> {">"} <p>{product.name}</p></p>
+                                {/* <BreadCrumbs/> */}
+                                <Link to='/products' className="font-noto">{"<"} Back to Product Page</Link>
                             </div>
                             <div className="flex xl:flex-row xsm:flex-col xsm:items-center gap-x-3">
-                                <img src={product.image} alt="" className="xl:size-96 xsm:size-32"/>
-                                <div className="p-3 flex flex-col xl:gap-y-4 xsm:gap-y-2">
-                                    <p className="xl:text-3xl xsm:text-2xl font-noto">{product.name}</p>
+                                <img src={mainImage} alt="" className="xl:size-96 xsm:size-32 rounded-md"/>
+                                <div className="p-3 px-10 flex flex-col xl:gap-y-4 xsm:gap-y-2">
+                                    <p className="xl:text-5xl xsm:text-2xl font-noto">{product.name}</p>
                                     <p>₱{product.price}.00</p>
                                     <div className="flex flex-row  gap-x-4">
                                     <select name="size" className="w-full">
@@ -83,7 +92,7 @@ export default function ProductDetails() {
                                     </div>
                                     <div className="flex flex-wrap gap-x-2">
                                     <p className="text-yellow-400">{product.stars}</p>
-                                    <p >{product.rating}</p>
+                                    <p >{product.rating} rating</p>
                                     </div>
                                     <div className="">
                                     <p>Description</p>
@@ -93,6 +102,29 @@ export default function ProductDetails() {
                                     <button onClick={() => handleAddToCart(product.id, product.name, product.image, size, color, product.price, product.category)} className="bg-[#885B56] text-white font-light px-2 py-2 font-serif">Add To Cart</button>
                                     </div>
                                 </div>
+                            </div>
+                            <div className="flex flex-row gap-x-3 mt-3">
+                                {product.image && Array.isArray(product.image) ? (
+                                    product.image.map((img, index) => (
+                                        <img
+                                        key={index}
+                                        src={img}
+                                        alt={`Product ${index + 1}`}
+                                        className="w-32 cursor-pointer hover:scale-110 transition-transform duration-100 rounded-md"
+                                        title={product.name}
+                                        onClick={() => handleClickImage(img)}
+                                        />
+                                    ))
+                                    ) : (
+                                    product.image && (
+                                        <img
+                                        src={product.image}
+                                        alt="Product"
+                                        className="w-32 cursor-pointer hover"
+                                        title={product.name}
+                                        />
+                                    )
+                                )}
                             </div>
                         </div>
                     ) :

@@ -1,4 +1,7 @@
 import avatar from '../Assets/avatar.jpg'
+import mission from '../Assets/mission_pic.jpg'
+import vision from '../Assets/vision_pic.jpg'
+
 export default function About() {
     return (
         <>
@@ -18,23 +21,22 @@ export default function About() {
                                     />
                                 </h3>
                                 <p className="text-gray-700 lg:text-lg leading-relaxed">
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam excepturi molestiae maxime recusandae animi ab
-                                    sapiente a maiores deserunt iusto labore corporis accusantium esse! Ab quibusdam quis rerum animi velit.
+                                To celebrate the timeless art of crochet by offering meticulously handcrafted, high-quality, and sustainable crochet products. We aim to empower local artisans, preserve traditional craftsmanship, and bring joy to our customers through unique, eco-friendly designs that blend creativity and functionality.
                                 </p>
                             </div>
                             <img 
-                            src={avatar} 
+                            src={mission} 
                             alt="Representation of our mission" 
-                            className="w-[20rem] h-auto rounded-xl shadow-lg mx-auto hidden md:block"
+                            className="w-[30rem] rounded-xl shadow-lg mx-auto hidden md:block"
                             />
                         </div>
                         
                         {/* Vision Section */}
                         <div className="grid md:grid-cols-2 xsm:grid-cols-1 gap-8 items-center">
                             <img 
-                            src={avatar} 
+                            src={vision} 
                             alt="Representation of our vision" 
-                            className="w-[20rem] h-auto rounded-xl shadow-lg mx-auto hidden md:block"
+                            className="w-[30rem] h-auto rounded-xl shadow-lg mx-auto hidden md:block"
                             />
                             <div className="md:text-left xsm:text-center">
                                 <h3 className="text-black lg:text-5xl xsm:text-3xl font-serif mb-4 relative group">
@@ -44,8 +46,7 @@ export default function About() {
                                     />
                                 </h3>
                                 <p className="text-gray-700 lg:text-lg leading-relaxed">
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam excepturi molestiae maxime recusandae animi ab
-                                    sapiente a maiores deserunt iusto labore corporis accusantium esse! Ab quibusdam quis rerum animi velit.
+                                    To become a global symbol of excellence in hand-woven crochet artistry, fostering a deep appreciation for handmade crafts while promoting sustainable practices and supporting communities of skilled artisans.
                                 </p>
                             </div>
                         </div>

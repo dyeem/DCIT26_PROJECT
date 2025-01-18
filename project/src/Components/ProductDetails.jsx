@@ -16,6 +16,7 @@ export default function ProductDetails() {
     const product = useLoaderData()
 
     const navigate = useNavigate()
+
     const [color, setColor] = useState("");
     const [size, setSize] = useState("");
 
@@ -43,6 +44,10 @@ export default function ProductDetails() {
     function handleClickImage (img) {
         setMainImage(img)
     }
+
+    function handleSizeChange (e) {
+        setSize(e.target.value);
+    }
     
     return (
         <>
@@ -61,14 +66,14 @@ export default function ProductDetails() {
                                     <p className="xl:text-5xl xsm:text-2xl font-noto">{product.name}</p>
                                     <p>₱{product.price}.00</p>
                                     <div className="flex flex-row  gap-x-4">
-                                    <select name="size" className="w-full">
+                                    <select name="size" className="w-full" onChange={(e) => handleSizeChange(e)}>
                                         <option value="none" disabled selected className="xl:text-base xsm:text-sm">
                                         Select a size
                                         </option>
                                         {product.size && Array.isArray(product.size) ? (
                                         product.size.map((size, index) => (
                                             <option key={index} value={size}>
-                                            {size}
+                                                {size}
                                             </option>
                                         ))
                                         ) : (

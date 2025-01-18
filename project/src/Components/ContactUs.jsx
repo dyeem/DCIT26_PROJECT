@@ -13,7 +13,7 @@ export default function ContactUs() {
                                 className="absolute bottom-0 left-0 h-[2px] w-0 bg-black transition-all duration-300 group-hover:w-full"
                                 />
                             </h1>
-                            <p className="text-gray-600 leading-relaxed lg:text-base mb-4 xsm:text-sm">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Officiis asperiores corrupti cumque quia provident fugit, deserunt ratione pariatur, veritatis aut eaque, qui non! Ullam incidunt vel quas nemo! Tempore, voluptatem.</p>
+                            <p className="text-gray-600 leading-relaxed lg:text-base mb-4 xsm:text-sm">If you have any questions, concerns, or need assistance with our products or services, we encourage you to get in touch with us. You can reach out to us through the contact form below or by using the provided contact details. We value every inquiry and will make every effort to respond promptly and helpfully to ensure your satisfaction.</p>
                             <div className="flex flex-col items-left gap-4 mb-4 text-center">
                                 <div className="flex items-center gap-3">
                                     <img src={phone} alt="Phone" className="w-6 opacity-70" />

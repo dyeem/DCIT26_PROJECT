@@ -69,12 +69,11 @@ export default function OCPage() {
                                             <div className="flex flex-row gap-x-4" key={cart.id}>
                                                 <img src={cart.img[0]} alt="" className='w-28 rounded-md'/>
                                                 <div className="text-gray-900">
-                                                    <p>{cart.name}</p>
-                                                    <p>{cart.category}</p>
-                                                    <p>{cart.size}</p>
-                                                    <p>{cart.color}</p>
-                                                    <p>{cart.quantity}</p>
-                                                    <p className='font-semibold'>₱{cart.price}</p>
+                                                    <p className='font-semibold'>Name: {cart.name}</p>
+                                                    <p className='font-semibold'>Category: {cart.category}</p>
+                                                    <p className='font-semibold'>Size: {cart.size}</p>
+                                                    <p className='font-semibold'>Color: {cart.color}</p>
+                                                    <p className='font-semibold'>Price: ₱{cart.price}</p>
                                                 </div>
                                             </div>
                                         ))  
@@ -91,22 +90,22 @@ export default function OCPage() {
                                 </div>
                                 <div className="flex flex-wrap justify-between py-4 text-gray-900">
                                     <p className='font-semibold'>Shipping:</p>
-                                    <p>₱666.66</p>
+                                    <p>₱36.00</p>
                                 </div>
                                 <div className="flex flex-wrap justify-between py-4 text-gray-900">
                                     <p className='font-semibold'>Tax:</p>
-                                    <p>₱666.66</p>
+                                    <p>None</p>
                                 </div>
                                 <div className="flex flex-wrap justify-between py-4 text-gray-900">
                                     <p className='font-semibold'>Order Total:</p>
-                                    <p>₱{userCart.reduce((total, cart) => cart.price ? total + cart.price : total, 0)}</p>
+                                    <p>₱{userCart.reduce((total, cart) => cart.price ? total + cart.price : total, 0) +36}</p>
                                 </div>
                             </div>
                         </div>
                         <div className="w-full flex flex-col gap-y-3 items-center px-4">
                             <img src={barcode} alt="" />
                             <button className='font-semibold rounded-md border border-gray-600 text-black w-full py-4 text-lg font-noto'>Print Order Details</button>
-                            <button className='font-semibold rounded-md border border-gray-600 text-black w-full py-4 text-lg font-noto'>Cancel Order</button>
+                            <button onClick={() => navigate('/products')} className='font-semibold rounded-md border border-gray-600 text-black w-full py-4 text-lg font-noto'>Cancel Order</button>
                             <button className='font-semibold flex flex-row justify-center gap-x-1 items-center rounded-md border border-gray-600 text-black w-full py-4 text-lg font-noto'><img src={tel} alt="" className='w-5 '/> +63 13456798</button>
                             <button onClick={() => handleClearUserCart() } className='font-semibold rounded-md bg-[#885b56] text-white w-full py-4 text-lg font-noto'>Back to Home</button>
                         </div>

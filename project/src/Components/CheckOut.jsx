@@ -22,7 +22,7 @@ export default function CheckOut() {
                 
                 <div className="w-full container p-4 flex flex-row justify-between">
                     <BreadCrumbs/>
-                    <p onClick={() => navigate("/products/sales")} className='text-gray-800 cursor-pointer px-2 py-2 font-semibold'>{"<"} Back to Products</p>
+                    <p onClick={() => navigate("/products")} className='text-gray-800 cursor-pointer px-2 py-2 font-semibold'>{"<"} Back to Products</p>
                 </div>
                 <div className="max-w-[90rem] w-full m-5 rounded-2xl shadow-xl bg-white">
                     {/*grid container */}
@@ -143,16 +143,16 @@ export default function CheckOut() {
                                     {/* Street */}
                                     <div class="relative z-0 w-full mb-5 group">
                                         <input 
-                                            type="tel" 
+                                            type="address" 
                                             name="street" 
-                                            id="floating_email" 
+                                            id="street" 
                                             class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
                                             placeholder=" " 
                                             required 
                                         />
                                     
                                         <label 
-                                            for="floating_email" 
+                                            for="street" 
                                             class="peer-focus:font-medium text-left absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-[#885b56] peer-focus:dark:text-[#885b56] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                                             >
                                             Street, Address, Etc.
@@ -164,16 +164,16 @@ export default function CheckOut() {
                                         {/* City */}
                                         <div class="relative z-0 w-full mb-5 group">
                                             <input 
-                                                type="tel" 
+                                                type="address" 
                                                 name="city" 
-                                                id="floating_email" 
+                                                id="city" 
                                                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
                                                 placeholder=" " 
                                                 required 
                                             />
                                         
                                             <label 
-                                                for="floating_email" 
+                                                for="city" 
                                                 class="peer-focus:font-medium text-left absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-[#885b56] peer-focus:dark:text-[#885b56] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                                                 >
                                                 City
@@ -183,16 +183,16 @@ export default function CheckOut() {
                                         {/* Province */}
                                         <div class="relative z-0 w-full mb-5 group">
                                             <input 
-                                                type="tel" 
+                                                type="address" 
                                                 name="province" 
-                                                id="floating_email" 
+                                                id="province" 
                                                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
                                                 placeholder=" " 
                                                 required 
                                             />
                                         
                                             <label 
-                                                for="floating_email" 
+                                                for="province" 
                                                 class="peer-focus:font-medium text-left absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-[#885b56] peer-focus:dark:text-[#885b56] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                                                 >
                                             Province
@@ -202,16 +202,16 @@ export default function CheckOut() {
                                         {/* Postal Code */}
                                         <div class="relative z-0 w-full mb-5 group">
                                             <input 
-                                                type="tel" 
-                                                name="postal code" 
-                                                id="floating_email" 
+                                                type="address" 
+                                                name="postal-code" 
+                                                id="postal-code" 
                                                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
                                                 placeholder=" " 
                                                 required 
                                             />
                                         
                                             <label 
-                                                for="floating_email" 
+                                                for="postal-code" 
                                                 class="peer-focus:font-medium text-left absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-[#885b56] peer-focus:dark:text-[#885b56] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                                                 >
                                                 Postal Code
@@ -261,7 +261,7 @@ export default function CheckOut() {
                                         userCart.map((cart) => (
                                             <div key={cart.id} className="flex items-center py-4">
                                                 <img
-                                                    src={cart.img[0]}
+                                                    src={Array.isArray(cart.img) ? cart.img[0] : cart.img}
                                                     alt={cart.name}
                                                     className="lg:h-20 lg:w-20 xsm:h-14 xsm:w-14 object-cover rounded-md"/>
                                                 <div className="ml-4 flex-grow text-left">

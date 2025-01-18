@@ -243,14 +243,6 @@ export default function NavBar() {
                             </li>
                             <hr />
                             <li>
-                                <a className="justify-between text-base">
-                                    Profile
-                                </a>
-                            </li>
-                            <li>
-                                <a className='text-base'>Settings</a>
-                            </li>
-                            <li>
                                 {currentUser ?  
                                     <a onClick={() => dispatch(userActions.logoutUser())} className='text-base'>
                                         Log out

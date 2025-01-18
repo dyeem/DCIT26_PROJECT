@@ -30,6 +30,7 @@ import HelpLayout from "./HelpLayout.jsx";
 
 //error page
 import ErrorPage from '../Components/ErrorPage/PagenotFound.jsx'
+import DatanotFound from "../Components/ErrorPage/DatanotFound.jsx";
 
 const router = createBrowserRouter(createRoutesFromElements(
   <>
@@ -41,10 +42,10 @@ const router = createBrowserRouter(createRoutesFromElements(
       <Route path="ourteam" element={<OurTeam />} />
 
       {/* PRODUCT ROUTE */}
-      <Route path="products" element={<SalesLayout />}>
+      <Route path="products" element={<SalesLayout />} errorElement={<ErrorPage/>}>
         <Route index loader={CrochetLoaders} element={<Sales />} />
-        <Route path=":id" loader={ProductDetailsLoader} element={<ProductDetails/>} />
-        <Route path="checkout" element={<CheckoutLayout />}>
+        <Route path=":id" loader={ProductDetailsLoader} element={<ProductDetails/>} errorElement={<DatanotFound/>}/>
+        <Route path="checkout" element={<CheckoutLayout />} errorElement={<ErrorPage/>}>
           {/* CHECKOUT ROUTE */}
           <Route index element={<CheckOut />} />
           <Route path="orderconfirmationpage" element={<OCPage />} />
@@ -56,7 +57,7 @@ const router = createBrowserRouter(createRoutesFromElements(
       </Route>
 
       {/* HELP ROUTE */}
-      <Route path="help" element={<HelpLayout/>}>
+      <Route path="help" element={<HelpLayout/>} errorElement={<ErrorPage/>}>
         <Route path="contactus" element={<ContactUs />} />
         <Route path="faqpage" element={<FaqPage />}/>
         <Route path="customize-order" element={<CustomizePage/>}/>

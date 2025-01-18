@@ -44,7 +44,7 @@ export default function Categories () {
                         />
                         <div className="absolute inset-0 flex flex-col justify-end items-start p-4 text-white leading-relaxed">
                             <p className="mb-2 text-2xl font-normal text-left">{category.label}</p>
-                            <button className="px-3 py-1 hover:bg-[#885b56] bg-white text-black hover:text-white transition duration-300 rounded-2xl font-semibold">Shop Now</button>
+                            <button className="px-3 py-1 hover:bg-[#885b56] bg-[#885b56] text-white hover:text-white transition duration-300 rounded-2xl font-semibold">Shop Now</button>
                         </div>
                     </HashLink>
                 ))}

@@ -175,7 +175,7 @@
         {
           "id": 311, 
           "name": "Baby Mushroom", 
-          "image": "/src/assets/products/Keychain/baby_mushroom.png", 
+          "image": "/src/assets/products/Keychain/baby_mushroom.jpg", 
           "size": ["Small"], 
           "color": ["Deer", "Frog", "Cherry", "Flowery", "Frog", "Tiger"], 
           "quantity": 99, 
@@ -201,7 +201,7 @@
         {
           "id": 313, 
           "name": "Cat face keychain", 
-          "image": ["/src/assets/products/Keychain/cat1.jpg", "/src/assets/products/Keychain/cat2.jpg"], 
+          "image": ["/src/assets/products/Keychain/cat1.png", "/src/assets/products/Keychain/cat2.jpg"], 
           "size": ["Small, Medium"], 
           "color": ["One color"], 
           "quantity": 5, 

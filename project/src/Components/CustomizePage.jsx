@@ -114,7 +114,7 @@ export default function CustomizePage() {
                                 <label htmlFor="check" className='text-gray-900'>I agree to the following terms and conditions.</label>
                             </div>
                             <button
-                                className="px-4 py-2 text-white bg-red-500 rounded-2xl"
+                                className="px-4 py-2 text-white bg-[#885b56] rounded-2xl"
                                 onClick={() => setPopup(false)}
                             >
                                 Submit

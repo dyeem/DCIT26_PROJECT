@@ -3,6 +3,10 @@ import fb from '../Assets/fbb.png';
 import google from '../Assets/google.png';
 import otpic from '../assets/otpic.jpg';
 
+import javis from '../assets/OurTeam/javis.png';
+import merce from '../assets/OurTeam/merce.jpg';
+import tala from '../Assets/OurTeam/tala.png';
+
 export default function OurTeam() {
   return (
     <div
@@ -28,21 +32,21 @@ export default function OurTeam() {
 
       <div className="grid lg:grid-cols-3 gap-8 text-center max-w-6xl w-full group">
         {[
-          { name: "John Mark Navajas", pos: "Taga Luto", fb: "", google: "" },
-          { name: "Mark Javis Mateo", pos: "Taga Luto", fb: "", google: "" },
-          { name: "Crystal Nable", pos: "Taga Luto", fb: "", google: "" }
+          { name: "John Mark Navajas",img: merce, pos: "Lead Developer", fb: "", google: "" },
+          { name: "Mark Javis Mateo",img: javis, pos: "Assistant Programmer/Lead Design Developer", fb: "", google: "" },
+          { name: "Crystal Nable",img: tala, pos: "Assistant Developer/Lead Documenter", fb: "", google: "" }
         ].map((obj, index) => (
           <div
             key={index}
-            className="card flex flex-col items-center bg-gray-100 p-6 rounded-xl shadow-md hover:shadow-lg group-hover:opacity-50 hover:!opacity-100 transition-opacity duration-300 bg-opacity-90"
+            className="card flex flex-col items-center bg-gray-100 p-6 rounded-xl shadow-md hover:shadow-lg group-hover:opacity-50 hover:!opacity-100 transition-opacity duration-300 bg-opacity-90 hover:scale-110 transition-transform duration-300 font-serif"
           >
             <img
-              src={avatar}
+              src={obj.img}
               alt={`${obj.name}`}
               className="rounded-full w-32 h-32 mb-4 border-4 border-gray-300"
             />
             <p className="text-black text-2xl font-medium mb-2">{obj.name}</p>
-            <p className="text-gray-600">{obj.pos}</p>
+            <p className="text-gray-900">{obj.pos}</p>
             <div className="flex gap-5 p-3">
               <a href={obj.fb}><img src={fb} alt="" className="w-4 h-4" /></a>
               <a href={obj.google}><img src={google} alt="" className="w-4 h-4" /></a>

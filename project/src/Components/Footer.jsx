@@ -18,7 +18,7 @@ export default function Footer() {
                     <HashLink smooth to={`/products#${"Keychain".replace(/\s+/g, '-')}`} className="text-sm leading-relaxed text-[1rem]">Keychain</HashLink>
                 </nav>
                 <nav className="justify-self-center justify-items-center">
-                    <h6 className="footer-title font-serif text-xl lg:text-2xl relative group">Company
+                    <h6 className="footer-title font-serif text-xl lg:text-2xl relative group">Pages
                         <span 
                             className="absolute bottom-0 left-0 h-[2px] w-0 bg-slate-100 transition-all duration-300 group-hover:w-full"
                         />
@@ -26,6 +26,7 @@ export default function Footer() {
                     <HashLink smooth to="/" className="text-sm leading-relaxed text-[1rem]">Home</HashLink>
                     <HashLink smooth to="/aboutus" className="text-sm leading-relaxed text-[1rem]">About Us</HashLink>
                     <HashLink smooth to="/reviews" className="text-sm leading-relaxed text-[1rem]">Reviews</HashLink>
+                    <HashLink smooth to="/ourteam" className="text-sm leading-relaxed text-[1rem]">Our Team</HashLink>
                 </nav>
                 <nav className="justify-self-center justify-items-center">
                     <h6 className="footer-title font-serif text-xl lg:text-2xl relative group">Customer Support

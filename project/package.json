@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "nodemon backend/server.js"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.2.2",
@@ -17,10 +18,17 @@
     "@heroicons/react": "^2.2.0",
     "@reduxjs/toolkit": "^2.4.0",
     "@tailwindcss/forms": "^0.5.9",
-    "axios": "^1.7.8",
+    "axios": "^1.7.9",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
     "flowbite-react": "^0.10.2",
     "framer-motion": "^11.12.0",
+    "mongodb": "^6.12.0",
+    "mongoose": "^8.9.5",
     "next-themes": "^0.4.3",
+    "nodemon": "^3.1.9",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hot-toast": "^2.4.1",
@@ -47,5 +55,10 @@
     "react-router-dom": "^6.28.0",
     "tailwindcss": "^3.4.14",
     "vite": "^5.4.10"
-  }
+  },
+  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
+  "main": "eslint.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

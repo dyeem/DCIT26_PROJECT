@@ -1,8 +1,9 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import path from 'path';
 import { connectDB } from './config/db.js';
-import Product from './models/product.model.js';
 
+import productRoutes from './routes/product.route.js';
 
 /*NOTE
   200 - Success Request
@@ -13,58 +14,25 @@ import Product from './models/product.model.js';
 
 dotenv.config();
 const app = express();
+const PORT = process.env.PORT || 5000;
+
+const __dirname = path.resolve();
 
 app.use(express.json()); //parsing incoming request body, accepting data as json
 
-// FETCH ALL PRODUCTS
-app.get('/api/products', async (req, res) => {
-  try {
-    const products = await Product.find({}); //empty argument meaning fetch all products
-    res.status(200).json({success:true, data:products});
-  } catch (error) {
-    console.log("error in fetching products:", error.message);
-    res.status(500).json({success:false, message: "Internal server error"});
-  }
-})
+app.use("/api/products", productRoutes);
 
-// CREATE A PRODUCT
-app.post('/api/products', (req, res) => {
-  const product = req.body;
+if(process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '/frontend/dist')));
 
-  if(!product.name || !product.description || !product.price || !product.countInStock || !product.imageUrl || !product.size || !product.category || !product.color || !product.rating || !product.stars) {
-    return res.status(400).json({success:false, message: "All fields are required"});
-  }
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html'));
+  });
+}
 
-  const newProduct = new Product(product)
-
-  try{
-    newProduct.save();
-    return res.status(201).json({success:true, message: "Product created successfully"});
-
-  }catch(error){
-    console.error("Error creating product:", error);
-    res.status(500).json({success:false, message: "Internal server error"});
-  };
-
-});
-
-// DELETING A PRODUCT BY ID
-app.delete('/api/products/:id', async (req, res) => {
-  const productId = req.params.id;
-
-  try {
-    await Product.findByIdAndDelete(productId);
-    res.status(200).json({ success: true, message: 'Product deleted successfully' });
-
-  } catch (error) {
-    res.status(404).json({ success: false, message: 'Product not found' });
-  }
-
-});
-
-app.listen(5000, () => {
+app.listen(PORT, () => {
   connectDB();
-  console.log('Server is running on port http://localhost:5000');
+  console.log('Server is running on port http://localhost:'+ PORT);
 });
 
 // username = johnmarknavajas14

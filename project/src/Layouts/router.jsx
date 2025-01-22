@@ -19,7 +19,7 @@ import CustomizePage from "../Components/CustomizePage.jsx";
 import ProductDetails from "../Components/ProductDetails.jsx";
 
 // PRODUCT LOADER
-import { CrochetLoaders } from "../Components/Loader/ProductsLoader.js";
+import { ProductsLoader } from "../Components/Loader/ProductsLoader.js";
 import { ProductDetailsLoader } from "../Components/Loader/ProductDetLoader.js";
 
 //Root Layout
@@ -32,6 +32,11 @@ import HelpLayout from "./HelpLayout.jsx";
 import ErrorPage from '../Components/ErrorPage/PagenotFound.jsx'
 import DatanotFound from "../Components/ErrorPage/DatanotFound.jsx";
 
+// admin route
+import AdminLayout from "./AdminLayout.jsx";
+import AdminDashboard from "../Components/Admin/AdminDashBoard.jsx";
+import ManageProducts from "../Components/Admin/ManageProducts.jsx";
+
 const router = createBrowserRouter(createRoutesFromElements(
   <>
     <Route path="/" element={<RootLayout/>}>
@@ -43,7 +48,7 @@ const router = createBrowserRouter(createRoutesFromElements(
 
       {/* PRODUCT ROUTE */}
       <Route path="products" element={<SalesLayout />} errorElement={<ErrorPage/>}>
-        <Route index loader={CrochetLoaders} element={<Sales />} />
+        <Route index loader={ProductsLoader} element={<Sales />} />
         <Route path=":id" loader={ProductDetailsLoader} element={<ProductDetails/>} errorElement={<DatanotFound/>}/>
         <Route path="checkout" element={<CheckoutLayout />} errorElement={<ErrorPage/>}>
           {/* CHECKOUT ROUTE */}
@@ -63,6 +68,13 @@ const router = createBrowserRouter(createRoutesFromElements(
         <Route path="customize-order" element={<CustomizePage/>}/>
         {/* Handle missing/mismatched page */}
         <Route path="*" element={<ErrorPage/>}/> 
+      </Route>
+
+      <Route path="admin" element={<AdminLayout />} errorElement={<ErrorPage />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="manage-products" element={<ManageProducts />} />
+        {/* Additional admin routes */}
+        <Route path="*" element={<ErrorPage />} />
       </Route>
       
       {/* Handle missing/mismatched page */}

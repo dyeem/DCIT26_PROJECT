@@ -36,6 +36,7 @@ import DatanotFound from "../Components/ErrorPage/DatanotFound.jsx";
 import AdminLayout from "./AdminLayout.jsx";
 import AdminDashboard from "../Components/Admin/AdminDashBoard.jsx";
 import ManageProducts from "../Components/Admin/ManageProducts.jsx";
+import AdminRoute from "../Components/Admin/AdminRoute.jsx";
 
 const router = createBrowserRouter(createRoutesFromElements(
   <>
@@ -70,7 +71,8 @@ const router = createBrowserRouter(createRoutesFromElements(
         <Route path="*" element={<ErrorPage/>}/> 
       </Route>
 
-      <Route path="admin" element={<AdminLayout />} errorElement={<ErrorPage />}>
+      {/* Admin Route */}
+      <Route path="admin" element={<AdminRoute />}>
         <Route index element={<AdminDashboard />} />
         <Route path="manage-products" element={<ManageProducts />} />
         {/* Additional admin routes */}

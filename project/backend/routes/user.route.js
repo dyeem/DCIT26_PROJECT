@@ -15,8 +15,8 @@ from '../controller/user.controller.js';
 
 const router = express.Router();
 
-router.post('/', createUser);
+router.post('/', createUser); //create user through login and signup
 
-router.put('/:id', updateUser);
+router.put('/:id', updateUser); //update user through edit profile
 
 export default router;

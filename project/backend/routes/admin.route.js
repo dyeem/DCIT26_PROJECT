@@ -9,9 +9,10 @@ import { admin, protect } from '../Middleware/auth.js';
 
 const router = express.Router();
 
-router.get('/', protect, admin, getUsers);
-router.post('/', protect, admin, createUser);
-router.put('/:id', protect, admin, updateUser);
-router.delete('/:id',protect, admin, deleteUser);
+// users routes
+router.get('/', protect, admin, getUsers); //get all users
+router.post('/', protect, admin, createUser); //create user
+router.put('/:id', protect, admin, updateUser); //update user
+router.delete('/:id',protect, admin, deleteUser); //delete user
 
 export default router;

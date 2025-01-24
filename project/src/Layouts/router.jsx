@@ -35,8 +35,12 @@ import DatanotFound from "../Components/ErrorPage/DatanotFound.jsx";
 // admin route
 import AdminLayout from "./AdminLayout.jsx";
 import AdminDashboard from "../Components/Admin/AdminDashBoard.jsx";
-import ManageProducts from "../Components/Admin/ManageProducts.jsx";
+import ProductList from "../Components/Admin/ProductList.jsx";
 import AdminRoute from "../Components/Admin/AdminRoute.jsx";
+import EditProduct from "../Components/Admin/EditProduct.jsx";
+import ProductsLayout from "./ProductsLayout.jsx";
+import AddProduct from "../Components/Admin/AddProduct.jsx";
+import UsersList from "../Components/Admin/UsersList.jsx";
 
 const router = createBrowserRouter(createRoutesFromElements(
   <>
@@ -70,18 +74,26 @@ const router = createBrowserRouter(createRoutesFromElements(
         {/* Handle missing/mismatched page */}
         <Route path="*" element={<ErrorPage/>}/> 
       </Route>
-
-      {/* Admin Route */}
-      <Route path="admin" element={<AdminRoute />}>
-        <Route index element={<AdminDashboard />} />
-        <Route path="manage-products" element={<ManageProducts />} />
-        {/* Additional admin routes */}
-        <Route path="*" element={<ErrorPage />} />
-      </Route>
-      
-      {/* Handle missing/mismatched page */}
-      <Route path="*" element={<ErrorPage/>}/> 
     </Route>
+    
+    {/* Admin Route */}
+    <Route path="admin" element={<AdminLayout />} errorElement={<ErrorPage/>}>
+      <Route index element={<AdminDashboard />} />
+      <Route path="manage-product" element={<ProductsLayout />}>
+        <Route index element={<ProductList />} />
+        <Route path="add-product" element={<AddProduct />} />
+        <Route path="edit-product" element={<EditProduct />} />
+      </Route>
+      {/* Additional admin routes */}
+      <Route path="*" element={<ErrorPage />} />
+
+      <Route path="manage-user" element={<UsersList/>}>
+        <Route index element={<UsersList/>}/>
+      </Route>
+    </Route>
+    
+    {/* Handle missing/mismatched page */}
+    <Route path="*" element={<ErrorPage/>}/> 
   </>
 ))
 

@@ -1,5 +1,5 @@
 
-export default function ManageProducts() {
+export default function ProductList() {
   return (
     <div>ManageProduct</div>
   )

@@ -78,7 +78,7 @@ const router = createBrowserRouter(createRoutesFromElements(
     
     {/* Admin Route */}
     <Route path="admin" element={<AdminLayout />} errorElement={<ErrorPage/>}>
-      <Route index element={<AdminDashboard />} />
+      <Route index path="dashboard" element={<AdminDashboard />} />
       <Route path="manage-product" element={<ProductsLayout />}>
         <Route index element={<ProductList />} />
         <Route path="add-product" element={<AddProduct />} />

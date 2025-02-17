@@ -1,13 +1,15 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../Components/Admin/Components/Navbar";
+import Header from "../Components/Admin/Components/Header";
 
 export default function AdminLayout() {
   return (
     <>
-      <header className="bg-transparent">
+      <header className="">
         <Navbar/>
       </header>
-      <body className="bg-puzzle-pattern bg-[#f5f5f5] min-h-screen">
+      <body className="flex flex-col bg-[#faf8f8] bg-puzzle-pattern font-poppins">
+        <Header/>
         <Outlet />
       </body>
       <footer>

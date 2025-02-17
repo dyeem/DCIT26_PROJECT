@@ -9,7 +9,6 @@ export const ProductDetailsLoader = async ({ params }) => {
     const data = await res.json();
     console.log("Response Data:", data); // Debugging: Verify the API response
 
-    // Find the product in the nested structure
     let product = null;
     for (const category of data) {
         product = category.Items.find((item) => item.id === parseInt(id));

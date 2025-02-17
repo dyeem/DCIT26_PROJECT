@@ -4,7 +4,7 @@ export default function Navbar() {
   return (
     <nav className="z-50 w-60 fixed h-screen p-10 bg-[#faf9f9] font-semibold shadow-md">
       <div className="flex flex-col justify-between h-full">
-          <div className="flex flex-col items gap-y-5">
+          <div className="flex flex-col items gap-y-8">
                 <p className="text-[#7E62FF] text-4xl mb-14 font-bold font-playfair">Loop</p>
                 <div className="flex flex-row items-center gap-x-2">
                     <svg fill="#7E62FF" width="35" height="35" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" id="dashboard" class="icon glyph"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><rect x="2" y="2" width="9" height="11" rx="2"></rect><rect x="13" y="2" width="9" height="7" rx="2"></rect><rect x="2" y="15" width="9" height="7" rx="2"></rect><rect x="13" y="11" width="9" height="11" rx="2"></rect></g></svg>
@@ -17,6 +17,18 @@ export default function Navbar() {
                                 Overview
                             </NavLink>
                         </p>
+                </div>
+                <div className="flex flex-row items-center gap-x-2">
+                    <svg viewBox="0 0 24 24" width="36" height="36" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M11.0287 2.53961C11.6327 2.20402 12.3672 2.20402 12.9713 2.5396L20.4856 6.71425C20.8031 6.89062 21 7.22524 21 7.5884V15.8232C21 16.5495 20.6062 17.2188 19.9713 17.5715L12.9713 21.4604C12.3672 21.796 11.6327 21.796 11.0287 21.4604L4.02871 17.5715C3.39378 17.2188 3 16.5495 3 15.8232V7.5884C3 7.22524 3.19689 6.89062 3.51436 6.71425L11.0287 2.53961Z" stroke="#7E62FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M7.5 4.5L16.5 9.5V13" stroke="#7E62FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M6 12.3281L9 14" stroke="#7E62FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M3 7L12 12M12 12L21 7M12 12V21.5" stroke="#7E62FF" stroke-width="2" stroke-linejoin="round"></path> </g></svg>
+                    <p className="text text-gray-700">
+                        <NavLink
+                            to="/admin/manage-product"
+                            className={({ isActive }) =>
+                            isActive ? "text-[#7E62FF]" : "text-gray-700"}
+                        > 
+                            Products
+                        </NavLink>
+                    </p>
                 </div>
                 <div className="flex flex-row items-center gap-x-2">
                     <svg fill="#7E62FF" viewBox="0 -64 640 640" width="35" height="35" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M96 224c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm448 0c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm32 32h-64c-17.6 0-33.5 7.1-45.1 18.6 40.3 22.1 68.9 62 75.1 109.4h66c17.7 0 32-14.3 32-32v-32c0-35.3-28.7-64-64-64zm-256 0c61.9 0 112-50.1 112-112S381.9 32 320 32 208 82.1 208 144s50.1 112 112 112zm76.8 32h-8.3c-20.8 10-43.9 16-68.5 16s-47.6-6-68.5-16h-8.3C179.6 288 128 339.6 128 403.2V432c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48v-28.8c0-63.6-51.6-115.2-115.2-115.2zm-223.7-13.4C161.5 263.1 145.6 256 128 256H64c-35.3 0-64 28.7-64 64v32c0 17.7 14.3 32 32 32h65.9c6.3-47.4 34.9-87.3 75.2-109.4z"></path></g></svg>

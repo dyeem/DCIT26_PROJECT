@@ -8,7 +8,7 @@ export default function AdminLayout() {
       <header className="">
         <Navbar/>
       </header>
-      <body className="flex flex-col bg-[#e9e6e6] bg-puzzle-pattern font-poppins">
+      <body className="flex flex-col bg-[#e2e3ec] bg-puzzle-pattern font-poppins">
         <Header/>
         <Outlet />
       </body>

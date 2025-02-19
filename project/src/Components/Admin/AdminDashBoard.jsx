@@ -3,7 +3,7 @@ import SalesChart from './Components/SalesChart';
 export default function AdminDashboard() {
   return (
     <div className="w-full flex justify-center items-center p-4 font-roboto">
-      <div className="ml-[19rem] mt-[7rem] max-w-9xl flex flex-col justify-center items-center">
+      <div className="ml-[15rem] mt-[7rem] max-w-9xl flex flex-col justify-center items-center">
         <div className="flex flex-wrap w-full">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
             <div className="flex flex-col gap-y-6 px-8 py-6 bg-[#faf8f8] shadow-lg rounded-lg">

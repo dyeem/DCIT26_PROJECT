@@ -1,21 +1,21 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
 const data = [
-  { month: "Jan", sales: 4000 },
-  { month: "Feb", sales: 3000 },
-  { month: "Mar", sales: 5000 },
-  { month: "Apr", sales: 7000 },
-  { month: "May", sales: 6000 },
-  { month: "Jun", sales: 8000 },
-  { month: "May", sales: 6000 },
-  { month: "Jun", sales: 8000 },
+  { month: "Jan", Sales: 4000 },
+  { month: "Feb", Sales: 3000 },
+  { month: "Mar", Sales: 5000 },
+  { month: "Apr", Sales: 7000 },
+  { month: "May", Sales: 6000 },
+  { month: "Jun", Sales: 8000 },
+  { month: "May", Sales: 6000 },
+  { month: "Jun", Sales: 8000 },
 ];
 
 const SalesChart = () => {
   return (
-    <div className="p-6 bg-white rounded-xl shadow-lg w-full max-w-screen-lg">
+    <div className="p-6 bg-white rounded-xl shadow-lg w-full max-w-screen-lg font-poppins">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4">Monthly Sales Overview</h2>
-      <ResponsiveContainer width="100%" height={400}>
+      <ResponsiveContainer width="100%" height={400} >
         <LineChart data={data} margin={{ top: 10, right: 30, left: 10, bottom: 10 }}>
           <CartesianGrid strokeDasharray="4 4" stroke="#e5e7eb" />
           <XAxis dataKey="month" tick={{ fill: "#374151", fontSize: 14 }} />
@@ -28,7 +28,7 @@ const SalesChart = () => {
           <Legend verticalAlign="top" height={36} />
           <Line 
             type="monotone" 
-            dataKey="sales" 
+            dataKey="Sales" 
             stroke="url(#colorSales)" 
             strokeWidth={3} 
             dot={{ fill: "#4F46E5", r: 5 }} 

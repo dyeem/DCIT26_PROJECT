@@ -17,6 +17,7 @@ import FaqPage from "../Components/FaqPage.jsx";
 import OCPage from "../Components/OCPage.jsx";
 import CustomizePage from "../Components/CustomizePage.jsx";
 import ProductDetails from "../Components/ProductDetails.jsx";
+import SignUp from "../Components/SignUp.jsx";
 
 // PRODUCT LOADER
 import { ProductsLoader } from "../Components/Loader/ProductsLoader.js";
@@ -47,6 +48,7 @@ const router = createBrowserRouter(createRoutesFromElements(
     <Route path="/" element={<RootLayout/>}>
       <Route index element={<MainContent />} />
       <Route path="login" element={<Login />} />
+      <Route path="signup" element={<SignUp/>}/>
       <Route path="aboutus" element={<AboutUs />} />
       <Route path="reviews" element={<Reviews />} />
       <Route path="ourteam" element={<OurTeam />} />

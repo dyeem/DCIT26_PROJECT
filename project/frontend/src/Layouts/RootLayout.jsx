@@ -9,7 +9,7 @@ import Banner from '../Components/Banner';
 export default function RootLayout() {
 
     const location = useLocation();
-    const noBannerRoutes = ["/login"];
+    const noBannerRoutes = ["/login","/signup"];;
     
     return (
         <div className="root-layout">

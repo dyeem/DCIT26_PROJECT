@@ -32,30 +32,29 @@ export default function Login() {
 
     const [formValues, setFormValues] = useState({ 
         email: '',
-        firstname: '',
-        lastname: '',
         password: '',
-        confirmPassword: '',
-        tel: '',
-        avatar: ''
     })
     
     async function handleSubmit(e) { // handleSubmit for Login
         e.preventDefault();
         console.log(formValues);
         try {
+            await axios.get('http://localhost:8000/sanctum/csrf-cookie', { withCredentials: true });
+            
             const response = await axios.post('http://localhost:8000/api/login', {
                 email: formValues.email,
                 password: formValues.password
+            },{
+                withCredentials: true // This is KEY to pass and receive PHP sessions
             });
 
             console.log('Success:', response.data);
-            setLogin(true);
             setProfile(response.data.user);
             navigate('/');
 
         }catch (error) {
             console.error('Error posting user data:', error);
+            navigate('/login');
         }
     }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -21,11 +22,21 @@ class UserController extends Controller
         return $user;
     }
 
-    function login (Request $request) {
+    public function login(Request $request){
         $user = User::where('email', $request->email)->first();
+
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return ["error" => "Email or password is not matched"];
+            return response()->json(['error' => 'Invalid credentials'], 401);
         }
-        return $user;
+
+        // Store session data
+        session(['user_id' => $user->id]);
+
+        return response()->json(['message' => 'Login successful']);
     }
+
+    public function users(Request $request) {
+        
+    }
+
 }

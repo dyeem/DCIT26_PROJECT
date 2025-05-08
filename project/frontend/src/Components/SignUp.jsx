@@ -4,6 +4,7 @@ import checkanimation from '../Assets/Animations/checkanimation.webm'
 import failanimation from '../Assets/Animations/failanimation.webm'
 
 import axios from 'axios';
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -166,13 +167,14 @@ export default function SignUp () {
         }
     
         try { //sends data to backend
-            const response = await axios.post('http://localhost:8000/api/register', {
+            await axios.get('http://localhost:8000/sanctum/csrf-cookie', { withCredentials: true });
+            const response = await axios.post('http://localhost:8000/register', {
                 firstname: formValues.firstname,
                 lastname: formValues.lastname,
                 email: formValues.email,
                 password: formValues.password,
                 contact_number: formValues.tel
-            });
+            }, { withCredentials: true }); // Make sure withCredentials is true
     
             console.log('Success:', response.data);
             setFormValues({

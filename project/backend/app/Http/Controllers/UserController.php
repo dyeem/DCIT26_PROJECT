@@ -11,7 +11,7 @@ use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
-    function register (Request $request) {
+    public function register (Request $request) {
         
        // Validate input first
         $validator = Validator::make($request->all(), [
@@ -44,13 +44,42 @@ class UserController extends Controller
     }
 
     public function login(Request $request){
+        // 1. Validate the input
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required|min:8',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // 2. Attempt to find user
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['error' => 'Invalid credentials'], 401);
+            return response()->json(['message' => 'Invalid email or password'], 401);
         }
 
-        return response()->json(['message' => 'Login successful']);
+        // 3. Login user via Laravel Sanctum
+        Auth::login($user);
+
+        // 4. Optionally regenerate session to prevent fixation
+        $request->session()->regenerate();
+
+        // 5. Respond with user data
+        return response()->json([
+            'message' => 'Login successful',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                // add more fields only if needed
+            ]
+        ]);
     }
 
     public function users(Request $request) {

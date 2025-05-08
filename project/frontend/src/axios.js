@@ -1,22 +1,14 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
-
+// src/axios.js
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-// Axios config
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
 const token = Cookies.get('XSRF-TOKEN');
 if (token) {
   axios.defaults.headers.common['X-XSRF-TOKEN'] = decodeURIComponent(token);
 }
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-      <App />
-  </StrictMode>,
-)
+export default axios;

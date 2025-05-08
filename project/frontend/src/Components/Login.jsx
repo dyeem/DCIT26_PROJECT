@@ -19,6 +19,9 @@ import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography'
 
 export default function Login() {
+    axios.defaults.baseURL = 'http://localhost:8000';
+    axios.defaults.withCredentials = true;
+    
     const style = {
         position: 'absolute',
         top: '50%',
@@ -58,6 +61,8 @@ export default function Login() {
         e.preventDefault();
         console.log(formValues);
 
+        
+
         if(!formValues.email){ //checks if email is not empty
             setErrorModalData({
                 title: "Email Required",
@@ -88,21 +93,26 @@ export default function Login() {
             const response = await axios.post('http://localhost:8000/api/login', {
                 email: formValues.email,
                 password: formValues.password
-            },{
-                withCredentials: true // This is KEY to pass and receive PHP sessions
             });
 
             console.log('Success:', response.data);
-
             setProfile(response.data.user);
             navigate('/');
 
         }catch (error) {
-            console.error('Error posting user data:', error);
-            navigate('/login');
+            const message = error?.response?.data?.message || "Something went wrong. Please try again.";
+            
+            setErrorModalData({
+                title: "Login Failed",
+                messages: [message],
+                buttonText: "Retry",
+                animation: failanimation,
+                onClose: () => setOpenErrorModal(false)
+            });
+            setOpenErrorModal(true);
+            
         }
     }
-
     
     return (
         <>

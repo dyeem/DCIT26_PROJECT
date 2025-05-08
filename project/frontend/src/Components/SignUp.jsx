@@ -1,6 +1,7 @@
 import loginbg from '../Assets/loginbg.jpg'
 import loginPic from '../Assets/login.png'
 import checkanimation from '../Assets/Animations/checkanimation.webm'
+import failanimation from '../Assets/Animations/failanimation.webm'
 
 import axios from 'axios';
 import { useState, useEffect } from 'react';
@@ -25,7 +26,8 @@ export default function SignUp () {
     const handleCloseSuccess= () => setOpenSuccessModal(false);
     const handleOpenError = () => setOpenErrorModal(true);
     const handleCloseError= () => setOpenErrorModal(false);
-
+    const [invalidEmail, setInvalidEmail] = useState(false);
+    
     const style = {
         position: 'absolute',
         top: '50%',
@@ -50,14 +52,120 @@ export default function SignUp () {
     //password validation
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const passwordMismatch = formValues.password && formValues.confirmPassword && formValues.password !== formValues.confirmPassword;
+    const [errorModalData, setErrorModalData] = useState({
+        title: '',
+        messages: [],
+        buttonText: '',
+        animation: null,
+        onClose: () => {},
+    });
+      
+
+    const passwordMismatch = formValues.password !== formValues.confirmPassword;
     const isPasswordTooShort = formValues.password.length > 0 && formValues.password.length < 8;
 
-    async function handleSubmit(e) { // handleSubmit for Sign up
+
+    async function handleSubmit(e) {
         e.preventDefault();
         console.log(formValues);
+
+        if(!formValues.email){ //checks if email is not empty
+            setErrorModalData({
+                title: "Email Required",
+                messages: ["Please enter your email address."],
+                buttonText: "Try Again",
+                animation: failanimation,
+                onClose: () => setOpenErrorModal(false)
+            });
+            setOpenErrorModal(true);
+            return;
+        }
+
+        if(!formValues.firstname){ //checks if first name is not empty
+            setErrorModalData({
+                title: "First Name Required",
+                messages: ["Please enter your first name."],
+                buttonText: "Try Again",
+                animation: failanimation,
+                onClose: () => setOpenErrorModal(false)
+            });
+            setOpenErrorModal(true);
+            return;
+        }
+
+        if(!formValues.lastname){ //checks if last name is not empty
+            setErrorModalData({
+                title: "Last Name Required",
+                messages: ["Please enter your last name."],
+                buttonText: "Try Again",
+                animation: failanimation,
+                onClose: () => setOpenErrorModal(false)
+            });
+            setOpenErrorModal(true);
+            return;
+        }
+
+        if(!formValues.password){ //checks if password is not empty
+            setErrorModalData({
+                title: "Password Required",
+                messages: ["Please enter your password."],
+                buttonText: "Try Again",
+                animation: failanimation,
+                onClose: () => setOpenErrorModal(false)
+            });
+            setOpenErrorModal(true);
+            return;
+        }
+
+        if(!formValues.confirmPassword){ //checks if confirm password is not empty 
+            setErrorModalData({
+                title: "Confirm Password Required",
+                messages: ["Please confirm your password."],
+                buttonText: "Try Again",
+                animation: failanimation,
+                onClose: () => setOpenErrorModal(false)
+            });
+            setOpenErrorModal(true);
+            return;
+        }
+
+        if (!formValues.tel) { //checks if tel is not empty
+            setErrorModalData({
+                title: "Contact Number Required",
+                messages: ["Please enter your contact number."],
+                buttonText: "Try Again",
+                animation: failanimation,
+                onClose: () => setOpenErrorModal(false)
+            });
+            setOpenErrorModal(true);
+            return;
+        }
     
-        try {
+        if (isPasswordTooShort) { //checks if password is at least 8 characters long
+            setErrorModalData({
+                title: "Weak Password",
+                messages: ["Password must be at least 8 characters long."],
+                buttonText: "Try Again",
+                animation: failanimation,
+                onClose: () => setOpenErrorModal(false)
+            });
+            setOpenErrorModal(true);
+            return;
+        }
+    
+        if (passwordMismatch) { //checks if password and confirm password match
+            setErrorModalData({
+                title: "Password Mismatch",
+                messages: ["Your password and confirmation do not match."],
+                buttonText: "Try Again",
+                animation: failanimation,
+                onClose: () => setOpenErrorModal(false)
+            });
+            setOpenErrorModal(true);
+            return;
+        }
+    
+        try { //sends data to backend
             const response = await axios.post('http://localhost:8000/api/register', {
                 firstname: formValues.firstname,
                 lastname: formValues.lastname,
@@ -74,14 +182,27 @@ export default function SignUp () {
                 password: '',
                 confirmPassword: '',
                 tel: ''
-            })
+            });
             setOpenSuccessModal(true);
         } catch (error) {
             console.error('Error posting user data:', error);
+    
+            let messages = ["An error occurred. Please try again."];
+    
+            if (error.response?.data?.errors?.email?.[0]) {
+                messages = [error.response.data.errors.email[0]];
+            }
+    
+            setErrorModalData({
+                title: "Registration Failed",
+                messages,
+                buttonText: "Try Again",
+                animation: failanimation,
+                onClose: () => setOpenErrorModal(false)
+            });
             setOpenErrorModal(true);
         }
     }
-        
  return (
         <>
             {/*SUCCESS MODAL*/}
@@ -132,42 +253,47 @@ export default function SignUp () {
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
                 open={openErrorModal}
-                onClose={handleCloseError}
+                onClose={errorModalData.onClose}
                 closeAfterTransition
                 slots={{ backdrop: Backdrop }}
                 slotProps={{
-                backdrop: {
+                    backdrop: {
                     timeout: 500,
-                },
+                    },
                 }}
-            >
+                >
                 <Fade in={openErrorModal}>
                     <Box sx={style} className='rounded-lg leading-tight'>
-                        <div className='flex flex-col justify-center items-center bg-red-500 py-2'>
-                            <video
-                                src={checkanimation}
-                                autoPlay
-                                loop
-                                muted
-                                playsInline
-                                className=""
-                            />
-                            <Typography id="transition-modal-title" variant="h6" component="h2" className='text-center text-white'>
-                                Sign up Failed!
+                    <div className='flex flex-col justify-center items-center bg-[#df4c4c] py-2'>
+                        {errorModalData.animation && (
+                        <video
+                            src={errorModalData.animation}
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                        />
+                        )}
+                        <Typography id="transition-modal-title" variant="h6" component="h2" className='text-center text-white'>
+                            {errorModalData.title}
+                        </Typography>
+                    </div>
+                    <div className="py-6 px-12 leading-tight">
+                        <div className="flex flex-col items-center justify-center gap-y-7">
+                            <Typography id="transition-modal-description" className='text-center text-gray-500'>
+                                {errorModalData.messages.map((msg, index) => (
+                                    <p key={index}>{msg}</p>
+                                ))}
                             </Typography>
+                            <button onClick={errorModalData.onClose} className='text-white bg-green-500 py-2 px-3 rounded-lg hover:bg-green-800'>
+                                {errorModalData.buttonText}
+                            </button>
                         </div>
-                        <div className="py-6 px-12 leading-tight">
-                            <div className="flex flex-col items-center justify-center gap-y-7">
-                                <Typography id="transition-modal-description"  className='text-center text-gray-500'>
-                                    <p>Thank you for registering with us.</p>
-                                    <p>You can now log in to explore our crochet collections and manage your orders with ease.</p>
-                                </Typography>
-                                <button onClick={(e) => navigate('/signup')} className='text-white bg-green-500 py-2 px-3 rounded-lg hover:bg-green-800'>Continue</button>
-                            </div>
-                        </div>
+                    </div>
                     </Box>
                 </Fade>
             </Modal>
+
             <div className="mt-8 min-h-screen bg-gray-100 flex justify-center items-center leading-relaxed p-4" 
                 style={{
                     backgroundImage: `url(${loginbg})`,
@@ -192,7 +318,11 @@ export default function SignUp () {
                             <div class="relative z-0 w-full mb-5 group">
                                 <input 
                                     value={formValues.email}
-                                    onChange={(e) => setFormValues({ ...formValues, email: e.target.value })}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        setFormValues({ ...formValues, email: value });
+                                        setInvalidEmail(value && !value.includes('@'));
+                                    }}
                                     type="email" 
                                     name="floating_email" 
                                     id="floating_email" 
@@ -207,10 +337,9 @@ export default function SignUp () {
                                     >
                                     Email address
                                 </label>
-                                <span
-                                    className='text-red-800'
-                                    id="email-error">
-                                </span>
+                                {invalidEmail && (
+                                    <p className="text-red-500 text-sm mt-1">Please enter a valid email address.</p>
+                                )}
                             </div>
                             {/* FIRST NAME LAST NAME FOR SIGNUP */}
                                 <div class="grid md:grid-cols-2 md:gap-6">
@@ -270,7 +399,7 @@ export default function SignUp () {
                                     {isPasswordTooShort && (
                                         <p className="text-red-500 text-sm mt-1">Password must be at least 8 characters long.</p>
                                     )}
-                                    <div className="absolute right-3 top-3 cursor-pointer text-gray-600" onClick={() => setShowPassword(!showPassword)}>
+                                    <div className="absolute right-3 top-1 cursor-pointer text-gray-600" onClick={() => setShowPassword(!showPassword)}>
                                         {showPassword ? <VisibilityOff /> : <Visibility />}
                                     </div>
                                 </div>
@@ -288,7 +417,7 @@ export default function SignUp () {
                                         for="floating_last_name" 
                                         class="peer-focus:font-medium absolute text-sm text-gray-700 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-[#885b56] peer-focus:dark:text-[#885b56] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Confirm Password
                                     </label>
-                                    <div className="absolute right-3 top-3 cursor-pointer text-gray-600" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                                    <div className="absolute right-3 top-1 cursor-pointer text-gray-600" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
                                         {showConfirmPassword ?  <VisibilityOff /> : <Visibility />}
                                     </div>
                                     {passwordMismatch && (

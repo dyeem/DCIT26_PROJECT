@@ -2,33 +2,52 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-//avatar
-// import boy from '../Assets/Avatar/boy.png'
-// import girl from '../Assets/Avatar/girl.png'
-// import manwithBeard from '../Assets/Avatar/man-with-beard.png'
-// import manwithGlasses from '../Assets/Avatar/man-with-glasses.png'
-// import womanwithGlasses from '../Assets/Avatar/woman-with-glasses.png'
-// import woman from '../Assets/Avatar/woman.png'
-
 import loginbg from '../Assets/loginbg.jpg'
-import loginPic from '../Assets/login.png' 
+import loginPic from '../Assets/login.png'
+import checkanimation from '../Assets/Animations/checkanimation.webm'
+import failanimation from '../Assets/Animations/failanimation.webm'
+
+//eye
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+
+//modal
+import Backdrop from '@mui/material/Backdrop';
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
+import Fade from '@mui/material/Fade';
+import Typography from '@mui/material/Typography'
 
 export default function Login() {
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 500,
+        bgcolor: 'background.paper',
+    };
+
+    const [openErrorModal, setOpenErrorModal] = useState(false);
+    const [openSuccessModal, setOpenSuccessModal] = useState(false);
+    const handleOpenSuccess = () => setOpenSuccessModal(true);
+    const handleCloseSuccess= () => setOpenSuccessModal(false);
+    const handleOpenError = () => setOpenErrorModal(true);
+    const handleCloseError= () => setOpenErrorModal(false);
+    const [errorModalData, setErrorModalData] = useState({
+        title: '',
+        messages: [],
+        buttonText: '',
+        animation: null,
+        onClose: () => {},
+    });
    
-    const [login, setLogin] = useState(null)
     const [profile, setProfile] = useState(null)  
+    const [showPassword, setPassword] = useState(false);
+    const [invalidEmail, setInvalidEmail] = useState(false);
+
     
     const navigate = useNavigate(); 
-
-    //avatar
-    // const avatars = [
-    //     {   id: 1, src: boy, label: 'Merce'},
-    //     {   id: 2, src: girl, label: 'She'},
-    //     {   id: 3, src: manwithBeard, label: 'Wataoski'},
-    //     {   id: 4, src: manwithGlasses, label: 'Javis'},
-    //     {   id: 5, src: womanwithGlasses, label: 'Linda'},
-    //     {   id: 6, src: woman, label: 'Blair'}
-    // ]
 
     const [formValues, setFormValues] = useState({ 
         email: '',
@@ -38,6 +57,31 @@ export default function Login() {
     async function handleSubmit(e) { // handleSubmit for Login
         e.preventDefault();
         console.log(formValues);
+
+        if(!formValues.email){ //checks if email is not empty
+            setErrorModalData({
+                title: "Email Required",
+                messages: ["Please enter your email address."],
+                buttonText: "Try Again",
+                animation: failanimation,
+                onClose: () => setOpenErrorModal(false)
+            });
+            setOpenErrorModal(true);
+            return;
+        }
+
+        if(!formValues.password){ //checks if password is not empty
+            setErrorModalData({
+                title: "Password Required",
+                messages: ["Please enter your password."],
+                buttonText: "Try Again",
+                animation: failanimation,
+                onClose: () => setOpenErrorModal(false)
+            });
+            setOpenErrorModal(true);
+            return;
+        }
+
         try {
             await axios.get('http://localhost:8000/sanctum/csrf-cookie', { withCredentials: true });
             
@@ -49,6 +93,7 @@ export default function Login() {
             });
 
             console.log('Success:', response.data);
+
             setProfile(response.data.user);
             navigate('/');
 
@@ -61,6 +106,95 @@ export default function Login() {
     
     return (
         <>
+            {/*SUCCESS MODAL*/}
+            <Modal
+                className='rounded-lg'
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                open={openSuccessModal}
+                onClose={handleCloseSuccess}
+                closeAfterTransition
+                slots={{ backdrop: Backdrop }}
+                slotProps={{
+                backdrop: {
+                    timeout: 500,
+                },
+                }}
+            >
+                <Fade in={openSuccessModal}>
+                    <Box sx={style} className='rounded-lg leading-tight'>
+                        <div className='flex flex-col justify-center items-center bg-green-500 py-2'>
+                            <video
+                                src={checkanimation}
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                                className=""
+                            />
+                            <Typography id="transition-modal-title" variant="h6" component="h2" className='text-center text-white'>
+                                Sign up Successful!
+                            </Typography>
+                        </div>
+                        <div className="py-6 px-12 leading-tight">
+                            <div className="flex flex-col items-center justify-center gap-y-7">
+                                <Typography id="transition-modal-description"  className='text-center text-gray-500'>
+                                    <p>Thank you for registering with us.</p>
+                                    <p>You can now log in to explore our crochet collections and manage your orders with ease.</p>
+                                </Typography>
+                                <button onClick={(e) => navigate('/login')} className='text-white bg-green-500 py-2 px-3 rounded-lg hover:bg-green-800'>Continue</button>
+                            </div>
+                        </div>
+                    </Box>
+                </Fade>
+            </Modal>
+            {/* ERROR MODAL */}
+            <Modal
+                className='rounded-lg'
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                open={openErrorModal}
+                onClose={errorModalData.onClose}
+                closeAfterTransition
+                slots={{ backdrop: Backdrop }}
+                slotProps={{
+                    backdrop: {
+                    timeout: 500,
+                    },
+                }}
+                >
+                <Fade in={openErrorModal}>
+                    <Box sx={style} className='rounded-lg leading-tight'>
+                    <div className='flex flex-col justify-center items-center bg-[#df4c4c] py-2'>
+                        {errorModalData.animation && (
+                            <video
+                            src={errorModalData.animation}
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className=""
+                        />
+                        )}
+                        <Typography variant="h6" className="text-center text-white">
+                            {errorModalData.title || "Error"}
+                        </Typography>
+                    </div>
+                    <div className="py-6 px-12 leading-tight">
+                        <div className="flex flex-col items-center justify-center gap-y-7">
+                            <Typography id="transition-modal-description" className='text-center text-gray-500'>
+                                {errorModalData.messages.map((msg, index) => (
+                                    <p key={index}>{msg}</p>
+                                ))}
+                            </Typography>
+                            <button onClick={errorModalData.onClose} className='text-white bg-green-500 py-2 px-3 rounded-lg hover:bg-green-800'>
+                                {errorModalData.buttonText || "Close"}
+                            </button>
+                        </div>
+                    </div>
+                    </Box>
+                </Fade>
+            </Modal>
             <div className="mt-8 min-h-screen bg-gray-100 flex justify-center items-center leading-relaxed p-4" 
                 style={{
                     backgroundImage: `url(${loginbg})`,
@@ -85,7 +219,11 @@ export default function Login() {
                             <div class="relative z-0 w-full mb-5 group">
                                 <input 
                                     value={formValues.email}
-                                    onChange={(e) => setFormValues({ ...formValues, email: e.target.value })}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        setFormValues({ ...formValues, email: value });
+                                        setInvalidEmail(value && !value.includes('@'));
+                                    }}
                                     type="email" 
                                     name="floating_email" 
                                     id="floating_email" 
@@ -100,17 +238,16 @@ export default function Login() {
                                     >
                                     Email address
                                 </label>
-                                <span
-                                    className='text-red-800'
-                                    id="email-error">
-                                </span>
+                                {invalidEmail && (
+                                    <p className="text-red-500 text-sm mt-1">Please enter a valid email address.</p>
+                                )}
                             </div>
                             {/* PASSWORD */}
                             <div class="relative z-0 w-full mb-5 group">
                                 <input 
                                     value={formValues.password}
                                     onChange={(e) => setFormValues({ ...formValues, password: e.target.value })}
-                                    type="password" 
+                                    type={showPassword ? "text" : "password"} 
                                     name="floating_password" 
                                     id="floating_password" 
                                     class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white dark:border-gray-600 dark:focus:border-[#885b56] focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
@@ -123,7 +260,9 @@ export default function Login() {
                                 >
                                     Password
                                 </label>
-                                
+                                <div className="absolute right-3 top-1 cursor-pointer text-gray-600" onClick={() => setPassword(!showPassword)}>
+                                        {showPassword ?  <VisibilityOff /> : <Visibility />}
+                                </div>
                             </div>
                             <div className="flex justify-center items-center">
                                 <button

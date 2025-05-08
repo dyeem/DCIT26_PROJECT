@@ -50,9 +50,6 @@ class UserController extends Controller
             return response()->json(['error' => 'Invalid credentials'], 401);
         }
 
-        // Store session data
-        session(['user_id' => $user->id]);
-
         return response()->json(['message' => 'Login successful']);
     }
 

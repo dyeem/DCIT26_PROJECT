@@ -39,15 +39,15 @@ export default function SignUp () {
     };
 
     const navigate = useNavigate(); 
-    
+
+    //form values
     const [formValues, setFormValues] = useState({ 
-        email: '',
         firstname: '',
         lastname: '',
+        email: '',
         password: '',
         confirmPassword: '',
         tel: '',
-        avatar: ''
     })
 
     //password validation
@@ -166,35 +166,37 @@ export default function SignUp () {
             return;
         }
     
-        try { //sends data to backend
-            await axios.get('http://localhost:8000/sanctum/csrf-cookie', { withCredentials: true });
-            const response = await axios.post('http://localhost:8000/register', {
-                firstname: formValues.firstname,
-                lastname: formValues.lastname,
-                email: formValues.email,
-                password: formValues.password,
-                contact_number: formValues.tel
-            }, { withCredentials: true }); // Make sure withCredentials is true
-    
+        try {
+            const response = await axios.post('http://localhost/loop_backend/signup.php', {
+                ...formValues}, {
+                withCredentials: true,
+                headers: {
+                'Content-Type': 'application/json'
+                }
+            });
+
             console.log('Success:', response.data);
+
             setFormValues({
-                email: '',
                 firstname: '',
                 lastname: '',
+                email: '',
                 password: '',
                 confirmPassword: '',
                 tel: ''
             });
+
             setOpenSuccessModal(true);
+
         } catch (error) {
             console.error('Error posting user data:', error);
-    
+
             let messages = ["An error occurred. Please try again."];
-    
-            if (error.response?.data?.errors?.email?.[0]) {
-                messages = [error.response.data.errors.email[0]];
+
+            if (error.response?.data?.error) {
+                messages = [error.response.data.error];
             }
-    
+
             setErrorModalData({
                 title: "Registration Failed",
                 messages,
@@ -202,6 +204,7 @@ export default function SignUp () {
                 animation: failanimation,
                 onClose: () => setOpenErrorModal(false)
             });
+
             setOpenErrorModal(true);
         }
     }

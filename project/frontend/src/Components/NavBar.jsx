@@ -1,10 +1,24 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { NavLink, Link } from 'react-router-dom';
 
 import Cart from './Cart'
 
-import loginicon from '../Assets/loginicon.png'
 export default function NavBar() {
+    useEffect(() => {
+        axios.get('http://localhost/loop_backend/session_check.php', {
+        withCredentials: true,
+        })
+        .then(res => {
+        if (res.data.loggedIn) {
+            console.log("User is logged in:", res.data.user);
+            // You can redirect, or set user state here
+        } else {
+            console.log("Not logged in");
+        }
+        })
+        .catch(err => console.error("Session check failed:", err));
+    }, []);
 
     const [isCartOpen, setIsCartOpen] = useState(false);
 

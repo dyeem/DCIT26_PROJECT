@@ -19,9 +19,6 @@ import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography'
 
 export default function Login() {
-    axios.defaults.baseURL = 'http://localhost:8000';
-    axios.defaults.withCredentials = true;
-    
     const style = {
         position: 'absolute',
         top: '50%',
@@ -57,13 +54,11 @@ export default function Login() {
         password: '',
     })
     
-    async function handleSubmit(e) { // handleSubmit for Login
+    async function handleSubmit(e) {
         e.preventDefault();
         console.log(formValues);
 
-        
-
-        if(!formValues.email){ //checks if email is not empty
+        if (!formValues.email) {
             setErrorModalData({
                 title: "Email Required",
                 messages: ["Please enter your email address."],
@@ -75,7 +70,7 @@ export default function Login() {
             return;
         }
 
-        if(!formValues.password){ //checks if password is not empty
+        if (!formValues.password) {
             setErrorModalData({
                 title: "Password Required",
                 messages: ["Please enter your password."],
@@ -87,21 +82,41 @@ export default function Login() {
             return;
         }
 
+        if(formValues.password.length < 8) {
+            setErrorModalData({
+                title: "Password Too Short",
+                messages: ["Please enter a password with at least 8 characters."],
+                buttonText: "Try Again",    
+                animation: failanimation,
+                onClose: () => setOpenErrorModal(false)
+            });
+            setOpenErrorModal(true);
+            return;
+        }
+
         try {
-            await axios.get('http://localhost:8000/sanctum/csrf-cookie', { withCredentials: true });
-            
-            const response = await axios.post('http://localhost:8000/api/login', {
+            const response = await axios.post('http://localhost/loop_backend/login.php', {
                 email: formValues.email,
                 password: formValues.password
+            }, {
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
 
             console.log('Success:', response.data);
-            setProfile(response.data.user);
-            navigate('/');
 
-        }catch (error) {
-            const message = error?.response?.data?.message || "Something went wrong. Please try again.";
-            
+            if (response.data.success) {
+                setProfile(response.data.user);
+                navigate('/');
+            } else {
+                throw new Error(response.data.message || "Invalid login.");
+            }
+
+        } catch (error) {
+            const message = error?.response?.data?.message || error?.message || "Something went wrong. Please try again.";
+
             setErrorModalData({
                 title: "Login Failed",
                 messages: [message],
@@ -110,7 +125,6 @@ export default function Login() {
                 onClose: () => setOpenErrorModal(false)
             });
             setOpenErrorModal(true);
-            
         }
     }
     

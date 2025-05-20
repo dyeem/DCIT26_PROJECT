@@ -42,7 +42,8 @@ import EditProduct from "../Components/Admin/EditProduct.jsx";
 import ProductsLayout from "./ProductsLayout.jsx";
 import AddProduct from "../Components/Admin/AddProduct.jsx";
 import UsersList from "../Components/Admin/UsersList.jsx";
-
+import AdminLogin from "../Components/Admin/Admin_Login.jsx";
+import AdminSignUp from "../Components/Admin/Admin_Signup.jsx";
 const router = createBrowserRouter(createRoutesFromElements(
   <>
     <Route path="/" element={<RootLayout/>}>
@@ -80,6 +81,7 @@ const router = createBrowserRouter(createRoutesFromElements(
     
     {/* Admin Route */}
     <Route path="admin" element={<AdminLayout />} errorElement={<ErrorPage/>}>
+      
       <Route index path="dashboard" element={<AdminDashboard />} />
       <Route path="manage-product" element={<ProductsLayout />}>
         <Route index element={<ProductList />} />
@@ -93,6 +95,9 @@ const router = createBrowserRouter(createRoutesFromElements(
         <Route index element={<UsersList/>}/>
       </Route>
     </Route>
+
+    <Route path="/admin/login" element={<AdminLogin />} />
+    <Route path="/admin/signup" element={<AdminSignUp />} />
     
     {/* Handle missing/mismatched page */}
     <Route path="*" element={<ErrorPage/>}/> 

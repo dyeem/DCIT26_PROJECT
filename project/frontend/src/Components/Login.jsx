@@ -18,7 +18,12 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography'
 
+//auth
+import { useAuth } from './Auth/AuthContext';
+
 export default function Login() {
+    const { setIsLogin, setUser } = useAuth(); // grab context setters
+
     const style = {
         position: 'absolute',
         top: '50%',
@@ -53,6 +58,19 @@ export default function Login() {
         email: '',
         password: '',
     })
+
+    useEffect(() => {
+        axios.get('http://localhost/loop_backend/session_check.php', {
+            withCredentials: true,
+        })
+        .then(res => {
+            if (res.data.loggedIn) {
+                setProfile(res.data.user);
+                navigate('/');
+            }
+        })
+        .catch(err => console.error("Session check failed:", err));
+    }, []);
     
     async function handleSubmit(e) {
         e.preventDefault();
@@ -108,14 +126,38 @@ export default function Login() {
             console.log('Success:', response.data);
 
             if (response.data.success) {
-                setProfile(response.data.user);
-                navigate('/');
+                if (response.data.user) {
+                    setUser(response.data.user);       // <- from context
+                    setIsLogin(true);
+                    setOpenSuccessModal({
+                        title: "Login Successful",
+                        messages: ["You have successfully logged in."],
+                        buttonText: "Continue",
+                        animation: checkanimation,
+                        onClose: () => {
+                            setOpenSuccessModal(false);
+                            navigate('/');
+                        }
+                    })
+                } else {
+                    console.warn("User object missing despite success");
+                }
             } else {
-                throw new Error(response.data.message || "Invalid login.");
+                setErrorModalData({
+                    title: "Login Failed",
+                    messages: [response.data.message || "Invalid login."],
+                    buttonText: "Retry",
+                    animation: failanimation,
+                    onClose: () => setOpenErrorModal(false)
+                });
+                setOpenErrorModal(true);
             }
+
 
         } catch (error) {
             const message = error?.response?.data?.message || error?.message || "Something went wrong. Please try again.";
+            console.error("Caught error:", error);
+            console.error("Error response data:", error.response?.data);
 
             setErrorModalData({
                 title: "Login Failed",
@@ -125,6 +167,7 @@ export default function Login() {
                 onClose: () => setOpenErrorModal(false)
             });
             setOpenErrorModal(true);
+            console.error("Login error response:", error.response?.data);
         }
     }
     
@@ -132,46 +175,60 @@ export default function Login() {
         <>
             {/*SUCCESS MODAL*/}
             <Modal
-                className='rounded-lg'
+                className="rounded-lg"
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
-                open={openSuccessModal}
-                onClose={handleCloseSuccess}
+                open={!!openSuccessModal}
+                onClose={openSuccessModal?.onClose}
                 closeAfterTransition
                 slots={{ backdrop: Backdrop }}
                 slotProps={{
-                backdrop: {
-                    timeout: 500,
-                },
+                    backdrop: {
+                        timeout: 500,
+                    },
                 }}
             >
-                <Fade in={openSuccessModal}>
-                    <Box sx={style} className='rounded-lg leading-tight'>
-                        <div className='flex flex-col justify-center items-center bg-green-500 py-2'>
+                <Fade in={!!openSuccessModal}>
+                    <Box sx={style} className="rounded-lg leading-tight">
+                        <div className="flex flex-col justify-center items-center bg-green-500 py-2">
                             <video
-                                src={checkanimation}
+                                src={openSuccessModal?.animation}
                                 autoPlay
                                 loop
                                 muted
                                 playsInline
-                                className=""
                             />
-                            <Typography id="transition-modal-title" variant="h6" component="h2" className='text-center text-white'>
-                                Sign up Successful!
+                            <Typography
+                                id="transition-modal-title"
+                                variant="h6"
+                                component="h2"
+                                className="text-center text-white"
+                            >
+                                {openSuccessModal?.title || "Success!"}
                             </Typography>
                         </div>
                         <div className="py-6 px-12 leading-tight">
                             <div className="flex flex-col items-center justify-center gap-y-7">
-                                <Typography id="transition-modal-description"  className='text-center text-gray-500'>
-                                    <p>Thank you for registering with us.</p>
-                                    <p>You can now log in to explore our crochet collections and manage your orders with ease.</p>
+                                <Typography
+                                    id="transition-modal-description"
+                                    className="text-center text-gray-500"
+                                >
+                                    {openSuccessModal?.messages?.map((msg, idx) => (
+                                        <p key={idx}>{msg}</p>
+                                    ))}
                                 </Typography>
-                                <button onClick={(e) => navigate('/login')} className='text-white bg-green-500 py-2 px-3 rounded-lg hover:bg-green-800'>Continue</button>
+                                <button
+                                    onClick={openSuccessModal?.onClose}
+                                    className="text-white bg-green-500 py-2 px-3 rounded-lg hover:bg-green-800"
+                                >
+                                    {openSuccessModal?.buttonText || "Continue"}
+                                </button>
                             </div>
                         </div>
                     </Box>
                 </Fade>
             </Modal>
+
             {/* ERROR MODAL */}
             <Modal
                 className='rounded-lg'

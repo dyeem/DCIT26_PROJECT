@@ -1,26 +1,33 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, } from 'react';
 import axios from 'axios';
-import { NavLink, Link } from 'react-router-dom';
-
+import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { useAuth } from './Auth/AuthContext';
 import Cart from './Cart'
 
 export default function NavBar() {
-    useEffect(() => {
-        axios.get('http://localhost/loop_backend/session_check.php', {
-        withCredentials: true,
+    
+    const navigate = useNavigate();
+    const [isCartOpen, setIsCartOpen] = useState(false);
+    const {isLogin, loading, user, setIsLogin, setUser } = useAuth();
+    const [loggingOut, setLoggingOut] = useState(false);
+
+    function handleLogout() {
+        setLoggingOut(true);
+        axios.post('http://localhost/loop_backend/logout.php', {}, {
+            withCredentials: true,
         })
         .then(res => {
-        if (res.data.loggedIn) {
-            console.log("User is logged in:", res.data.user);
-            // You can redirect, or set user state here
-        } else {
-            console.log("Not logged in");
-        }
+            if (res.data.success) {
+                setIsLogin(false);
+                setUser(null);
+                navigate('/login');
+            } else {
+                console.error("Logout failed:", res.data.message);
+            }
         })
-        .catch(err => console.error("Session check failed:", err));
-    }, []);
-
-    const [isCartOpen, setIsCartOpen] = useState(false);
+        .catch(err => console.error("Logout failed:", err))
+        .finally(() => setLoggingOut(false));
+    }
 
     return (
         <>
@@ -169,89 +176,72 @@ export default function NavBar() {
                                 <span className="badge badge-sm indicator-item #150016">{}</span>
                             </div>
                         </div>
-                        {/* <div
-                            tabIndex={0}
-                            className="card card-compact dropdown-content bg-[#150016] z-[1] mt-3 xsm:w-36 lg:w-52 shadow">
-                            <div className="card-body">
-                                <span className="text-lg font-bold">8 Items</span>
-                                <span className="text-info">Subtotal: $999</span>
-                                <div className="card-actions">
-                                    <NavLink to="checkout" className="btn #150016 btn-block">View cart</NavLink>
-                                </div>
-                            </div>
-                        </div> */}
-                    
                     </div>
                     
                     <div className="dropdown dropdown-end ">
                         <div tabIndex={0} role="button" className="">
                             <div className="w-11 rounded-full">
-                            <svg width="40px" height="40px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M8.90039 7.56023C9.21039 3.96023 11.0604 2.49023 15.1104 2.49023H15.2404C19.7104 2.49023 21.5004 4.28023 21.5004 8.75023V15.2702C21.5004 19.7402 19.7104 21.5302 15.2404 21.5302H15.1104C11.0904 21.5302 9.24039 20.0802 8.91039 16.5402" stroke="#292D32" stroke-width="0.8879999999999999" stroke-linecap="round" stroke-linejoin="round"></path> <g opacity="0.4"> <path d="M2 12H14.88" stroke="#292D32" stroke-width="0.8879999999999999" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12.6504 8.65039L16.0004 12.0004L12.6504 15.3504" stroke="#292D32" stroke-width="0.8879999999999999" stroke-linecap="round" stroke-linejoin="round"></path> </g> </g></svg>
-                                {/* {currentUser ? 
-                                    (currentUser.avatar ? (
-                                        <img
-                                            src={currentUser.avatar}
-                                            alt="User Avatar"
-                                            className="w-16 h-12 rounded-xl"
-                                        />
-                                        ) 
-                                    : 
-                                        (
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            strokeWidth={1.5}
-                                            stroke="black"
-                                            className="size-8"
-                                        >
-                                            <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
-                                            />
-                                        </svg>
-                                        )
-                                    ) 
-                                    : 
-                                    (
-                                        <svg
+                                {isLogin ? (
+                                    <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         fill="none"
                                         viewBox="0 0 24 24"
                                         strokeWidth={1.5}
                                         stroke="black"
                                         className="size-8"
-                                        >
+                                    >
                                         <path
                                             strokeLinecap="round"
                                             strokeLinejoin="round"
                                             d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
                                         />
-                                        </svg>
-                                    )
-                                } */}
+                                    </svg>
+                                ) : (
+                                    <svg width="40px" height="40px" viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#000000">
+                                        <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+                                        <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
+                                        <g id="SVGRepo_iconCarrier"> 
+                                            <path d="M8.90039 7.56023C9.21039 3.96023 11.0604 2.49023 15.1104 2.49023H15.2404C19.7104 2.49023 21.5004 4.28023 21.5004 8.75023V15.2702C21.5004 19.7402 19.7104 21.5302 15.2404 21.5302H15.1104C11.0904 21.5302 9.24039 20.0802 8.91039 16.5402" stroke="#292D32" strokeWidth="0.8879999999999999" strokeLinecap="round" strokeLinejoin="round"></path> 
+                                            <g opacity="0.4"> 
+                                                <path d="M2 12H14.88" stroke="#292D32" strokeWidth="0.8879999999999999" strokeLinecap="round" strokeLinejoin="round"></path> 
+                                                <path d="M12.6504 8.65039L16.0004 12.0004L12.6504 15.3504" stroke="#292D32" strokeWidth="0.8879999999999999" strokeLinecap="round" strokeLinejoin="round"></path> 
+                                            </g> 
+                                        </g>
+                                    </svg>
+                                )}
                             </div>
                         </div>
                         <ul
                             tabIndex={0}
                             className="menu menu-sm dropdown-content bg-[#885b56] text-gray-100 rounded-box z-[1] mt-3 lg:w-64 xsm:w-44 p-2 shadow">
-                            <li>
-                                <a className="justify-between text-base">
-                                    {/* {currentUser ? currentUser.email : ""} */}
-                                </a>
-                            </li>
-                            <li>
-                                <a className="justify-between text-base">
-                                    {/* {currentUser ? currentUser.firstname : ""} */}
-                                </a>
-                            </li>
-                            <hr />
-                            <li>
-                                <Link to="/login" className='text-base'>
-                                    Sign in
-                                </Link>
-                            </li>
+                            {loading ? (
+                                <li><span className="text-base">Loading...</span></li>
+                            ) : isLogin && user ? (
+                                <>
+                                    <li>
+                                        <a className="justify-between text-base">
+                                            {user.email}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a className="justify-between text-base">
+                                            {user.first_name} 
+                                        </a>
+                                    </li>
+                                    <hr />
+                                    <li>
+                                        {loggingOut ? (
+                                            <span className="text-base">Logging out...</span>
+                                        ) : (
+                                            <a onClick={handleLogout} className="text-base">Logout</a>
+                                        )}
+                                    </li>
+                                </>
+                            ) : (
+                                <li>
+                                    <Link to="/login" className="text-base">Sign in</Link>
+                                </li>
+                            )}
                         </ul>
                     </div>
                 </div>

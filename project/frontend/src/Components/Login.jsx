@@ -60,7 +60,7 @@ export default function Login() {
     })
 
     useEffect(() => {
-        axios.get('http://localhost/loop_backend/session_check.php', {
+        axios.get('http://localhost/loop_backend/session_check_users.php', {
             withCredentials: true,
         })
         .then(res => {

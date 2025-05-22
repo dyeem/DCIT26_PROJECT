@@ -5,11 +5,14 @@ import App from './App.jsx'
 
 //auth
 import { AuthProvider } from './Components/Auth/AuthContext.jsx';
+import { AdminAuthProvider } from './Components/Admin/AdminAuth/AdminAuthContext.jsx';  
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
-      <App />
+      <AdminAuthProvider>
+        <App />
+      </AdminAuthProvider>
     </AuthProvider>
   </StrictMode>,
 )

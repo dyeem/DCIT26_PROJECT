@@ -21,11 +21,28 @@ import Typography from '@mui/material/Typography'
 
 //admin authh
 import { useAdminAuth } from './AdminAuth/AdminAuthContext';
-import { set } from 'mongoose';
 
 export default function AdminLogin() {
 
     const navigate = useNavigate();
+    const { isAdminLogin, setIsAdminLogin, setAdmin } = useAdminAuth();
+    useEffect(() => {
+        document.title = "Loop | Admin - Login";
+    }, []);
+    useEffect(() => {
+        axios.get('http://localhost/loop_backend/admin/session_check_admin.php', {
+        withCredentials: true,
+        })
+        .then(res => {
+            if (res.data.loggedIn) {
+                setAdmin(res.data.admin); 
+                setIsAdminLogin(true);
+                console.log("Admin is logged in:", res.data.admin);
+                navigate('/admin/dashboard');
+            }
+        })
+        .catch(err => console.error("Session check failed:", err));
+    }, [setAdmin, setIsAdminLogin, navigate]);
 
     //MODALS
     const [openErrorModal, setOpenErrorModal] = useState(false);
@@ -34,6 +51,7 @@ export default function AdminLogin() {
     const handleCloseSuccess= () => setOpenSuccessModal(false);
     const handleOpenError = () => setOpenErrorModal(true);
     const handleCloseError= () => setOpenErrorModal(false);
+    
     const [errorModalData, setErrorModalData] = useState({
         title: '',
         messages: [],
@@ -50,24 +68,8 @@ export default function AdminLogin() {
         bgcolor: 'background.paper',
     };
 
-    const { isAdminLogin, setIsAdminLogin, setAdmin } = useAdminAuth();
     const [formData, setFormData] = useState({email: '',password: ''});
     const [showPassword, setPassword] = useState(false);
-
-    useEffect(() => {
-        axios.get('http://localhost/loop_backend/admin/session_check_admin.php', {
-        withCredentials: true,
-        })
-        .then(res => {
-            if (res.data.loggedIn) {
-                setAdmin(res.data.admin); 
-                setIsAdminLogin(true);
-                navigate('/admin/dashboard');
-            }
-        })
-        .catch(err => console.error("Session check failed:", err));
-    }, [setAdmin, setIsAdminLogin, navigate]);
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
@@ -129,6 +131,7 @@ export default function AdminLogin() {
             if (response.data.success) {
                 setAdmin(response.data.admin);
                 setIsAdminLogin(true);
+                console.log("Admin session data:", response.data.admin); 
                 setOpenSuccessModal({
                     title: "Login Successful",
                     messages: ["You have successfully logged in."],
@@ -140,7 +143,6 @@ export default function AdminLogin() {
                     }
                 })
             } else {
-                // This block might never be hit unless backend sends 200 with success: false
                 throw new Error(response.data.message || "Invalid credentials.");
             }
 
@@ -156,7 +158,6 @@ export default function AdminLogin() {
             setOpenErrorModal(true);
             console.log("Admin login failed:", backendMessage);
         }
-
     };
 
     return (
@@ -272,7 +273,7 @@ export default function AdminLogin() {
                 
                 <div className="w-full max-w-5xl bg-white rounded-3xl shadow-2xl overflow-hidden py-12">
                     <div className="flex flex-col lg:flex-row">
-                        <div className="hidden lg:block lg:w-1/2 bg-[#f0f4ff]">
+                        <div className="hidden lg:block lg:w-1/2 ">
                             <div className="h-full flex items-center justify-center p-8">
                                 <img 
                                     src={pic1} 

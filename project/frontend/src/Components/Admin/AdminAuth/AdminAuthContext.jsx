@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-
 const AdminAuthContext = createContext();
 
 export function AdminAuthProvider({ children }) {
@@ -20,6 +19,7 @@ export function AdminAuthProvider({ children }) {
             } else {
                 setIsAdminLogin(false);
                 setAdmin(null);
+                console.log("Admin is not logged in.");
             }
         })
         .catch(err => console.error("Admin session check failed:", err))

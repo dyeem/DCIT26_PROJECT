@@ -7,8 +7,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import GroupIcon from '@mui/icons-material/Group';
-import PersonIcon from '@mui/icons-material/Person'; // Import a profile icon
-
+import PersonIcon from '@mui/icons-material/Person';
 
 export default function Header() {
     const location = useLocation();
@@ -49,7 +48,6 @@ export default function Header() {
     const currentPage = pageTitles[location.pathname];
     const currentTitle = currentPage ? currentPage.title : 'Admin Panel';
     const currentIcon = currentPage ? currentPage.icon : null;
-
 
     return (
         <div className="flex items-center bg-[#faf9f9] py-6 px-6 shadow-sm font-semibold font-roboto rounded-xl">

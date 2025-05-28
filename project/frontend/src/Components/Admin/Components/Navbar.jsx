@@ -41,14 +41,17 @@ export default function Navbar() {
   return (
     <nav className="z-50 w-60 fixed h-screen p-10 bg-[#7E62FF] font-semibold ">
       <div className="flex flex-col justify-between h-full">
-          <div className="flex flex-col items gap-y-8">
-                {/* <p className="text-[#7E62FF] text-4xl mb-14 font-bold font-playfair">Loop</p> */}
+          <div className="flex flex-col items gap-y-5">
                 <img src={logo} alt="" className='h-auto w-52 mb-14'/>
                 {navItems.map(({ path, label, icon }) => (
                     <NavLink
                         key={path}
                         to={path}
-                        className={({ isActive }) => `flex items-center gap-x-2 ${isActive ? 'text-[#FAF9F9]' : 'text-gray-700'}`}
+                        className={({ isActive }) =>
+                            `font-semibold flex items-center gap-x-2 px-3 py-1 rounded-md transition-colors duration-200
+                            ${isActive ? 'text-[#FAF9F9] bg-[#6f52ee]' : 'text-gray-700 hover:bg-[#6f52ee]'} 
+                            `
+                        }
                     >
                         <img src={icon} alt="" />
                         <span>{label}</span>

@@ -19,7 +19,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="flex items-center justify-center w-full p-4 font-roboto rounded-xl">
-      <div className=" mt-[2rem] max-w-9xl flex flex-col justify-center items-center">
+      <div className="mt-[2rem] max-w-9xl flex flex-col justify-center items-center">
         <div className="flex flex-wrap w-full">
           <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
             <div className="flex flex-col gap-y-6 px-8 py-6 bg-[#faf8f8] shadow-lg rounded-lg">

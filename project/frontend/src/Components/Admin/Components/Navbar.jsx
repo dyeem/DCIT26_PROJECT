@@ -48,8 +48,8 @@ export default function Navbar() {
                         key={path}
                         to={path}
                         className={({ isActive }) =>
-                            `font-semibold flex items-center gap-x-2 px-3 py-1 rounded-md transition-colors duration-200
-                            ${isActive ? 'text-[#FAF9F9] bg-[#6f52ee]' : 'text-gray-700 hover:bg-[#6f52ee]'} 
+                            ` flex items-center gap-x-2 px-3 py-1 rounded-md transition-colors duration-200
+                            ${isActive ? 'text-[#FAF9F9] bg-[#6f52ee] font-bold' : 'text-white hover:bg-[#6f52ee]'} 
                             `
                         }
                     >

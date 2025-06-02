@@ -88,12 +88,11 @@ const router = createBrowserRouter(createRoutesFromElements(
         <Route path="add-product" element={<AddProduct />} />
         <Route path="edit-product" element={<EditProduct />} />
       </Route>
-      {/* Additional admin routes */}
-      <Route path="*" element={<ErrorPage />} />
-
       <Route path="manage-user" element={<UsersList/>}>
         <Route index element={<UsersList/>}/>
       </Route>
+      {/* Additional admin routes */}
+      <Route path="*" element={<ErrorPage />} />
     </Route>
 
     <Route path="/admin/login" element={<AdminLogin />} />

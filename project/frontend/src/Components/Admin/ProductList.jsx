@@ -32,8 +32,9 @@ export default function ProductList() {
     ];
 
     return (
-        <div className="flex items-center justify-center w-full p-4 font-roboto">
-            <div className="mt-[2rem] w-full max-w-8xl overflow-x-auto">
+        <div className="flex items-center justify-center w-full px-12 py-4 text-gray-700 font-poppins">
+            <div className="flex flex-col mt-[2rem] w-full max-w-8xl overflow-x-auto">
+                <button className='place-items-start'>Add A Product</button>
                 <div className="overflow-hidden bg-white rounded-lg shadow-md">
                     <table className="min-w-full text-sm text-left">
                         <thead className="text-xs font-semibold text-white uppercase bg-[#7E62FF]">
@@ -50,7 +51,7 @@ export default function ProductList() {
                                 <th scope="col" className="px-6 py-3 text-center">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-200">
+                        <tbody className="divide-y divide-gray-200 ">
                             {mockProducts.map((product) => (
                                 <tr key={product.product_id} className="hover:bg-gray-50">
                                     <td className="px-6 py-4 whitespace-nowrap">{product.product_id}</td>

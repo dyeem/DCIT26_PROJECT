@@ -1,9 +1,20 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 // material ui for modal
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 
 export default function ProductList() {
+    const [formData, setFormData] = useState({
+        product_name: '',
+        product_category: '',
+        product_color: '',
+        product_price: '',
+        product_image: '',
+        product_description: '',
+        product_quantity: '',
+    });
+
     const [imagePreview, setImagePreview] = useState(null);
     // modal
     const style = {
@@ -17,6 +28,7 @@ export default function ProductList() {
     const [EditOpen, setEditOpen] = useState(false);
     const handleOpenEdit = () => setEditOpen(true);
     const handleCloseEdit = () => setEditOpen(false);
+    
     useEffect(() => {
         document.title = 'Loop | Manage Products';
     }, []);
@@ -32,6 +44,7 @@ export default function ProductList() {
             product_description: 'Handmade crochet doll.',
             product_rating: 4.5,
             created_at: '2025-05-27',
+            product_quantity: 10,
         },
         {
             product_id: 'P002',
@@ -43,8 +56,8 @@ export default function ProductList() {
             product_description: 'Elegant lace-style crochet doilies.',
             product_rating: 4.8,
             created_at: '2025-05-26',
+            product_quantity: 10,
         },
-        // ... more mock products
     ];
 
     const handleImageChange = (e) => {
@@ -52,9 +65,43 @@ export default function ProductList() {
         if (file) {
         setImagePreview(URL.createObjectURL(file));
         }
+        setFormData(prevData => ({
+            ...prevData,
+            product_image: file,
+        }));
     };
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    }
+    async function handleSubmit (e) {
+        e.preventDefault();
+        console.log(formData);
 
-    
+        try {
+            const response = await axios.post(
+                'http://localhost/loop_backend/admin/products/addproduct.php',
+                {
+                    
+                },{
+                    withCredentials: true,
+                    headers: { 'Content-Type': 'application/json' },
+                }
+            );
+
+            if (response.status === 200) {
+                console.log('Product added successfully');
+            } else {
+                console.error('Failed to add product');
+            }
+            
+        }catch (error) {
+            console.error('Error adding product:', error);
+        }
+    }
 
     return (
         <>
@@ -70,23 +117,29 @@ export default function ProductList() {
                         className="rounded-2xl bg-white text-gray-800 w-[95%] max-w-5xl shadow-xl"
                     >
                         <div className="px-6 py-4 border-b border-gray-200">
-                            <h2 className="text-2xl font-bold text-center text-[#7E62FF]">Add a Product</h2>
+                            <h2 className="text-2xl font-bold text-center text-[#7E62FF]">
+                                Add a Product
+                            </h2>
                         </div>
 
                         <form
                             className="flex flex-col gap-6 px-6 py-4 md:flex-row"
-                            encType="multipart/form-data">
+                            encType="multipart/form-data"
+                            onSubmit = {handleSubmit}
+                        >
                             <div className="flex flex-col items-center w-full gap-4 md:w-1/2">
                                 <div>
                                     <p className="mb-1 text-sm text-gray-600">Image Preview:</p>
                                     <img
-                                        src={imagePreview || 'Please put a Image.'}
+                                        src={imagePreview || 'https://via.placeholder.com/300x300?text=Product+Image'}
                                         alt="Product Preview"
                                         className="object-cover border rounded-lg shadow-sm w-72 h-72"
                                     />
-                                </div>
-                                <div className="w-full">
-                                    <label className="block mb-1 text-sm font-medium text-gray-700">Upload Image</label>
+                                    </div>
+                                    <div className="w-full">
+                                    <label className="block mb-1 text-sm font-medium text-gray-700">
+                                        Upload Image
+                                    </label>
                                     <input
                                         type="file"
                                         name="image"
@@ -100,54 +153,101 @@ export default function ProductList() {
 
                             <div className="w-full space-y-4 md:w-1/2">
                                 <div>
-                                    <label className="block mb-1 text-sm font-medium text-gray-700">Product Name</label>
+                                    <label className="block mb-1 text-sm font-medium text-gray-700">
+                                        Product Name
+                                    </label>
                                     <input
                                         type="text"
                                         name="product_name"
+                                        value={formData.product_name}
+                                        onChange={handleChange}
                                         required
                                         placeholder="Enter the product name"
                                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF]"
                                     />
-                                </div>
+                                    </div>
 
-                                <div>
-                                    <label className="block mb-1 text-sm font-medium text-gray-700">Description</label>
+                                    <div>
+                                    <label className="block mb-1 text-sm font-medium text-gray-700">
+                                        Description
+                                    </label>
                                     <textarea
-                                        name="description"
+                                        name="product_description"
                                         rows="3"
-                                        required
+                                        value={formData.product_description}
+                                        onChange={handleChange}
                                         placeholder="Write a short description..."
                                         className="w-full px-4 py-2 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#7E62FF]"
                                     ></textarea>
                                 </div>
 
-                                <div className="flex gap-4">
-                                    <div className="w-1/2">
-                                        <label className="block mb-1 text-sm font-medium text-gray-700">Price (₱)</label>
+                                <div className="flex flex-wrap gap-4">
+                                    <div className="w-full sm:w-[48%]">
+                                        <label className="block mb-1 text-sm font-medium text-gray-700">
+                                        Price (₱)
+                                        </label>
                                         <input
-                                        type="number"
-                                        name="price"
-                                        min="0"
-                                        step="0.01"
-                                        required
-                                        placeholder="0.00"
-                                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF]"
+                                            type="number"
+                                            name="product_price"
+                                            min="0"
+                                            step="0.01"
+                                            value={formData.product_price}
+                                            onChange={handleChange}
+                                            required
+                                            placeholder="0.00"
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF]"
                                         />
                                     </div>
 
-                                    <div className="w-1/2">
-                                        <label className="block mb-1 text-sm font-medium text-gray-700">Category</label>
+                                    <div className="w-full sm:w-[48%]">
+                                        <label className="block mb-1 text-sm font-medium text-gray-700">
+                                        Quantity
+                                        </label>
+                                        <input
+                                            type="number"
+                                            name="product_quantity"
+                                            min="1"
+                                            value={formData.product_quantity}
+                                            onChange={handleChange}
+                                            required
+                                            placeholder="e.g. 10"
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF]"
+                                        />
+                                    </div>
+
+                                    <div className="w-full sm:w-[48%]">
+                                        <label className="block mb-1 text-sm font-medium text-gray-700">
+                                            Color
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="product_color"
+                                            value={formData.product_color}
+                                            onChange={handleChange}
+                                            placeholder="e.g. Pink, Blue"
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF]"
+                                        />
+                                    </div>
+
+                                    <div className="w-full sm:w-[48%]">
+                                        <label className="block mb-1 text-sm font-medium text-gray-700">
+                                            Category
+                                        </label>
                                         <select
-                                        name="category"
-                                        required
-                                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF]"
-                                        >
-                                        <option value="" disabled selected>Select a category</option>
-                                        <option value="dolls">Dolls</option>
-                                        <option value="jackets">Jackets</option>
-                                        <option value="bouquet">Bouquet</option>
-                                        <option value="accessories">Accessories</option>
-                                        <option value="doilies">Doilies</option>
+                                            name="product_category"
+                                            value={formData.product_category}
+                                            onChange={handleChange}
+                                            required
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF]"
+                                            >
+                                            <option value="" disabled selected>
+                                                Select a category
+                                            </option>
+                                            <option value="dolls">Dolls</option>
+                                            <option value="jackets">Jackets</option>
+                                            <option value="bouquet">Bouquet</option>
+                                            <option value="accessories">Accessories</option>
+                                            <option value="doilies">Doilies</option>
                                         </select>
                                     </div>
                                 </div>
@@ -184,6 +284,7 @@ export default function ProductList() {
                                     <th scope="col" className="px-6 py-3">Image</th>
                                     <th scope="col" className="px-6 py-3">Description</th>
                                     <th scope="col" className="px-6 py-3">Rating</th>
+                                    <th scope="col" className="px-6 py-3">Stock</th>
                                     <th scope="col" className="px-6 py-3">Created At</th>
                                     <th scope="col" className="px-6 py-3 text-center">Actions</th>
                                 </tr>
@@ -209,6 +310,7 @@ export default function ProductList() {
                                         </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">{product.product_rating}⭐</td>
+                                        <td className="px-6 py-4 whitespace-nowrap">{product.product_quantity}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">{product.created_at}</td>
                                         <td className="px-6 py-4 text-center whitespace-nowrap"> 
                                             <div className="flex items-center justify-center gap-2">

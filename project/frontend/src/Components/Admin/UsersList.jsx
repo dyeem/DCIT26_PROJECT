@@ -1,32 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
-
-// material ui for modal
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-
-
-
 export default function UsersList() {
-  const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
-  // modal
-  const [EditOpen, setEditOpen] = useState(false);
-  const handleOpenEdit = () => setEditOpen(true);
-  const handleCloseEdit = () => setEditOpen(false);
-  
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -101,23 +75,7 @@ export default function UsersList() {
 
   return (
     <>
-    <div>
-      <Modal
-        open={EditOpen}
-        onClose={handleCloseEdit}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Edit User
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-        </Box>
-      </Modal>
-    </div>
+    
     <div className="flex items-center justify-center w-full px-12 py-4 text-gray-700 font-roboto">
       <div className="flex flex-col mt-[2rem] w-full max-w-8xl overflow-x-auto">
         <div className="overflow-hidden bg-white rounded-lg shadow-md">

@@ -1,10 +1,15 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+
 // material ui for modal
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 
+import imageAlt from '../../Assets/image_alt.png';
+
 export default function ProductList() {
+    const [products, setProducts] = useState([]);
     const [formData, setFormData] = useState({
         product_name: '',
         product_category: '',
@@ -33,42 +38,26 @@ export default function ProductList() {
         document.title = 'Loop | Manage Products';
     }, []);
 
-    const mockProducts = [
-        {
-            product_id: 'P001',
-            product_name: 'Crochet Doll',
-            product_category: 'Dolls',
-            product_color: 'Pink',
-            product_price: 299.99,
-            product_image: 'https://via.placeholder.com/50',
-            product_description: 'Handmade crochet doll.',
-            product_rating: 4.5,
-            created_at: '2025-05-27',
-            product_quantity: 10,
-        },
-        {
-            product_id: 'P002',
-            product_name: 'Doily Set',
-            product_category: 'Doilies',
-            product_color: 'White',
-            product_price: 149.0,
-            product_image: 'https://via.placeholder.com/50',
-            product_description: 'Elegant lace-style crochet doilies.',
-            product_rating: 4.8,
-            created_at: '2025-05-26',
-            product_quantity: 10,
-        },
-    ];
+    useEffect(() => {
+        axios.get('http://localhost/loop_backend/admin/products/fetchproducts.php', {
+            withCredentials: true,
+        })
+        .then(res => {
+            console.log(res.data);
+            setProducts(res.data.products);
+        })
+        .catch(err => console.error(err));
+    }, []);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-        setImagePreview(URL.createObjectURL(file));
-        }
-        setFormData(prevData => ({
-            ...prevData,
-            product_image: file,
-        }));
+            setImagePreview(URL.createObjectURL(file));
+            setFormData(prevData => ({
+                ...prevData,
+                product_image: file,
+            }));
+        };
     };
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -77,30 +66,82 @@ export default function ProductList() {
             [name]: value,
         }));
     }
-    async function handleSubmit (e) {
+    async function handleSubmit(e) {
         e.preventDefault();
-        console.log(formData);
+
+        const timestamp = new Date().toISOString().slice(0, 19).replace('T', ' '); // 'YYYY-MM-DD HH:mm:ss'
+
+        const newProduct = {
+            product_name: formData.product_name,
+            product_category: formData.product_category,
+            product_color: formData.product_color,
+            product_price: formData.product_price,
+            product_description: formData.product_description,
+            product_quantity: formData.product_quantity,
+            product_image: formData.product_image.name,
+            product_rating: 0,
+            created_at: timestamp,
+        };
 
         try {
             const response = await axios.post(
                 'http://localhost/loop_backend/admin/products/addproduct.php',
+                JSON.stringify(newProduct),
                 {
-                    
-                },{
                     withCredentials: true,
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                 }
             );
 
-            if (response.status === 200) {
-                console.log('Product added successfully');
-            } else {
+            if (response.status === 200 && response.data.success) {
+                const addedProduct = response.data.product;
+
+                setProducts(prev => [...prev, addedProduct]);
+
+                handleCloseEdit();
+
+                setFormData({
+                    product_name: '',
+                    product_category: '',
+                    product_color: '',
+                    product_price: '',
+                    product_image: '',
+                    product_description: '',
+                    product_quantity: '',
+                });
+                setImagePreview(null);
+
+                console.log('Product added and list updated with DB timestamp');
+                toast.success('Product added Successfully!');
+            }else {
                 console.error('Failed to add product');
+                toast.error('Failed to add product.');
             }
             
-        }catch (error) {
+        } catch (error) {
             console.error('Error adding product:', error);
+            toast.error('Failed to add product: ' + error.message);
         }
+    }
+
+    function handleDelete(productId) {
+        console.log('Delete button clicked Product: ' + productId);
+        
+        axios.delete(`http://localhost/loop_backend/admin/products/deleteproduct.php?id=${productId}`, {
+            withCredentials: true,
+        })
+        .then(res => {
+            console.log(res.data);
+            setProducts(prevProducts => prevProducts.filter(product => product.product_id !== productId));
+            toast.success('Product Deleted Successfully!');
+        })
+        .catch(err => {
+            console.error(err);
+            toast.error('Failed to delete product.');
+        });
+        
     }
 
     return (
@@ -131,7 +172,7 @@ export default function ProductList() {
                                 <div>
                                     <p className="mb-1 text-sm text-gray-600">Image Preview:</p>
                                     <img
-                                        src={imagePreview || 'https://via.placeholder.com/300x300?text=Product+Image'}
+                                        src={imagePreview || imageAlt}
                                         alt="Product Preview"
                                         className="object-cover border rounded-lg shadow-sm w-72 h-72"
                                     />
@@ -243,11 +284,13 @@ export default function ProductList() {
                                             <option value="" disabled selected>
                                                 Select a category
                                             </option>
-                                            <option value="dolls">Dolls</option>
-                                            <option value="jackets">Jackets</option>
-                                            <option value="bouquet">Bouquet</option>
-                                            <option value="accessories">Accessories</option>
-                                            <option value="doilies">Doilies</option>
+                                            <option value="Dolls">Dolls</option>
+                                            <option value="Flowers">Flowers</option>
+                                            <option value="Hairclips">Hairclips</option>
+                                            <option value="Hat">Hat</option>
+                                            <option value="Keychain">Keychain</option>
+                                            <option value="Miscellaneous">Miscellaneous</option>
+                                            <option value="Wearables">Wearables</option>
                                         </select>
                                     </div>
                                 </div>
@@ -290,16 +333,16 @@ export default function ProductList() {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200 ">
-                                {mockProducts.map((product) => (
+                                {products.map((product) => (
                                     <tr key={product.product_id} className="hover:bg-gray-50">
                                         <td className="px-6 py-4 whitespace-nowrap">{product.product_id}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">{product.product_name}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">{product.product_category}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">{product.product_color}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">₱{product.product_price.toFixed(2)}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap">₱{product.product_price}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <img
-                                                src={product.product_image}
+                                                src={`/Assets/Products/${product.product_category}/${product.product_image}`}
                                                 alt={product.product_name}
                                                 className="object-cover w-12 h-12 mx-auto rounded-md"
                                             />
@@ -315,7 +358,7 @@ export default function ProductList() {
                                         <td className="px-6 py-4 text-center whitespace-nowrap"> 
                                             <div className="flex items-center justify-center gap-2">
                                                 <button className="text-white hover:text-white bg-[#7E62FF] hover:bg-[#624bc7] px-3 py-1 rounded-lg">Edit</button>
-                                                <button className="px-3 py-1 text-white bg-red-500 rounded-lg hover:bg-red-700 hover:text-white">Delete</button>
+                                                <button onClick={(e) => handleDelete (product.product_id)} className="px-3 py-1 text-white bg-red-500 rounded-lg hover:bg-red-700 hover:text-white">Delete</button>
                                             </div>
                                         </td>
                                     </tr>

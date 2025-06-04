@@ -4,6 +4,9 @@ import { RouterProvider } from "react-router-dom";
 import LoadingEffect from "./Components/LoadingEffect.jsx";
 import router from "./Layouts/router.jsx";
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function App() {
 
   const [isLoading, setIsLoading] = useState(true);
@@ -29,6 +32,7 @@ function App() {
         {isLoading ? ( <LoadingEffect fadeOut={fadeOut} />) : (
           <RouterProvider router={router}/>
         )}
+        <ToastContainer position="top-right" autoClose={3000} />
     </>
   )
 }

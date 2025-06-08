@@ -31,8 +31,33 @@ export default function ProductList() {
         p: 4,
     };
     const [EditOpen, setEditOpen] = useState(false);
-    const handleOpenEdit = () => setEditOpen(true);
+    const [AddOpen, setAddOpen] = useState(false);
+
+    function handleOpenEdit(productId) {
+        setEditOpen(true);
+        
+        axios.get(`http://localhost/loop_backend/admin/products/fetchproducts.php?id=${productId}`, {
+            withCredentials: true,
+        })
+        .then(res => {
+            if (res.data.success) {
+                setFormData(res.data.product);
+                setImagePreview(`/Assets/Products/${res.data.product.product_category}/${res.data.product.product_image}`);
+                
+            } else {
+                toast.error(res.data.message || 'Failed to fetch product details');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            toast.error('Failed to fetch product details');
+        });
+    }
     const handleCloseEdit = () => setEditOpen(false);
+
+    const handleOpenAdd = () => setAddOpen(true);
+    const handleCloseAdd = () => setAddOpen(false);
+    
     
     useEffect(() => {
         document.title = 'Loop | Manage Products';
@@ -69,7 +94,7 @@ export default function ProductList() {
     async function handleSubmit(e) {
         e.preventDefault();
 
-        const timestamp = new Date().toISOString().slice(0, 19).replace('T', ' '); // 'YYYY-MM-DD HH:mm:ss'
+        const timestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
         const newProduct = {
             product_name: formData.product_name,
@@ -126,6 +151,78 @@ export default function ProductList() {
         }
     }
 
+    async function handleEditSubmit(e) {
+        e.preventDefault();
+        
+        if (!formData.product_id) {
+            toast.error('Product ID is missing');
+            return;
+        }
+
+        if (!validateForm()) return;
+
+        try {
+            const editedProduct = {
+                product_id: formData.product_id,
+                product_name: formData.product_name,
+                product_category: formData.product_category,
+                product_color: formData.product_color,
+                product_price: formData.product_price,
+                product_description: formData.product_description,
+                product_quantity: formData.product_quantity,
+                product_image: formData.product_image instanceof File 
+                    ? formData.product_image.name 
+                    : formData.product_image
+            };
+
+            const response = await axios.put(
+                `http://localhost/loop_backend/admin/products/updateproduct.php`, 
+                editedProduct,
+                {
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+
+            if (response.data.success) {
+                setProducts(prevProducts =>
+                    prevProducts.map(product =>
+                        product.product_id === editedProduct.product_id
+                            ? response.data.product
+                            : product
+                    )
+                );
+
+                handleCloseEdit();
+                toast.success('Product Updated Successfully!');
+            } else {
+                toast.error(response.data.message || 'Failed to update product');
+            }
+        } catch (error) {
+            console.error('Error updating product:', error);
+            toast.error('Failed to update product: ' + error.message);
+        }
+    }
+
+    function validateForm() {
+        const errors = [];
+
+        if (!formData.product_name) errors.push('Product name is required');
+        if (!formData.product_category) errors.push('Category is required');
+        if (!formData.product_price || parseFloat(formData.product_price) <= 0) errors.push('Valid price is required');
+        if (!formData.product_description) errors.push('Description is required');
+        if (!formData.product_quantity || parseInt(formData.product_quantity) < 0) errors.push('Valid quantity is required');
+
+        if (errors.length > 0) {
+            toast.error(errors.join(', '));
+            return false;
+        }
+
+        return true;
+    }
+    
     function handleDelete(productId) {
         console.log('Delete button clicked Product: ' + productId);
         
@@ -148,8 +245,8 @@ export default function ProductList() {
         <>
             <div>
                 <Modal
-                    open={EditOpen}
-                    onClose={handleCloseEdit}
+                    open={AddOpen}
+                    onClose={handleCloseAdd}
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                     >
@@ -308,10 +405,174 @@ export default function ProductList() {
                     </Box>
                 </Modal>
             </div>
+
+            <div>
+                <Modal
+                    open={EditOpen}
+                    onClose={handleCloseEdit}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                    >
+                    <Box
+                        sx={style}
+                        className="rounded-2xl bg-white text-gray-800 w-[95%] max-w-5xl shadow-xl"
+                    >
+                        <div className="px-6 py-4 border-b border-gray-200">
+                            <h2 className="text-2xl font-bold text-center text-[#7E62FF]">
+                                Edit a Product
+                            </h2>
+                        </div>
+
+                        <form
+                            className="flex flex-col gap-6 px-6 py-4 md:flex-row"
+                            encType="multipart/form-data"
+                            onSubmit = {handleEditSubmit}
+                        >
+                            <div className="flex flex-col items-center w-full gap-4 md:w-1/2">
+                                <div>
+                                    <p className="mb-1 text-sm text-gray-600">Image Preview:</p>
+                                    <img
+                                        src={imagePreview || imageAlt}
+                                        alt="Product Preview"
+                                        className="object-cover border rounded-lg shadow-sm w-72 h-72"
+                                    />
+                                    </div>
+                                    <div className="w-full">
+                                    <label className="block mb-1 text-sm font-medium text-gray-700">
+                                        Upload Image
+                                    </label>
+                                    <input
+                                        type="file"
+                                        name="image"
+                                        accept="image/*"
+                                        required
+                                        onChange={handleImageChange}
+                                        className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#7E62FF] file:text-white hover:file:bg-[#624bc7]"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="w-full space-y-4 md:w-1/2">
+                                <div>
+                                    <label className="block mb-1 text-sm font-medium text-gray-700">
+                                        Product Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="product_name"
+                                        value={formData.product_name}
+                                        onChange={handleChange}
+                                        required
+                                        placeholder="Enter the product name"
+                                        className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF]"
+                                    />
+                                    </div>
+
+                                    <div>
+                                    <label className="block mb-1 text-sm font-medium text-gray-700">
+                                        Description
+                                    </label>
+                                    <textarea
+                                        name="product_description"
+                                        rows="3"
+                                        value={formData.product_description}
+                                        onChange={handleChange}
+                                        placeholder="Write a short description..."
+                                        className="w-full px-4 py-2 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-[#7E62FF]"
+                                    ></textarea>
+                                </div>
+
+                                <div className="flex flex-wrap gap-4">
+                                    <div className="w-full sm:w-[48%]">
+                                        <label className="block mb-1 text-sm font-medium text-gray-700">
+                                        Price (₱)
+                                        </label>
+                                        <input
+                                            type="number"
+                                            name="product_price"
+                                            min="0"
+                                            step="0.01"
+                                            value={formData.product_price}
+                                            onChange={handleChange}
+                                            required
+                                            placeholder="0.00"
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF]"
+                                        />
+                                    </div>
+
+                                    <div className="w-full sm:w-[48%]">
+                                        <label className="block mb-1 text-sm font-medium text-gray-700">
+                                        Quantity
+                                        </label>
+                                        <input
+                                            type="number"
+                                            name="product_quantity"
+                                            min="1"
+                                            value={formData.product_quantity}
+                                            onChange={handleChange}
+                                            required
+                                            placeholder="e.g. 10"
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF]"
+                                        />
+                                    </div>
+
+                                    <div className="w-full sm:w-[48%]">
+                                        <label className="block mb-1 text-sm font-medium text-gray-700">
+                                            Color
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="product_color"
+                                            value={formData.product_color}
+                                            onChange={handleChange}
+                                            placeholder="e.g. Pink, Blue"
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF]"
+                                        />
+                                    </div>
+
+                                    <div className="w-full sm:w-[48%]">
+                                        <label className="block mb-1 text-sm font-medium text-gray-700">
+                                            Category
+                                        </label>
+                                        <select
+                                            name="product_category"
+                                            value={formData.product_category}
+                                            onChange={handleChange}
+                                            required
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF]"
+                                            >
+                                            <option value="" disabled selected>
+                                                Select a category
+                                            </option>
+                                            <option value="Dolls">Dolls</option>
+                                            <option value="Flowers">Flowers</option>
+                                            <option value="Hairclips">Hairclips</option>
+                                            <option value="Hat">Hat</option>
+                                            <option value="Keychain">Keychain</option>
+                                            <option value="Miscellaneous">Miscellaneous</option>
+                                            <option value="Wearables">Wearables</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div className="pt-2">
+                                    <button
+                                        type="submit"
+                                        className="w-full py-3 text-white bg-[#7E62FF] hover:bg-[#624bc7] rounded-lg font-semibold transition duration-200"
+                                    >
+                                        Save Product
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </Box>
+                </Modal>
+            </div>
+            
             <div className="flex items-center justify-center w-full px-12 py-4 text-gray-700 font-poppins">
                 <div className="flex flex-col gap-y-2 mt-[2rem] w-full max-w-8xl overflow-x-auto">
                     <div className="flex place-content-end">
-                        <button onClick={handleOpenEdit} className='px-3 py-2 text-white transition-all bg-green-500 rounded-lg hover:bg-green-600 place-items-end'>
+                        <button onClick={handleOpenAdd} className='px-3 py-2 text-white transition-all bg-green-500 rounded-lg hover:bg-green-600 place-items-end'>
                             Add A Product
                         </button>
                     </div>
@@ -357,7 +618,7 @@ export default function ProductList() {
                                         <td className="px-6 py-4 whitespace-nowrap">{product.created_at}</td>
                                         <td className="px-6 py-4 text-center whitespace-nowrap"> 
                                             <div className="flex items-center justify-center gap-2">
-                                                <button className="text-white hover:text-white bg-[#7E62FF] hover:bg-[#624bc7] px-3 py-1 rounded-lg">Edit</button>
+                                                <button onClick = {(e) => handleOpenEdit ( product.product_id)} className="text-white hover:text-white bg-[#7E62FF] hover:bg-[#624bc7] px-3 py-1 rounded-lg">Edit</button>
                                                 <button onClick={(e) => handleDelete (product.product_id)} className="px-3 py-1 text-white bg-red-500 rounded-lg hover:bg-red-700 hover:text-white">Delete</button>
                                             </div>
                                         </td>

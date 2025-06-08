@@ -44,6 +44,8 @@ import AddProduct from "../Components/Admin/AddProduct.jsx";
 import UsersList from "../Components/Admin/UsersList.jsx";
 import AdminLogin from "../Components/Admin/Admin_Login.jsx";
 import AdminSignUp from "../Components/Admin/Admin_Signup.jsx";
+import OrderList from "../Components/Admin/OrderList.jsx";
+import OrderDetails from "../Components/Admin/OrderDetails.jsx";
 const router = createBrowserRouter(createRoutesFromElements(
   <>
     <Route path="/" element={<RootLayout/>}>
@@ -90,6 +92,11 @@ const router = createBrowserRouter(createRoutesFromElements(
       </Route>
       <Route path="manage-user" element={<UsersList/>}>
         <Route index element={<UsersList/>}/>
+      </Route>
+
+      <Route path="orders" element={<OrderList/>}>
+        <Route index element={<OrderList/>}/>
+        <Route path="order-details" element={<OrderDetails/>}/>
       </Route>
       {/* Additional admin routes */}
       <Route path="*" element={<ErrorPage />} />

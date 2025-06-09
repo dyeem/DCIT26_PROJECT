@@ -569,63 +569,161 @@ export default function ProductList() {
                 </Modal>
             </div>
             
-            <div className="flex items-center justify-center w-full px-12 py-4 text-gray-700 font-poppins">
-                <div className="flex flex-col gap-y-2 mt-[2rem] w-full max-w-8xl overflow-x-auto">
+            <div className="flex items-center justify-center w-full px-4 py-4 text-gray-700 sm:px-8 lg:px-12 font-poppins">
+                <div className="flex flex-col gap-y-2 mt-[2rem] w-full max-w-8xl">
                     <div className="flex place-content-end">
                         <button onClick={handleOpenAdd} className='px-3 py-2 text-white transition-all bg-green-500 rounded-lg hover:bg-green-600 place-items-end'>
                             Add A Product
                         </button>
                     </div>
-                    <div className="overflow-hidden bg-white rounded-lg shadow-md">
-                        <table className="min-w-full text-sm text-left">
-                            <thead className="text-xs font-semibold text-white uppercase bg-[#7E62FF]">
-                                <tr>
-                                    <th scope="col" className="px-6 py-3">ID</th>
-                                    <th scope="col" className="px-6 py-3">Name</th>
-                                    <th scope="col" className="px-6 py-3">Category</th>
-                                    <th scope="col" className="px-6 py-3">Color</th>
-                                    <th scope="col" className="px-6 py-3">Price</th>
-                                    <th scope="col" className="px-6 py-3">Image</th>
-                                    <th scope="col" className="px-6 py-3">Description</th>
-                                    <th scope="col" className="px-6 py-3">Rating</th>
-                                    <th scope="col" className="px-6 py-3">Stock</th>
-                                    <th scope="col" className="px-6 py-3">Created At</th>
-                                    <th scope="col" className="px-6 py-3 text-center">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-200 ">
-                                {products.map((product) => (
-                                    <tr key={product.product_id} className="hover:bg-gray-50">
-                                        <td className="px-6 py-4 whitespace-nowrap">{product.product_id}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">{product.product_name}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">{product.product_category}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">{product.product_color}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">₱{product.product_price}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <img
-                                                src={`/Assets/Products/${product.product_category}/${product.product_image}`}
-                                                alt={product.product_name}
-                                                className="object-cover w-12 h-12 mx-auto rounded-md"
-                                            />
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="max-w-xs truncate">
-                                            {product.product_description}
-                                        </div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">{product.product_rating}⭐</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">{product.product_quantity}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap">{product.created_at}</td>
-                                        <td className="px-6 py-4 text-center whitespace-nowrap"> 
-                                            <div className="flex items-center justify-center gap-2">
-                                                <button onClick = {(e) => handleOpenEdit ( product.product_id)} className="text-white hover:text-white bg-[#7E62FF] hover:bg-[#624bc7] px-3 py-1 rounded-lg">Edit</button>
-                                                <button onClick={(e) => handleDelete (product.product_id)} className="px-3 py-1 text-white bg-red-500 rounded-lg hover:bg-red-700 hover:text-white">Delete</button>
-                                            </div>
-                                        </td>
+        
+                    {/* Desktop Table View */}
+                    <div className="hidden overflow-hidden bg-white rounded-lg shadow-md lg:block">
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full text-sm text-left">
+                                <thead className="text-xs font-semibold text-white uppercase bg-[#7E62FF]">
+                                    <tr>
+                                        <th scope="col" className="px-6 py-3">ID</th>
+                                        <th scope="col" className="px-6 py-3">Name</th>
+                                        <th scope="col" className="px-6 py-3">Category</th>
+                                        <th scope="col" className="px-6 py-3">Color</th>
+                                        <th scope="col" className="px-6 py-3">Price</th>
+                                        <th scope="col" className="px-6 py-3">Image</th>
+                                        <th scope="col" className="px-6 py-3">Description</th>
+                                        <th scope="col" className="px-6 py-3">Rating</th>
+                                        <th scope="col" className="px-6 py-3">Stock</th>
+                                        <th scope="col" className="px-6 py-3">Created At</th>
+                                        <th scope="col" className="px-6 py-3 text-center">Actions</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody className="divide-y divide-gray-200">
+                                    {products.map((product) => (
+                                        <tr key={product.product_id} className="hover:bg-gray-50">
+                                            <td className="px-6 py-4 whitespace-nowrap">{product.product_id}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{product.product_name}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{product.product_category}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{product.product_color}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">₱{product.product_price}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <img
+                                                    src={`/Assets/Products/${product.product_category}/${product.product_image}`}
+                                                    alt={product.product_name}
+                                                    className="object-cover w-12 h-12 mx-auto rounded-md"
+                                                />
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="max-w-xs truncate">
+                                                {product.product_description}
+                                            </div>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{product.product_rating}⭐</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{product.product_quantity}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{product.created_at}</td>
+                                            <td className="px-6 py-4 text-center whitespace-nowrap"> 
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <button onClick={(e) => handleOpenEdit(product.product_id)} className="text-white hover:text-white bg-[#7E62FF] hover:bg-[#624bc7] px-3 py-1 rounded-lg">Edit</button>
+                                                    <button onClick={(e) => handleDelete(product.product_id)} className="px-3 py-1 text-white bg-red-500 rounded-lg hover:bg-red-700 hover:text-white">Delete</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {/* Tablet View - Simplified Table */}
+                    <div className="hidden overflow-hidden bg-white rounded-lg shadow-md md:block lg:hidden">
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full text-sm text-left">
+                                <thead className="text-xs font-semibold text-white uppercase bg-[#7E62FF]">
+                                    <tr>
+                                        <th scope="col" className="px-4 py-3">Product</th>
+                                        <th scope="col" className="px-4 py-3">Category</th>
+                                        <th scope="col" className="px-4 py-3">Price</th>
+                                        <th scope="col" className="px-4 py-3">Stock</th>
+                                        <th scope="col" className="px-4 py-3 text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-200">
+                                    {products.map((product) => (
+                                        <tr key={product.product_id} className="hover:bg-gray-50">
+                                            <td className="px-4 py-4">
+                                                <div className="flex items-center space-x-3">
+                                                    <img
+                                                        src={`/Assets/Products/${product.product_category}/${product.product_image}`}
+                                                        alt={product.product_name}
+                                                        className="object-cover w-10 h-10 rounded-md"
+                                                    />
+                                                    <div>
+                                                        <div className="font-medium text-gray-900">{product.product_name}</div>
+                                                        <div className="text-xs text-gray-500">ID: {product.product_id}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="px-4 py-4 whitespace-nowrap">{product.product_category}</td>
+                                            <td className="px-4 py-4 whitespace-nowrap">₱{product.product_price}</td>
+                                            <td className="px-4 py-4 whitespace-nowrap">{product.product_quantity}</td>
+                                            <td className="px-4 py-4 text-center whitespace-nowrap">
+                                                <div className="flex flex-col gap-1">
+                                                    <button onClick={(e) => handleOpenEdit(product.product_id)} className="text-white bg-[#7E62FF] hover:bg-[#624bc7] px-2 py-1 rounded text-xs">Edit</button>
+                                                    <button onClick={(e) => handleDelete(product.product_id)} className="px-2 py-1 text-xs text-white bg-red-500 rounded hover:bg-red-700">Delete</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {/* Mobile View - Card Layout */}
+                    <div className="block space-y-4 md:hidden">
+                        {products.map((product) => (
+                            <div key={product.product_id} className="p-4 bg-white rounded-lg shadow-md">
+                                <div className="flex items-start space-x-4">
+                                    <img
+                                        src={`/Assets/Products/${product.product_category}/${product.product_image}`}
+                                        alt={product.product_name}
+                                        className="flex-shrink-0 object-cover w-16 h-16 rounded-md"
+                                    />
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-start justify-between mb-2">
+                                            <h3 className="text-lg font-medium text-gray-900 truncate">{product.product_name}</h3>
+                                            <span className="text-lg font-bold text-[#7E62FF]">₱{product.product_price}</span>
+                                        </div>
+                                        
+                                        <div className="grid grid-cols-2 gap-2 mb-3 text-sm text-gray-600">
+                                            <div><span className="font-medium">ID:</span> {product.product_id}</div>
+                                            <div><span className="font-medium">Category:</span> {product.product_category}</div>
+                                            <div><span className="font-medium">Color:</span> {product.product_color}</div>
+                                            <div><span className="font-medium">Stock:</span> {product.product_quantity}</div>
+                                            <div><span className="font-medium">Rating:</span> {product.product_rating}⭐</div>
+                                            <div><span className="font-medium">Created:</span> {new Date(product.created_at).toLocaleDateString()}</div>
+                                        </div>
+                                        
+                                        <div className="mb-3">
+                                            <p className="text-sm text-gray-600 line-clamp-2">{product.product_description}</p>
+                                        </div>
+                                        
+                                        <div className="flex space-x-2">
+                                            <button 
+                                                onClick={(e) => handleOpenEdit(product.product_id)} 
+                                                className="flex-1 text-white bg-[#7E62FF] hover:bg-[#624bc7] px-3 py-2 rounded-lg text-sm font-medium"
+                                            >
+                                                Edit
+                                            </button>
+                                            <button 
+                                                onClick={(e) => handleDelete(product.product_id)} 
+                                                className="flex-1 px-3 py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-700"
+                                            >
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>

@@ -127,7 +127,7 @@ export default function Login() {
 
             if (response.data.success) {
                 if (response.data.user) {
-                    setUser(response.data.user);       // <- from context
+                    setUser(response.data.user);
                     setIsLogin(true);
                     setOpenSuccessModal({
                         title: "Login Successful",
@@ -189,8 +189,8 @@ export default function Login() {
                 }}
             >
                 <Fade in={!!openSuccessModal}>
-                    <Box sx={style} className="rounded-lg leading-tight">
-                        <div className="flex flex-col justify-center items-center bg-green-500 py-2">
+                    <Box sx={style} className="leading-tight rounded-lg">
+                        <div className="flex flex-col items-center justify-center py-2 bg-green-500">
                             <video
                                 src={openSuccessModal?.animation}
                                 autoPlay
@@ -207,7 +207,7 @@ export default function Login() {
                                 {openSuccessModal?.title || "Success!"}
                             </Typography>
                         </div>
-                        <div className="py-6 px-12 leading-tight">
+                        <div className="px-12 py-6 leading-tight">
                             <div className="flex flex-col items-center justify-center gap-y-7">
                                 <Typography
                                     id="transition-modal-description"
@@ -219,7 +219,7 @@ export default function Login() {
                                 </Typography>
                                 <button
                                     onClick={openSuccessModal?.onClose}
-                                    className="text-white bg-green-500 py-2 px-3 rounded-lg hover:bg-green-800"
+                                    className="px-3 py-2 text-white bg-green-500 rounded-lg hover:bg-green-800"
                                 >
                                     {openSuccessModal?.buttonText || "Continue"}
                                 </button>
@@ -245,7 +245,7 @@ export default function Login() {
                 }}
                 >
                 <Fade in={openErrorModal}>
-                    <Box sx={style} className='rounded-lg leading-tight'>
+                    <Box sx={style} className='leading-tight rounded-lg'>
                     <div className='flex flex-col justify-center items-center bg-[#df4c4c] py-2'>
                         {errorModalData.animation && (
                             <video
@@ -261,14 +261,14 @@ export default function Login() {
                             {errorModalData.title || "Error"}
                         </Typography>
                     </div>
-                    <div className="py-6 px-12 leading-tight">
+                    <div className="px-12 py-6 leading-tight">
                         <div className="flex flex-col items-center justify-center gap-y-7">
                             <Typography id="transition-modal-description" className='text-center text-gray-500'>
                                 {errorModalData.messages.map((msg, index) => (
                                     <p key={index}>{msg}</p>
                                 ))}
                             </Typography>
-                            <button onClick={errorModalData.onClose} className='text-white bg-green-500 py-2 px-3 rounded-lg hover:bg-green-800'>
+                            <button onClick={errorModalData.onClose} className='px-3 py-2 text-white bg-green-500 rounded-lg hover:bg-green-800'>
                                 {errorModalData.buttonText || "Close"}
                             </button>
                         </div>
@@ -276,7 +276,7 @@ export default function Login() {
                     </Box>
                 </Fade>
             </Modal>
-            <div className="mt-8 min-h-screen bg-gray-100 flex justify-center items-center leading-relaxed p-4" 
+            <div className="flex items-center justify-center min-h-screen p-4 mt-8 leading-relaxed bg-gray-100" 
                 style={{
                     backgroundImage: `url(${loginbg})`,
                     backgroundSize: 'cover',
@@ -286,13 +286,13 @@ export default function Login() {
                 
                 <div className=" grid xl:grid-cols-2 lg:grid-cols-1 bwlnx:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 xsm:grid-cols-1 justify-center items-center w-[90rem] p-4 bg-opacity-70 bg-white rounded-xl shadow-xl m-1">
                     {/* left side */}
-                    <div className="xsm:z-0 flex flex-col gap-y-2 justify-center items-center rounded-xl pb-11">
+                    <div className="flex flex-col items-center justify-center xsm:z-0 gap-y-2 rounded-xl pb-11">
                         <form className="max-w-xl mx-auto">
-                            <div className="py-10 gap-y-3 flex flex-col sm:text-center xsm:text-center">
-                                <p className='text-gray-900 xl:text-5xl font-bold sm:text-4xl xsm:text-3xl'>
+                            <div className="flex flex-col py-10 gap-y-3 sm:text-center xsm:text-center">
+                                <p className='font-bold text-gray-900 xl:text-5xl sm:text-4xl xsm:text-3xl'>
                                     Welcome Back!
                                 </p>
-                                <p className='text-gray-800 text-base'>
+                                <p className='text-base text-gray-800'>
                                     Log in to your account and continue exploring our collection of handcrafted crochet products just for you.
                                 </p>
                             </div>
@@ -320,7 +320,7 @@ export default function Login() {
                                     Email address
                                 </label>
                                 {invalidEmail && (
-                                    <p className="text-red-500 text-sm mt-1">Please enter a valid email address.</p>
+                                    <p className="mt-1 text-sm text-red-500">Please enter a valid email address.</p>
                                 )}
                             </div>
                             {/* PASSWORD */}
@@ -341,11 +341,11 @@ export default function Login() {
                                 >
                                     Password
                                 </label>
-                                <div className="absolute right-3 top-1 cursor-pointer text-gray-600" onClick={() => setPassword(!showPassword)}>
+                                <div className="absolute text-gray-600 cursor-pointer right-3 top-1" onClick={() => setPassword(!showPassword)}>
                                         {showPassword ?  <VisibilityOff /> : <Visibility />}
                                 </div>
                             </div>
-                            <div className="flex justify-center items-center">
+                            <div className="flex items-center justify-center">
                                 <button
                                     onClick={(e) => handleSubmit(e)}
                                     type="submit"
@@ -354,7 +354,7 @@ export default function Login() {
                                 </button>
                             </div>
                         </form>
-                        <div className="text-gray-800 font-medium pt-20">
+                        <div className="pt-20 font-medium text-gray-800">
                             <p>Don't have an account? <span className="underline cursor-pointer" onClick={() => navigate('/signup')}>
                                 Signup here!</span>
                             </p> 
@@ -362,10 +362,10 @@ export default function Login() {
                     </div>
                     {/* right side */}
                     <div className="xsm:hidden sm:hidden md:hidden bwlnx:block lg:hidden xl:block rounded-xl  bg-[#CCCCCC] pb-11">
-                        <div className=" xl:p-6 md:p-3 xsm:p-2 text-center flex flex-col gap-y-4">
+                        <div className="flex flex-col text-center  xl:p-6 md:p-3 xsm:p-2 gap-y-4">
                             <img src={loginPic} alt="" className='w-[70rem]'/>
-                            <p className='text-gray-800 xl:text-4xl xsm:text-3xl font-bold'>Pick Where You Left Off!</p>
-                            <p className='text-gray-700 text-base '>Log in to your account and continue exploring our collection of handcrafted crochet products just for you.</p>
+                            <p className='font-bold text-gray-800 xl:text-4xl xsm:text-3xl'>Pick Where You Left Off!</p>
+                            <p className='text-base text-gray-700 '>Log in to your account and continue exploring our collection of handcrafted crochet products just for you.</p>
                         </div>
                     </div>
                 </div>

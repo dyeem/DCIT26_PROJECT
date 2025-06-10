@@ -10,6 +10,8 @@ import imageAlt from '../../Assets/image_alt.png';
 
 export default function ProductList() {
     const [products, setProducts] = useState([]);
+
+    // INITIAL STATE FOR FORM DATA
     const [formData, setFormData] = useState({
         product_name: '',
         product_category: '',
@@ -33,6 +35,7 @@ export default function ProductList() {
     const [EditOpen, setEditOpen] = useState(false);
     const [AddOpen, setAddOpen] = useState(false);
 
+    // HANDLING OPENING MODAL FOR EDITING PRODUCT, FETCHING PRODUCT DETAILS
     function handleOpenEdit(productId) {
         setEditOpen(true);
         
@@ -55,14 +58,31 @@ export default function ProductList() {
     }
     const handleCloseEdit = () => setEditOpen(false);
 
-    const handleOpenAdd = () => setAddOpen(true);
-    const handleCloseAdd = () => setAddOpen(false);
+    //TOGGLE ADD MODAL AND UNSETTING FORM DATA
+    function handleOpenAdd() {
+        setAddOpen(true);
+        setFormData({
+            product_name: '',
+            product_category: '',
+            product_color: '',
+            product_price: '',
+            product_image: '',
+            product_description: '',
+            product_quantity: '',
+        });
+        setImagePreview(null);
+    }
+
+    function handleCloseAdd() {
+        setAddOpen(false);
+    }
     
-    
+    //TITLE
     useEffect(() => {
         document.title = 'Loop | Manage Products';
     }, []);
 
+    //FETCHING DATA
     useEffect(() => {
         axios.get('http://localhost/loop_backend/admin/products/fetchproducts.php', {
             withCredentials: true,
@@ -74,6 +94,7 @@ export default function ProductList() {
         .catch(err => console.error(err));
     }, []);
 
+    //HANDLING CHANGE FOR IMAGE PREVIEW
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -84,6 +105,8 @@ export default function ProductList() {
             }));
         };
     };
+
+    //HANDLING CHANGE FOR FORM DATA
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -91,8 +114,20 @@ export default function ProductList() {
             [name]: value,
         }));
     }
+
+    //HANDLING SUBMIT FOR ADDING PRODUCT
     async function handleSubmit(e) {
         e.preventDefault();
+
+        setFormData({
+            product_name: '',
+            product_category: '',
+            product_color: '',
+            product_price: '',
+            product_image: '',
+            product_description: '',
+            product_quantity: '',
+        });
 
         const timestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
@@ -151,6 +186,7 @@ export default function ProductList() {
         }
     }
 
+    //HANDLING SUBMIT FOR EDITING PRODUCT
     async function handleEditSubmit(e) {
         e.preventDefault();
         
@@ -195,17 +231,31 @@ export default function ProductList() {
                     )
                 );
 
+                setFormData({
+                    product_id: '',
+                    product_name: '',
+                    product_category: '',
+                    product_color: '',
+                    product_price: '',
+                    product_image: '',
+                    product_description: '',
+                    product_quantity: '',
+                });
                 handleCloseEdit();
                 toast.success('Product Updated Successfully!');
+
             } else {
                 toast.error(response.data.message || 'Failed to update product');
+
             }
         } catch (error) {
             console.error('Error updating product:', error);
             toast.error('Failed to update product: ' + error.message);
+
         }
     }
 
+    //VALIDATION FOR FORM USING TOAST
     function validateForm() {
         const errors = [];
 
@@ -223,6 +273,7 @@ export default function ProductList() {
         return true;
     }
     
+    //HANDLING DELETE PRODUCT
     function handleDelete(productId) {
         console.log('Delete button clicked Product: ' + productId);
         

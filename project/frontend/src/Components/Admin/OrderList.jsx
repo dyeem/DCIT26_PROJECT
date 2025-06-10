@@ -1,6 +1,10 @@
 import { useState, useEffect, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
+import { Modal, Box, Typography, Button } from '@mui/material';
+import dayjs from 'dayjs';
 import axios from 'axios';
+import useravatar from '../../Assets/admin/user-avatar.png'
+import dot from '../../Assets/admin/dot.png'
 
 // Mock Data for demonstration
 const mockOrders = [
@@ -54,7 +58,9 @@ const mockOrders = [
 export default function OrderList() {
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  
 
   useEffect(() => {
     axios.get('http://localhost/loop_backend/admin/order/get_all_orders.php', {
@@ -79,6 +85,19 @@ export default function OrderList() {
     setSelectedOrder(null);
   };
 
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const handleOpenCancelModal = (orderId) => {
+    setIsOpen(false);
+    setSelectedOrderId(orderId);
+    console.log(selectedOrderId);
+    setCancelModalOpen(true);
+  };
+  const handleCancelConfirm = () => {
+    // HEY SELF, PUT YOUR API CANCEL HERE 
+    console.log("Cancelling order ID:", selectedOrder);
+    setCancelModalOpen(false);
+  };
+
   return (
     <>
       <div className="px-12 py-4">
@@ -90,7 +109,7 @@ export default function OrderList() {
               <th className="px-6 py-3">Total Amount</th>
               <th className="px-6 py-3">Order Date</th>
               <th className="px-6 py-3">Status</th>
-              <th className="px-6 py-3 text-center">Actions</th>
+              <th className="px-6 py-3 text-center"></th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 text-gray-900">
@@ -98,17 +117,22 @@ export default function OrderList() {
               <tr key={order.order_id} className="hover:bg-gray-50">
                 <td className="px-6 py-4">{order.order_id}</td>
                 <td className="px-6 py-4">{order.customer_id}</td>
-                <td className="px-6 py-4">₱ {order.total_amount}</td>
-                <td className="px-6 py-4">{order.order_date}</td>
+                <td className="px-6 py-4">₱ {order.total_amount.toLocaleString('en-PH', { minimumFractionDigits: 2 })}</td>
+                <td className="px-6 py-4">{dayjs(order.order_date).format('MMMM D, YYYY h:mm A')}</td>
                 <td className="px-6 py-4">
-                  <span className={`px-2 py-1 rounded-full ${order.status === 'Completed' ? 'bg-green-200 text-green-600' : order.status === 'Shipped' ? 'bg-blue-200 text-blue-600' : order.status === 'Pending' ? 'bg-yellow-200 text-yellow-600' : 'bg-red-200 text-red-600'}`}>
+                  <span className={`px-2 py-1 rounded-full 
+                    ${order.status === 'Completed' ? 'p-2 bg-green-200 text-green-600' 
+                    : order.status === 'Shipped' ? 'p-2 bg-blue-200 text-blue-600' 
+                    : order.status === 'Pending' ? 'p-2 bg-yellow-200 text-yellow-600' 
+                    : 'p-2 bg-red-200 text-red-600'}`}>
                     {order.status}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-center">
-                  <button onClick={() => openDialog(order)} className="bg-[#7E62FF] text-white px-4 py-1 rounded hover:bg-[#624bc7]">
+                <td className="px-6 py-4 text-center flex justify-center items-center">
+                  {/* <button onClick={() => openDialog(order)} className="bg-[#7E62FF] text-white px-4 py-1 rounded hover:bg-[#624bc7]">
                     View
-                  </button>
+                  </button> */}
+                  <img onClick={() => openDialog(order)} src={dot} alt="" className="cursor-pointer w-6 h-6" />
                 </td>
               </tr>
             ))}
@@ -141,8 +165,8 @@ export default function OrderList() {
                   leaveFrom="translate-x-0"
                   leaveTo="translate-x-full"
                 >
-                  <Dialog.Panel className="w-screen max-w-md rounded-l-2xl bg-white shadow-xl">
-                    <div className="flex flex-col h-full py-6 overflow-y-auto">
+                  <Dialog.Panel className="w-screen max-w-md rounded-l-2xl bg-[#FFFFFF] shadow-xl">
+                    <div className="flex flex-col h-[calc(100vh-6rem)] py-6 overflow-y-auto">
                       <div className="px-6">
                         <Dialog.Title className="space-y-4">
                           {selectedOrder ? (
@@ -153,7 +177,7 @@ export default function OrderList() {
                                 </div>
                                 <button
                                   onClick={closeDialog}
-                                  className="text-gray-500 hover:text-gray-700 transition p-2 rounded-full hover:bg-gray-100"
+                                  className="text-gray-800 text-2xl hover:text-gray-700 transition px-3 py-1 rounded-full bg-gray-200 hover:bg-gray-400"
                                 >
                                   ✕
                                 </button>
@@ -161,14 +185,14 @@ export default function OrderList() {
 
                               <div className="flex items-center gap-2">
                                 <span className={`px-3 py-1 rounded-full text-xs font-semibold capitalize 
-                                  ${selectedOrder.status === 'Completed' ? 'bg-green-100 text-green-700'
-                                    : selectedOrder.status === 'Shipped' ? 'bg-blue-100 text-blue-700'
-                                    : selectedOrder.status === 'Pending' ? 'bg-yellow-100 text-yellow-700'
-                                    : selectedOrder.status === 'Cancelled' ? 'bg-red-100 text-red-700'
+                                  ${selectedOrder.status === 'Completed' ? 'p-2 bg-green-100 text-green-700 border border-green-300'
+                                    : selectedOrder.status === 'Shipped' ? 'p-2 bg-blue-100 text-blue-700 border border-blue-300'
+                                    : selectedOrder.status === 'Pending' ? 'p-2 bg-yellow-100 text-yellow-700 border border-yellow-300'
+                                    : selectedOrder.status === 'Cancelled' ? 'p-2 bg-red-100 text-red-700 border border-red-300'
                                     : 'bg-gray-100 text-gray-700'}`}>
                                   {selectedOrder.status}
                                 </span>
-                                <span className="text-sm text-gray-500">{selectedOrder.order_date}</span>
+                                <span className="text-sm text-gray-600">{dayjs(selectedOrder.order_date).format('MMMM D, YYYY h:mm A')}</span>
                               </div>
                             </>
                           ) : (
@@ -177,35 +201,84 @@ export default function OrderList() {
                         </Dialog.Title>
                       </div>
 
-                      <div className="mt-6 border-t border-gray-200 px-6 pt-4 space-y-6 text-sm text-gray-700">
+                      <div className="mt-6 border-t border-gray-300 px-6 pt-4 space-y-6 text-sm text-gray-700">
                         {selectedOrder && (
                           <div className="space-y-2">
-                            <div className="flex justify-between">
-                              <span className="text-gray-600">Customer ID</span>
-                              <span className="font-medium text-gray-900">{selectedOrder.customer_id}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-gray-600">Total</span>
-                              <span className="font-semibold text-gray-900">₱{selectedOrder.total_amount}</span>
+                            <div className="flex flex-col items-center justify-center space-y-1">
+                              <div className="">
+                                <img src={useravatar} alt="" className='w-40 h-40 object-cover rounded-full bg-gray-300 p-3' />
+                              </div>
+                              <div className="flex flex-row items-center justify-center gap-x-1 text-2xl font-semibold">
+                                <p>{selectedOrder.customer_first_name}</p>
+                                <p>{selectedOrder.customer_last_name}</p>
+                              </div>
+                              <p>{selectedOrder.customer_email}</p>
+                              <p>{selectedOrder.customer_contact}</p>
                             </div>
                           </div>
                         )}
 
-                        <div className="mt-4">
-                          <h3 className="text-base font-semibold text-gray-900 mb-2">Order Items</h3>
-                          <ul className="space-y-3 divide-y divide-gray-100">
+                        <div className="mt-4 border-t border-gray-300">
+                          <h3 className="text-base font-semibold text-gray-900 mb-2 mt-2">Order Items</h3>
+                          <ul className="space-y-3 divide-y divide-gray-400">
                             {selectedOrder?.items?.map((item, i) => (
                               <li key={i} className="pt-3 first:pt-0">
                                 <div className="flex justify-between items-center">
-                                  <div>
-                                    <p className="font-medium text-gray-900">{item.product_name}</p>
-                                    <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
+                                  <div className="flex items-center space-x-2">
+                                    <img src={`/Assets/Products/${item.category}/${item.image}`} alt={item.image} className="w-20 h-20 object-cover rounded-md bg-gray-100 p-2" />
+                                    <div className="flex flex-col">
+                                      <p className="font-medium text-gray-900">{item.product_name}</p>
+                                      <p className="font-medium text-gray-900">{item.category}</p>
+                                      <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
+                                    </div>
                                   </div>
-                                  <p className="text-sm font-semibold text-gray-700">₱{item.price}</p>
+                                  <p className="text-sm font-semibold text-gray-700">₱{item.price.toLocaleString('en-PH', { minimumFractionDigits: 2 })}</p>
                                 </div>
                               </li>
                             ))}
                           </ul>
+                        </div>
+                        <div className="mt-4 border-t border-gray-300">
+                          <h3 className="text-base font-semibold text-gray-900 mb-2 mt-2">Order Summary</h3>
+                          <div className="flex justify-between items-center">
+                            <p className="text-sm text-gray-700">Subtotal:</p>
+                            <p className="text-sm font-semibold text-gray-700">₱{(selectedOrder?.total_amount?? 0).toLocaleString('en-PH', { minimumFractionDigits: 2 })}</p>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <p className="text-sm text-gray-700">Shipping:</p>
+                            <p className="text-sm font-semibold text-gray-700">₱0.00</p>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <p className="text-sm text-gray-700">Tax:</p>
+                            <p className="text-sm font-semibold text-gray-700">₱0.00</p>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <p className="text-sm font-bold text-gray-700">Total:</p>
+                            <p className="text-sm font-semibold text-gray-700">₱{(selectedOrder?.total_amount?? 0).toLocaleString('en-PH', { minimumFractionDigits: 2 })}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                   <div className="sticky bottom-0 z-10 bg-white border-t border-gray-200 px-6 py-4 shadow-[0_-2px_6px_rgba(0,0,0,0.05)]">
+                      <div className="flex flex-col space-y-3">
+                        <p className="text-sm font-semibold text-gray-800 text-center">Update Order Status</p>
+                        <div className="grid grid-cols-3 gap-3">
+                          <button
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition-all shadow-sm hover:shadow-md"
+                          >
+                            Shipped
+                          </button>
+                          <button
+                            className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 rounded-lg transition-all shadow-sm hover:shadow-md"
+                          >
+                            Completed
+                          </button>
+                          <button
+                            onClick={() => handleOpenCancelModal(selectedOrder.order_id)}
+                            className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 rounded-lg transition-all shadow-sm hover:shadow-md"
+                          >
+                            Cancelled
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -216,6 +289,78 @@ export default function OrderList() {
           </div>
         </Dialog>
       </Transition>
+      <Modal
+        open={cancelModalOpen}
+        onClose={() => setCancelModalOpen(false)}
+        aria-labelledby="cancel-order-title"
+        aria-describedby="cancel-order-description"
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 500,
+            bgcolor: '#fff',
+            borderRadius: 3,
+            boxShadow: 8,
+            p: 4,
+            textAlign: 'center',
+          }}
+        >
+          <Typography
+            id="cancel-order-title"
+            variant="h5"
+            component="h2"
+            sx={{ fontWeight: 'bold', mb: 2 }}
+            className='text-red-500'
+          >
+            🚫 Cancel This Order?
+          </Typography>
+
+          <Typography
+            id="cancel-order-description"
+            sx={{ color: 'text.secondary', mb: 3 }}
+          >
+            You're about to cancel <strong className='underline'>Order #{selectedOrderId}</strong>. This action cannot be undone.
+          </Typography>
+
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: 2,
+              mt: 2,
+            }}
+          >
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => setCancelModalOpen(false)}
+              sx={{ px: 3, py: 1.5, borderRadius: 2, fontWeight: 500 }}
+            >
+              No, Keep Order
+            </Button>
+
+            <Button
+              variant="contained"
+              color="error"
+              onClick={handleCancelConfirm}
+              sx={{
+                px: 3,
+                py: 1.5,
+                borderRadius: 2,
+                fontWeight: 500,
+                boxShadow: '0 4px 10px rgba(255, 0, 0, 0.2)',
+              }}
+            >
+              Yes, Cancel It
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+
     </>
   );
 }

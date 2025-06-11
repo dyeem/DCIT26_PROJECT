@@ -57,7 +57,7 @@ const router = createBrowserRouter(createRoutesFromElements(
       <Route path="ourteam" element={<OurTeam />} />
 
       {/* PRODUCT ROUTE */}
-      <Route path="products" element={<SalesLayout />} errorElement={<ErrorPage/>}>
+      <Route path="/products" element={<SalesLayout />} errorElement={<ErrorPage/>}>
         <Route index loader={ProductsLoader} element={<Sales />} />
         <Route path=":id" loader={ProductDetailsLoader} element={<ProductDetails/>} errorElement={<DatanotFound/>}/>
         <Route path="checkout" element={<CheckoutLayout />} errorElement={<ErrorPage/>}>

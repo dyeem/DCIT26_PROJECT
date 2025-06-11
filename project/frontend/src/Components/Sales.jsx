@@ -73,8 +73,6 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-import bg from '../Assets/bg.png'
-
 export default function Sales() {
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
@@ -281,7 +279,7 @@ export default function Sales() {
                               <div className="flex-wrap grid-cols-2 xsm:grid xl:flex gap-x-4 gap-y-2 xl:p-4">
                                 {product.Items.map((prod) =>
                                   <div className="p-4 bg-gray-100 " key={prod.id}>
-                                    <Link to={prod.id?.toString() || '#'}>
+                                    <Link to={`/products/${prod.id}`}>
                                       {prod.image && Array.isArray(prod.image) ? (
                                         <img 
                                           src={`/src/assets/products/${prod.category}/${prod.image[0]}`}

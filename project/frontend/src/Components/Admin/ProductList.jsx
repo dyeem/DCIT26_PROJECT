@@ -15,11 +15,12 @@ export default function ProductList() {
     const [formData, setFormData] = useState({
         product_name: '',
         product_category: '',
-        product_color: '',
+        product_color: [],
         product_price: '',
         product_image: '',
         product_description: '',
         product_quantity: '',
+        product_size: [],
     });
 
     const [imagePreview, setImagePreview] = useState(null);
@@ -119,16 +120,6 @@ export default function ProductList() {
     async function handleSubmit(e) {
         e.preventDefault();
 
-        setFormData({
-            product_name: '',
-            product_category: '',
-            product_color: '',
-            product_price: '',
-            product_image: '',
-            product_description: '',
-            product_quantity: '',
-        });
-
         const timestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
         const newProduct = {
@@ -140,8 +131,10 @@ export default function ProductList() {
             product_quantity: formData.product_quantity,
             product_image: formData.product_image.name,
             product_rating: 0,
+            product_size: formData.product_size,
             created_at: timestamp,
         };
+        console.log(newProduct);
 
         try {
             const response = await axios.post(
@@ -154,6 +147,7 @@ export default function ProductList() {
                     },
                 }
             );
+            console.log(response.data);
 
             if (response.status === 200 && response.data.success) {
                 const addedProduct = response.data.product;
@@ -165,19 +159,21 @@ export default function ProductList() {
                 setFormData({
                     product_name: '',
                     product_category: '',
-                    product_color: '',
+                    product_color: [],
                     product_price: '',
                     product_image: '',
                     product_description: '',
                     product_quantity: '',
+                    product_size: [],
                 });
                 setImagePreview(null);
 
                 console.log('Product added and list updated with DB timestamp');
                 toast.success('Product added Successfully!');
+
             }else {
                 console.error('Failed to add product');
-                toast.error('Failed to add product.');
+                toast.error('Failed to add product: ', error.message);
             }
             
         } catch (error) {
@@ -403,21 +399,7 @@ export default function ProductList() {
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF]"
                                         />
                                     </div>
-
-                                    <div className="w-full sm:w-[48%]">
-                                        <label className="block mb-1 text-sm font-medium text-gray-700">
-                                            Color
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="product_color"
-                                            value={formData.product_color}
-                                            onChange={handleChange}
-                                            placeholder="e.g. Pink, Blue"
-                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF]"
-                                        />
-                                    </div>
-
+                                    
                                     <div className="w-full sm:w-[48%]">
                                         <label className="block mb-1 text-sm font-medium text-gray-700">
                                             Category
@@ -441,8 +423,74 @@ export default function ProductList() {
                                             <option value="Wearables">Wearables</option>
                                         </select>
                                     </div>
+                                    <div className="w-full sm:w-[48%]">
+                                        <label className="block mb-1 text-sm font-medium text-gray-700">
+                                            Size
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="product_size"
+                                            value={formData.product_size}
+                                            onChange={handleChange}
+                                            placeholder="e.g. S, M, L, XL"
+                                            required
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF]"
+                                        />
+                                        <div className="flex flex-wrap gap-2 mt-2">
+                                            {(Array.isArray(formData.product_size)
+                                                ? formData.product_size
+                                                : typeof formData.product_size === 'string'
+                                                ? formData.product_size.split(',').map(s => s.trim()).filter(Boolean)
+                                                : []
+                                            ).map((size, index) => (
+                                                <span
+                                                key={index}
+                                                className="px-2 py-1 text-sm text-white bg-indigo-500 rounded-full"
+                                                >
+                                                {size}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="block mb-1 text-sm font-medium text-gray-700">
+                                            Color(s)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            placeholder="Type color and press comma"
+                                            onKeyDown={(e) => {
+                                            if (e.key === ',' || e.key === 'Enter') {
+                                                e.preventDefault();
+                                                const newColor = e.target.value.trim().replace(',', '');
+                                                if (newColor && !formData.product_color.includes(newColor)) {
+                                                setFormData((prev) => ({
+                                                    ...prev,
+                                                    product_color: [...prev.product_color, newColor],
+                                                }));
+                                                }
+                                                e.target.value = '';
+                                            }
+                                            }}
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF]"
+                                        />
+                                        <div className="flex flex-wrap gap-2 mt-2">
+                                            {(Array.isArray(formData.product_color)
+                                                ? formData.product_color
+                                                : typeof formData.product_color === 'string'
+                                                ? formData.product_color.split(',').map(c => c.trim()).filter(Boolean)
+                                                : []
+                                            ).map((color, index) => (
+                                                <span
+                                                key={index}
+                                                className="px-2 py-1 text-sm text-white bg-purple-500 rounded-full"
+                                                >
+                                                {color}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
-
                                 <div className="pt-2">
                                     <button
                                         type="submit"

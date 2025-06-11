@@ -1,10 +1,17 @@
 import { useState, useEffect, Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Modal, Box, Typography, Button } from '@mui/material';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import dayjs from 'dayjs';
 import axios from 'axios';
 import useravatar from '../../Assets/admin/user-avatar.png'
 import dot from '../../Assets/admin/dot.png'
+import shipped from '../../Assets/admin/shipped.png'
+import completed from '../../Assets/admin/completed.png'
+import cancelled  from '../../Assets/admin/cancelled.png'
+import refund from '../../Assets/admin/refund.png'
 
 // Mock Data for demonstration
 const mockOrders = [
@@ -60,8 +67,31 @@ export default function OrderList() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  
+  const [toastError, setToastError] = useState(
+    {
+      message: '',
+      isOpen: false,
+    },
+  );
 
+  //error toast
+  const showToastError = (msg) => {
+    setToastError({ message: msg, isOpen: true });
+
+    toast.error(msg, {
+      position: 'bottom-center',
+      icon: '⚠️',
+      style: {
+        background: '#1f2937',     
+        color: '#f87171',          
+        borderRadius: '8px',       
+        border: '1px solid #ef4444', 
+        padding: '12px 16px',
+      },
+    });
+  };
+  
+  //FETCHING ALL ORDERS FROM ORDER TABLE
   useEffect(() => {
     axios.get('http://localhost/loop_backend/admin/order/get_all_orders.php', {
       withCredentials: true
@@ -75,27 +105,78 @@ export default function OrderList() {
       });
   }, []);
 
+  //DIALOG VIEWING SPECIFIC ORDER
   const openDialog = (order) => {
     setSelectedOrder(order);
     setIsOpen(true);
   };
 
+  //CLOSE DIALOG VIEWING SPECIFIC ORDER
   const closeDialog = () => {
     setIsOpen(false);
     setSelectedOrder(null);
   };
 
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
-  const handleOpenCancelModal = (orderId) => {
-    setIsOpen(false);
+  const handleOpenCancelModal = (orderId, orderStatus) => {
+
+    if (orderStatus === 'Cancelled') {
+      showToastError('This order is already cancelled!');
+      return;
+    }
+
+    if (orderStatus === 'Completed') {
+      showToastError('This order is already completed!');;
+      return;
+    }
     setSelectedOrderId(orderId);
-    console.log(selectedOrderId);
     setCancelModalOpen(true);
   };
+
   const handleCancelConfirm = () => {
-    // HEY SELF, PUT YOUR API CANCEL HERE 
-    console.log("Cancelling order ID:", selectedOrder);
+    updateOrderStatus(selectedOrderId, 'Active', 'Cancelled'); // 'Active' could be dynamic if needed
+  };
+
+  const updateOrderStatus = (orderId, currentStatus, newStatus) => {
+    if (currentStatus === newStatus) {
+      showToastError(`Order is already marked as "${newStatus}".`);
+      return;
+    }
+
+    if (currentStatus === 'Cancelled') {
+      showToastError('This order is already cancelled!');
+      return;
+    }
+
+    if (currentStatus === 'Completed') {
+      showToastError('This order is already completed!');;
+      return;
+    }
+
     setCancelModalOpen(false);
+    setIsOpen(false);
+
+    const updatedOrders = orders.map((order) =>
+      order.order_id === orderId ? { ...order, status: newStatus } : order
+    );
+    setOrders(updatedOrders);
+
+    axios.post('http://localhost/loop_backend/admin/order/update_status_order.php', {
+      order_id: orderId,
+      status: newStatus,
+    },{
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then((res) => {
+        console.log(`Order ${orderId} marked as ${newStatus}.`, res.data);
+      })
+      .catch((err) => {
+        console.error('Failed to update order status:', err);
+        showToastError('Failed to update order status');
+      });
+
   };
 
   return (
@@ -124,6 +205,7 @@ export default function OrderList() {
                     ${order.status === 'Completed' ? 'p-2 bg-green-200 text-green-600' 
                     : order.status === 'Shipped' ? 'p-2 bg-blue-200 text-blue-600' 
                     : order.status === 'Pending' ? 'p-2 bg-yellow-200 text-yellow-600' 
+                    : order.status === 'Refund' ? 'p-2 bg-gray-200 text-gray-600' 
                     : 'p-2 bg-red-200 text-red-600'}`}>
                     {order.status}
                   </span>
@@ -166,7 +248,7 @@ export default function OrderList() {
                   leaveTo="translate-x-full"
                 >
                   <Dialog.Panel className="w-screen max-w-md rounded-l-2xl bg-[#FFFFFF] shadow-xl">
-                    <div className="flex flex-col h-[calc(100vh-6rem)] py-6 overflow-y-auto">
+                    <div className="flex flex-col h-[calc(100vh-9rem)] py-6 overflow-y-auto">
                       <div className="px-6">
                         <Dialog.Title className="space-y-4">
                           {selectedOrder ? (
@@ -262,22 +344,35 @@ export default function OrderList() {
                    <div className="sticky bottom-0 z-10 bg-white border-t border-gray-200 px-6 py-4 shadow-[0_-2px_6px_rgba(0,0,0,0.05)]">
                       <div className="flex flex-col space-y-3">
                         <p className="text-sm font-semibold text-gray-800 text-center">Update Order Status</p>
-                        <div className="grid grid-cols-3 gap-3">
-                          <button
-                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition-all shadow-sm hover:shadow-md"
-                          >
-                            Shipped
-                          </button>
-                          <button
-                            className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 rounded-lg transition-all shadow-sm hover:shadow-md"
-                          >
-                            Completed
-                          </button>
-                          <button
-                            onClick={() => handleOpenCancelModal(selectedOrder.order_id)}
-                            className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 rounded-lg transition-all shadow-sm hover:shadow-md"
-                          >
-                            Cancelled
+                        <div className="flex flex-col justify-center items-center w-full space-y-2">
+                          <div className="grid grid-cols-3 gap-3">
+                            <button
+                              onClick={() => updateOrderStatus(selectedOrder.order_id, selectedOrder.status, 'Shipped')}
+                              className="flex flex-row justify-center items-center gap-x-1 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-all shadow-sm hover:shadow-md"
+                            >
+                              Shipped
+                              <img src={shipped} alt="" className='w-6 h-6' />
+                            </button>
+                            <button
+                              onClick={() => updateOrderStatus(selectedOrder.order_id, selectedOrder.status, 'Completed')}
+                              className="flex flex-row justify-center items-center gap-x-1 w-full bg-green-600 hover:bg-green-700 text-white  py-2 px-2 rounded-lg transition-all shadow-sm hover:shadow-md"
+                            >
+                              Completed
+                              <img src={completed} alt="" className='w-6 h-6' />
+                            </button>
+                            <button
+                              onClick={() => handleOpenCancelModal(selectedOrder.order_id, selectedOrder.status)}
+                              className="flex flex-row justify-center items-center gap-x-1 w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg transition-all shadow-sm hover:shadow-md"
+                            >
+                              Cancelled
+                              <img src={cancelled} alt="" className='w-6 h-6' />
+                            </button>
+                          </div>
+                          <button 
+                            onClick={() => updateOrderStatus(selectedOrder.order_id, selectedOrder.status, 'Refund')}
+                            className="flex flex-row justify-center items-center gap-x-1 bg-gray-600 hover:bg-gray-700 text-white py-2 px-3 rounded-lg transition-all shadow-sm hover:shadow-md">
+                            Refund
+                            <img src={refund} alt="" className='w-6 h-6' />
                           </button>
                         </div>
                       </div>

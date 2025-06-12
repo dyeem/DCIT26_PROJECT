@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import dayjs from 'dayjs';
+
 
 // material ui for modal
 import Box from '@mui/material/Box';
@@ -10,6 +12,7 @@ import imageAlt from '../../Assets/image_alt.png';
 
 export default function ProductList() {
     const [products, setProducts] = useState([]);
+    const [colorInput, setColorInput] = useState('');
 
     // INITIAL STATE FOR FORM DATA
     const [formData, setFormData] = useState({
@@ -45,9 +48,19 @@ export default function ProductList() {
         })
         .then(res => {
             if (res.data.success) {
-                setFormData(res.data.product);
-                setImagePreview(`/Assets/Products/${res.data.product.product_category}/${res.data.product.product_image}`);
-                
+                const product = res.data.product;
+
+                setFormData({
+                    ...product,
+                    product_color: typeof product.product_color === 'string'
+                        ? product.product_color.split(',').map(c => c.trim()).filter(Boolean)
+                        : [],
+                    product_size: typeof product.product_size === 'string'
+                        ? product.product_size.split(',').map(s => s.trim()).filter(Boolean)
+                        : [],
+                });
+
+                setImagePreview(`/Assets/Products/${product.product_category}/${product.product_image}`);
             } else {
                 toast.error(res.data.message || 'Failed to fetch product details');
             }
@@ -114,7 +127,30 @@ export default function ProductList() {
             ...prevData,
             [name]: value,
         }));
-    }
+
+    };
+
+    // For color input handling
+    const handleColorChange = (e) => {
+        const newColor = e.target.value.trim();
+        if (newColor && !formData.product_color.includes(newColor)) {
+            setFormData((prev) => ({
+                ...prev,
+                product_color: [...prev.product_color, newColor],
+            }));
+        }
+    };
+
+    // For size input handling
+    const handleSizeChange = (e) => {
+        const newSize = e.target.value.trim();
+        if (newSize && !formData.product_size.includes(newSize)) {
+            setFormData((prev) => ({
+                ...prev,
+                product_size: [...prev.product_size, newSize],
+            }));
+        }
+    };
 
     //HANDLING SUBMIT FOR ADDING PRODUCT
     async function handleSubmit(e) {
@@ -185,30 +221,35 @@ export default function ProductList() {
     //HANDLING SUBMIT FOR EDITING PRODUCT
     async function handleEditSubmit(e) {
         e.preventDefault();
-        
+
+        // Check if product ID is present
         if (!formData.product_id) {
             toast.error('Product ID is missing');
             return;
         }
 
+        // Validate the form data
         if (!validateForm()) return;
 
         try {
+            // Prepare the edited product data
             const editedProduct = {
                 product_id: formData.product_id,
                 product_name: formData.product_name,
                 product_category: formData.product_category,
-                product_color: formData.product_color,
+                product_color: formData.product_color, // Ensure this is an array
                 product_price: formData.product_price,
                 product_description: formData.product_description,
                 product_quantity: formData.product_quantity,
                 product_image: formData.product_image instanceof File 
                     ? formData.product_image.name 
-                    : formData.product_image
+                    : formData.product_image,
+                product_size: formData.product_size, // Ensure this is included if needed
             };
 
+            // Make the PUT request to update the product
             const response = await axios.put(
-                `http://localhost/loop_backend/admin/products/updateproduct.php`, 
+                `http://localhost/loop_backend/admin/products/updateproduct.php`,
                 editedProduct,
                 {
                     withCredentials: true,
@@ -218,36 +259,39 @@ export default function ProductList() {
                 }
             );
 
+            // Check if the response indicates success
             if (response.data.success) {
+                // Update the product list in state
                 setProducts(prevProducts =>
                     prevProducts.map(product =>
                         product.product_id === editedProduct.product_id
-                            ? response.data.product
+                            ? response.data.product // Update the product with the response data
                             : product
                     )
                 );
 
+                // Reset the form data
                 setFormData({
                     product_id: '',
                     product_name: '',
                     product_category: '',
-                    product_color: '',
+                    product_color: [],
                     product_price: '',
                     product_image: '',
                     product_description: '',
                     product_quantity: '',
+                    product_size: [],
                 });
+
+                // Close the edit modal
                 handleCloseEdit();
                 toast.success('Product Updated Successfully!');
-
             } else {
                 toast.error(response.data.message || 'Failed to update product');
-
             }
         } catch (error) {
             console.error('Error updating product:', error);
             toast.error('Failed to update product: ' + error.message);
-
         }
     }
 
@@ -290,6 +334,7 @@ export default function ProductList() {
 
     return (
         <>
+            {/*ADD PRODUCT MODAL */}
             <div>
                 <Modal
                     open={AddOpen}
@@ -505,6 +550,7 @@ export default function ProductList() {
                 </Modal>
             </div>
 
+            {/*MODIFY PRODUCT MODAL */}
             <div>
                 <Modal
                     open={EditOpen}
@@ -535,8 +581,8 @@ export default function ProductList() {
                                         alt="Product Preview"
                                         className="object-cover border rounded-lg shadow-sm w-72 h-72"
                                     />
-                                    </div>
-                                    <div className="w-full">
+                                </div>
+                                <div className="w-full">
                                     <label className="block mb-1 text-sm font-medium text-gray-700">
                                         Upload Image
                                     </label>
@@ -565,9 +611,9 @@ export default function ProductList() {
                                         placeholder="Enter the product name"
                                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF]"
                                     />
-                                    </div>
+                                </div>
 
-                                    <div>
+                                <div>
                                     <label className="block mb-1 text-sm font-medium text-gray-700">
                                         Description
                                     </label>
@@ -617,16 +663,76 @@ export default function ProductList() {
 
                                     <div className="w-full sm:w-[48%]">
                                         <label className="block mb-1 text-sm font-medium text-gray-700">
-                                            Color
+                                            Color(s)
                                         </label>
                                         <input
                                             type="text"
-                                            name="product_color"
-                                            value={formData.product_color}
-                                            onChange={handleChange}
-                                            placeholder="e.g. Pink, Blue"
+                                            placeholder="Type color and press comma"
+                                            value={colorInput}
+                                            onChange={(e) => setColorInput(e.target.value)}
+                                            onKeyDown={(e) => {
+                                            if (e.key === ',' || e.key === 'Enter') {
+                                                e.preventDefault();
+                                                const newColor = colorInput.trim().replace(',', '');
+                                                if (newColor && !formData.product_color.includes(newColor)) {
+                                                setFormData((prev) => ({
+                                                    ...prev,
+                                                    product_color: [...prev.product_color, newColor],
+                                                }));
+                                                }
+                                                setColorInput('');
+                                            }
+                                            }}
                                             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF]"
                                         />
+
+                                        <div className="flex flex-wrap gap-2 mt-2">
+                                            {Array.isArray(formData.product_color) && formData.product_color.map((color, index) => (
+                                            <span
+                                                key={index}
+                                                className="flex items-center gap-1 px-2 py-1 text-sm text-white bg-purple-500 rounded-full cursor-pointer"
+                                                onClick={() => {
+                                                setFormData(prev => ({
+                                                    ...prev,
+                                                    product_color: prev.product_color.filter((_, i) => i !== index)
+                                                }));
+                                                }}
+                                                title="Click to remove"
+                                            >
+                                                {color} ×
+                                            </span>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                     <div className="w-full sm:w-[48%]">
+                                        <label className="block mb-1 text-sm font-medium text-gray-700">
+                                            Size
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="product_size"
+                                            value={formData.product_size}
+                                            onChange={handleChange}
+                                            placeholder="e.g. S, M, L, XL"
+                                            required
+                                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF]"
+                                        />
+                                        <div className="flex flex-wrap gap-2 mt-2">
+                                            {(Array.isArray(formData.product_size)
+                                                ? formData.product_size
+                                                : typeof formData.product_size === 'string'
+                                                ? formData.product_size.split(',').map(s => s.trim()).filter(Boolean)
+                                                : []
+                                            ).map((size, index) => (
+                                                <span
+                                                key={index}
+                                                className="px-2 py-1 text-sm text-white bg-indigo-500 rounded-full"
+                                                >
+                                                {size}
+                                                </span>
+                                            ))}
+                                        </div>
                                     </div>
 
                                     <div className="w-full sm:w-[48%]">
@@ -686,10 +792,10 @@ export default function ProductList() {
                                         <th scope="col" className="px-6 py-3">Name</th>
                                         <th scope="col" className="px-6 py-3">Category</th>
                                         <th scope="col" className="px-6 py-3">Color</th>
+                                        <th scope="col" className="px-6 py-3">Size</th>
                                         <th scope="col" className="px-6 py-3">Price</th>
                                         <th scope="col" className="px-6 py-3">Image</th>
                                         <th scope="col" className="px-6 py-3">Description</th>
-                                        <th scope="col" className="px-6 py-3">Rating</th>
                                         <th scope="col" className="px-6 py-3">Stock</th>
                                         <th scope="col" className="px-6 py-3">Created At</th>
                                         <th scope="col" className="px-6 py-3 text-center">Actions</th>
@@ -701,7 +807,8 @@ export default function ProductList() {
                                             <td className="px-6 py-4 whitespace-nowrap">{product.product_id}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">{product.product_name}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">{product.product_category}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{product.product_color}</td>
+                                            <td className="max-w-xs truncate">{product.product_color}</td>
+                                            <td className="max-w-xs truncate">{product.product_size}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">₱{product.product_price}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <img
@@ -715,9 +822,8 @@ export default function ProductList() {
                                                 {product.product_description}
                                             </div>
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{product.product_rating}⭐</td>
                                             <td className="px-6 py-4 whitespace-nowrap">{product.product_quantity}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{product.created_at}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{dayjs(product.product_created_at).format('MMMM D, YYYY')}</td>
                                             <td className="px-6 py-4 text-center whitespace-nowrap"> 
                                                 <div className="flex items-center justify-center gap-2">
                                                     <button onClick={(e) => handleOpenEdit(product.product_id)} className="text-white hover:text-white bg-[#7E62FF] hover:bg-[#624bc7] px-3 py-1 rounded-lg">Edit</button>

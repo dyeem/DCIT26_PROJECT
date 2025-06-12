@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import dayjs from 'dayjs';
 export default function UsersList() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -97,7 +98,7 @@ export default function UsersList() {
                   <td className="px-6 py-4 whitespace-nowrap">{user.first_name} {user.last_name}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{user.email_address}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{user.contact_number}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{user.created_at}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{dayjs(user.created_at).format('MMMM D, YYYY')}</td>
                   <td className="px-6 py-4 text-center whitespace-nowrap">
                     <div className="flex items-center justify-center gap-2">
                       <button className="px-3 py-1 text-white bg-red-500 rounded-lg hover:bg-red-700 hover:text-white">Delete</button>

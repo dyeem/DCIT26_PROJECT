@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { toast } from 'react-toastify';
 import dayjs from 'dayjs';
+import toast, { Toaster } from 'react-hot-toast';
 
 
 // material ui for modal
@@ -20,13 +20,13 @@ export default function ProductList() {
         product_category: '',
         product_color: [],
         product_price: '',
-        product_image: '',
+        product_image_names: [],
         product_description: '',
         product_quantity: '',
         product_size: [],
     });
 
-    const [imagePreview, setImagePreview] = useState(null);
+    const [imagePreviews, setImagePreviews] = useState([]);
     // modal
     const style = {
         position: 'absolute',
@@ -58,9 +58,20 @@ export default function ProductList() {
                     product_size: typeof product.product_size === 'string'
                         ? product.product_size.split(',').map(s => s.trim()).filter(Boolean)
                         : [],
+                    product_image_names: typeof product.product_image === 'string'
+                        ? product.product_image.split(',').map(img => img.trim()).filter(Boolean)
+                        : []
                 });
+                console.log('Product Details:', product);
 
-                setImagePreview(`/Assets/Products/${product.product_category}/${product.product_image}`);
+                // SET IMAGE PREVIEW FROM EXISTING IMAGES AT THE DATABASE
+                if (product.product_image) {
+                    const existingImages = product.product_image.split(',').map(img => img.trim()).filter(Boolean);
+                    const previewUrls = existingImages.map(img => `/Assets/Products/${product.product_category}/${img}`);
+                    setImagePreviews(previewUrls);
+                } else {
+                    setImagePreviews([]);
+                }
             } else {
                 toast.error(res.data.message || 'Failed to fetch product details');
             }
@@ -78,17 +89,23 @@ export default function ProductList() {
         setFormData({
             product_name: '',
             product_category: '',
-            product_color: '',
+            product_color: [],
             product_price: '',
-            product_image: '',
+            product_image_names: [],
             product_description: '',
             product_quantity: '',
+            product_size: [],
         });
-        setImagePreview(null);
+        setImagePreviews([]);
     }
 
     function handleCloseAdd() {
         setAddOpen(false);
+        // Clean up preview URLs - add safety check
+        if (Array.isArray(imagePreviews)) {
+            imagePreviews.forEach(url => URL.revokeObjectURL(url));
+        }
+        setImagePreviews([]);
     }
     
     //TITLE
@@ -110,14 +127,46 @@ export default function ProductList() {
 
     //HANDLING CHANGE FOR IMAGE PREVIEW
     const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setImagePreview(URL.createObjectURL(file));
-            setFormData(prevData => ({
-                ...prevData,
-                product_image: file,
-            }));
-        };
+        const files = Array.from(e.target.files);
+        
+        const currentImageCount = imagePreviews.length;
+        const newImageCount = files.length;
+        
+        if (currentImageCount + newImageCount > 5) {
+            toast.error(`You can only have up to 5 images total. You currently have ${currentImageCount} images.`);
+            return;
+        }
+
+        // Extract just the filenames from new files
+        const newImageNames = files.map(file => file.name);
+        
+        // Create preview URLs for new files
+        const newPreviewUrls = files.map(file => URL.createObjectURL(file));
+        
+        // Append to existing previews and names
+        setImagePreviews(prev => [...prev, ...newPreviewUrls]);
+        setFormData(prevData => ({
+            ...prevData,
+            product_image_names: [...prevData.product_image_names, ...newImageNames],
+        }));
+    };
+
+    // Remove specific image
+    const removeImage = (indexToRemove) => {
+
+
+        const urlToRemove = imagePreviews[indexToRemove];
+        
+        // Only revoke URL if it's a blob URL (newly uploaded), not existing image paths
+        if (urlToRemove && urlToRemove.startsWith('blob:')) {
+            URL.revokeObjectURL(urlToRemove);
+        }
+        
+        setImagePreviews(prev => prev.filter((_, index) => index !== indexToRemove));
+        setFormData(prev => ({
+            ...prev,
+            product_image_names: prev.product_image_names.filter((_, index) => index !== indexToRemove)
+        }));
     };
 
     //HANDLING CHANGE FOR FORM DATA
@@ -130,88 +179,66 @@ export default function ProductList() {
 
     };
 
-    // For color input handling
-    const handleColorChange = (e) => {
-        const newColor = e.target.value.trim();
-        if (newColor && !formData.product_color.includes(newColor)) {
-            setFormData((prev) => ({
-                ...prev,
-                product_color: [...prev.product_color, newColor],
-            }));
-        }
-    };
-
-    // For size input handling
-    const handleSizeChange = (e) => {
-        const newSize = e.target.value.trim();
-        if (newSize && !formData.product_size.includes(newSize)) {
-            setFormData((prev) => ({
-                ...prev,
-                product_size: [...prev.product_size, newSize],
-            }));
-        }
-    };
 
     //HANDLING SUBMIT FOR ADDING PRODUCT
     async function handleSubmit(e) {
         e.preventDefault();
 
+        if (formData.product_image_names.length === 0) {
+            toast.error('Please select at least one image');
+            return;
+        }
+
         const timestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-        const newProduct = {
+        // Create regular object (not FormData) since we're only sending names
+        const productData = {
             product_name: formData.product_name,
             product_category: formData.product_category,
             product_color: formData.product_color,
             product_price: formData.product_price,
             product_description: formData.product_description,
             product_quantity: formData.product_quantity,
-            product_image: formData.product_image.name,
-            product_rating: 0,
             product_size: formData.product_size,
+            product_image: formData.product_image_names.join(','), // Send as comma-separated string
+            product_rating: 0,
             created_at: timestamp,
         };
-        console.log(newProduct);
 
         try {
             const response = await axios.post(
                 'http://localhost/loop_backend/admin/products/addproduct.php',
-                JSON.stringify(newProduct),
+                JSON.stringify(productData), // Send as JSON
                 {
                     withCredentials: true,
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json', // JSON content type
                     },
                 }
             );
-            console.log(response.data);
 
             if (response.status === 200 && response.data.success) {
                 const addedProduct = response.data.product;
-
                 setProducts(prev => [...prev, addedProduct]);
-
-                handleCloseEdit();
-
+                handleCloseAdd();
+                
                 setFormData({
                     product_name: '',
                     product_category: '',
                     product_color: [],
                     product_price: '',
-                    product_image: '',
+                    product_image_names: [],
                     product_description: '',
                     product_quantity: '',
                     product_size: [],
                 });
-                setImagePreview(null);
+                setImagePreviews([]);
 
-                console.log('Product added and list updated with DB timestamp');
                 toast.success('Product added Successfully!');
-
-            }else {
+            } else {
                 console.error('Failed to add product');
-                toast.error('Failed to add product: ', error.message);
+                toast.error('Failed to add product');
             }
-            
         } catch (error) {
             console.error('Error adding product:', error);
             toast.error('Failed to add product: ' + error.message);
@@ -231,23 +258,24 @@ export default function ProductList() {
         // Validate the form data
         if (!validateForm()) return;
 
+        console.log('Form Data:', formData);
+
         try {
             // Prepare the edited product data
             const editedProduct = {
                 product_id: formData.product_id,
                 product_name: formData.product_name,
                 product_category: formData.product_category,
-                product_color: formData.product_color, // Ensure this is an array
-                product_price: formData.product_price,
+                product_color: formData.product_color, 
+                product_price: formData.product_price, // Added: include price
                 product_description: formData.product_description,
                 product_quantity: formData.product_quantity,
-                product_image: formData.product_image instanceof File 
-                    ? formData.product_image.name 
-                    : formData.product_image,
-                product_size: formData.product_size, // Ensure this is included if needed
+                product_image: formData.product_image_names.join(','),
+                product_size: formData.product_size, 
             };
 
-            // Make the PUT request to update the product
+            console.log('Sending edit data:', editedProduct); // Debug log
+
             const response = await axios.put(
                 `http://localhost/loop_backend/admin/products/updateproduct.php`,
                 editedProduct,
@@ -258,6 +286,7 @@ export default function ProductList() {
                     },
                 }
             );
+            console.log('Response:', response.data);
 
             // Check if the response indicates success
             if (response.data.success) {
@@ -277,11 +306,21 @@ export default function ProductList() {
                     product_category: '',
                     product_color: [],
                     product_price: '',
-                    product_image: '',
+                    product_image_names: [], // Changed: reset to empty array
                     product_description: '',
                     product_quantity: '',
                     product_size: [],
                 });
+
+                // Clean up image previews
+                if (Array.isArray(imagePreviews)) {
+                    imagePreviews.forEach(url => {
+                        if (url.startsWith('blob:')) {
+                            URL.revokeObjectURL(url);
+                        }
+                    });
+                }
+                setImagePreviews([]);
 
                 // Close the edit modal
                 handleCloseEdit();
@@ -354,30 +393,80 @@ export default function ProductList() {
 
                         <form
                             className="flex flex-col gap-6 px-6 py-4 md:flex-row"
-                            encType="multipart/form-data"
                             onSubmit = {handleSubmit}
                         >
-                            <div className="flex flex-col items-center w-full gap-4 md:w-1/2">
-                                <div>
-                                    <p className="mb-1 text-sm text-gray-600">Image Preview:</p>
-                                    <img
-                                        src={imagePreview || imageAlt}
-                                        alt="Product Preview"
-                                        className="object-cover border rounded-lg shadow-sm w-72 h-72"
-                                    />
+                            <div className="w-full space-y-4 md:w-1/2">
+                                <div className="w-full">
+                                    <p className="mb-2 text-sm font-medium text-gray-700">
+                                        Image Previews:
+                                    </p>
+                                    <div className="grid grid-cols-2 gap-3 mb-4">
+                                        {Array.isArray(imagePreviews) && imagePreviews.length > 0 ? (
+                                            imagePreviews.map((preview, index) => (
+                                                <div key={index} className="relative group">
+                                                    <img
+                                                        src={preview}
+                                                        alt={`Product Preview ${index + 1}`}
+                                                        className="object-cover w-full border rounded-lg shadow-sm h-32"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removeImage(index)}
+                                                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                    >
+                                                        ×
+                                                    </button>
+                                                    <div className="absolute bottom-1 left-1 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
+                                                        {index + 1}
+                                                    </div>
+                                                    {/* Show filename */}
+                                                    <div className="absolute bottom-1 right-1 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded max-w-20 truncate">
+                                                        {formData.product_image_names[index]}
+                                                    </div>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="col-span-2 flex items-center justify-center">
+                                                <img
+                                                    src={imageAlt}
+                                                    alt="No images selected"
+                                                    className="object-cover border rounded-lg shadow-sm w-48 h-48 opacity-50"
+                                                />
+                                            </div>
+                                        )}
                                     </div>
+                                    {/* File Input */}
                                     <div className="w-full">
-                                    <label className="block mb-1 text-sm font-medium text-gray-700">
-                                        Upload Image
-                                    </label>
-                                    <input
-                                        type="file"
-                                        name="image"
-                                        accept="image/*"
-                                        required
-                                        onChange={handleImageChange}
-                                        className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#7E62FF] file:text-white hover:file:bg-[#624bc7]"
-                                    />
+                                        <label className="block mb-1 text-sm font-medium text-gray-700">
+                                            Select Images (Max 5)
+                                        </label>
+                                        <input
+                                            type="file"
+                                            name="images"
+                                            accept="image/*"
+                                            multiple
+                                            required
+                                            onChange={handleImageChange}
+                                            className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#7E62FF] file:text-white hover:file:bg-[#624bc7]"
+                                        />
+                                        <p className="mt-1 text-xs text-gray-500">
+                                            Select multiple images.
+                                        </p>
+                                        
+                                        {/* Show selected filenames */}
+                                        {Array.isArray(formData.product_image_names) && formData.product_image_names.length > 0 && (
+                                            <div className="mt-2">
+                                                <p className="text-xs text-gray-600">Selected files:</p>
+                                                <div className="flex flex-wrap gap-1 mt-1">
+                                                    {formData.product_image_names.map((name, index) => (
+                                                        <span key={index} className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded">
+                                                            {name}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
 
@@ -551,6 +640,7 @@ export default function ProductList() {
             </div>
 
             {/*MODIFY PRODUCT MODAL */}
+            
             <div>
                 <Modal
                     open={EditOpen}
@@ -573,27 +663,77 @@ export default function ProductList() {
                             encType="multipart/form-data"
                             onSubmit = {handleEditSubmit}
                         >
-                            <div className="flex flex-col items-center w-full gap-4 md:w-1/2">
-                                <div>
-                                    <p className="mb-1 text-sm text-gray-600">Image Preview:</p>
-                                    <img
-                                        src={imagePreview || imageAlt}
-                                        alt="Product Preview"
-                                        className="object-cover border rounded-lg shadow-sm w-72 h-72"
-                                    />
-                                </div>
+                            <div className="w-full space-y-4 md:w-1/2">
                                 <div className="w-full">
-                                    <label className="block mb-1 text-sm font-medium text-gray-700">
-                                        Upload Image
-                                    </label>
-                                    <input
-                                        type="file"
-                                        name="image"
-                                        accept="image/*"
-                                        required
-                                        onChange={handleImageChange}
-                                        className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#7E62FF] file:text-white hover:file:bg-[#624bc7]"
-                                    />
+                                    <p className="mb-2 text-sm font-medium text-gray-700">
+                                        Image Previews:
+                                    </p>
+                                    <div className="grid grid-cols-2 gap-3 mb-4">
+                                        {Array.isArray(imagePreviews) && imagePreviews.length > 0 ? (
+                                            imagePreviews.map((preview, index) => (
+                                                <div key={index} className="relative group">
+                                                    <img
+                                                        src={preview}
+                                                        alt={`Product Preview ${index + 1}`}
+                                                        className="object-cover w-full border rounded-lg shadow-sm h-32"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removeImage(index)}
+                                                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                    >
+                                                        ×
+                                                    </button>
+                                                    <div className="absolute bottom-1 left-1 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
+                                                        {index + 1}
+                                                    </div>
+                                                    {/* Show filename */}
+                                                    <div className="absolute bottom-1 right-1 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded max-w-20 truncate">
+                                                        {formData.product_image_names[index]}
+                                                    </div>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="col-span-2 flex items-center justify-center">
+                                                <img
+                                                    src={imageAlt}
+                                                    alt="No images selected"
+                                                    className="object-cover border rounded-lg shadow-sm w-48 h-48 opacity-50"
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
+                                    {/* File Input */}
+                                    <div className="w-full">
+                                        <label className="block mb-1 text-sm font-medium text-gray-700">
+                                            Select Images (Max 5)
+                                        </label>
+                                        <input
+                                            type="file"
+                                            name="images"
+                                            accept="image/*"
+                                            multiple
+                                            onChange={handleImageChange}
+                                            className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#7E62FF] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#7E62FF] file:text-white hover:file:bg-[#624bc7]"
+                                        />
+                                        <p className="mt-1 text-xs text-gray-500">
+                                            Select multiple images.
+                                        </p>
+                                        
+                                        {/* Show selected filenames */}
+                                        {Array.isArray(formData.product_image_names) && formData.product_image_names.length > 0 && (
+                                            <div className="mt-2">
+                                                <p className="text-xs text-gray-600">Selected files:</p>
+                                                <div className="flex flex-wrap gap-1 mt-1">
+                                                    {formData.product_image_names.map((name, index) => (
+                                                        <span key={index} className="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded">
+                                                            {name}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
 
@@ -774,6 +914,7 @@ export default function ProductList() {
                 </Modal>
             </div>
             
+            
             <div className="flex items-center justify-center w-full px-4 py-4 text-gray-700 sm:px-8 lg:px-12 font-poppins">
                 <div className="flex flex-col gap-y-2 mt-[2rem] w-full max-w-8xl">
                     <div className="flex place-content-end">
@@ -932,6 +1073,11 @@ export default function ProductList() {
                     </div>
                 </div>
             </div>
+
+            <Toaster
+                position="top-right"
+                reverseOrder={false} 
+            />
         </>
     );
 }

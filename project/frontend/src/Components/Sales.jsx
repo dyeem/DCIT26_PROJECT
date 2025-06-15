@@ -84,7 +84,6 @@ export default function Sales() {
   const data = useLoaderData();
   console.log("Sales component data:", data);
 
-  // Extract the Products array from the structured data
   const crochets = data.Products || [];
 
   return (
@@ -298,12 +297,19 @@ export default function Sales() {
                                       )}
                                     </Link>
 
-                                    <p className="text-black xl:text-lg xsm:text-base font-noto">{prod.name}</p>
-                                    <p className="text-gray-800 xsm:text-sm font-noto">{prod.category}</p>
-                                    <p className="text-gray-800 xsm:text-sm">₱{prod.price}.00</p>
-                                    <div className="flex flex-wrap xsm:text-sm">
-                                      <p>{prod.stars}</p>
-                                      <p>{prod.rating}</p>
+                                    <div className="p-2">
+                                      <div className="flex flex-row justify-between items-center">
+                                        <p className="text-black xl:text-xl xsm:text-base font-noto ">{prod.name}</p>
+                                        <p className="text-gray-800 xsm:text-sm font-semibold">₱{prod.price}.00</p>
+                                      </div>
+                                      <div className="flex flex-row justify-between items-center px-2">
+                                        <p className="text-gray-800 xsm:text-sm font-noto">{prod.category}</p>
+                                        <p className="text-gray-800 xsm:text-sm font-noto">Qty: {prod.quantity}</p>
+                                      </div>
+                                      <div className="flex flex-wrap xsm:text-sm">
+                                        <p>{prod.stars}</p>
+                                        <p>{prod.rating}</p>
+                                      </div>
                                     </div>
                                   </div>
                                   

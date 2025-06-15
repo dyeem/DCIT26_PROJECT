@@ -20,6 +20,22 @@ export const ProductDetailsLoader = async ({ params }) => {
       throw new Error('Product not found');
     }
 
+    // Transform product_image from comma-separated string to array
+    if (product.product_image) {
+      product.product_image = product.product_image.split(',').map(img => img.trim()).filter(Boolean);
+    } else {
+      product.product_image = [];
+    }
+
+    // Also handle colors and sizes if they're comma-separated
+    if (product.product_color && typeof product.product_color === 'string') {
+      product.product_color = product.product_color.split(',').map(color => color.trim()).filter(Boolean);
+    }
+
+    if (product.product_size && typeof product.product_size === 'string') {
+      product.product_size = product.product_size.split(',').map(size => size.trim()).filter(Boolean);
+    }
+
     console.log('[Loader] Valid product loaded:', product);
     return product;
 

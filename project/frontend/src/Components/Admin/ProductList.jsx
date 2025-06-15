@@ -930,13 +930,12 @@ export default function ProductList() {
                                 <thead className="text-xs font-semibold text-white uppercase bg-[#7E62FF]">
                                     <tr>
                                         <th scope="col" className="px-6 py-3">ID</th>
+                                        <th scope="col" className="px-6 py-3">Image</th>
                                         <th scope="col" className="px-6 py-3">Name</th>
                                         <th scope="col" className="px-6 py-3">Category</th>
                                         <th scope="col" className="px-6 py-3">Color</th>
                                         <th scope="col" className="px-6 py-3">Size</th>
                                         <th scope="col" className="px-6 py-3">Price</th>
-                                        <th scope="col" className="px-6 py-3">Image</th>
-                                        <th scope="col" className="px-6 py-3">Description</th>
                                         <th scope="col" className="px-6 py-3">Stock</th>
                                         <th scope="col" className="px-6 py-3">Created At</th>
                                         <th scope="col" className="px-6 py-3 text-center">Actions</th>
@@ -946,11 +945,6 @@ export default function ProductList() {
                                     {products.map((product) => (
                                         <tr key={product.product_id} className="hover:bg-gray-50">
                                             <td className="px-6 py-4 whitespace-nowrap">{product.product_id}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{product.product_name}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{product.product_category}</td>
-                                            <td className="max-w-xs truncate">{product.product_color}</td>
-                                            <td className="max-w-xs truncate">{product.product_size}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">₱{product.product_price}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <img
                                                     src={`/Assets/Products/${product.product_category}/${product.product_image}`}
@@ -958,11 +952,11 @@ export default function ProductList() {
                                                     className="object-cover w-12 h-12 mx-auto rounded-md"
                                                 />
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="max-w-xs truncate">
-                                                {product.product_description}
-                                            </div>
-                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{product.product_name}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{product.product_category}</td>
+                                            <td className="max-w-xs truncate">{product.product_color}</td>
+                                            <td className="max-w-xs truncate">{product.product_size}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">₱{product.product_price}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">{product.product_quantity}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">{dayjs(product.product_created_at).format('MMMM D, YYYY')}</td>
                                             <td className="px-6 py-4 text-center whitespace-nowrap"> 

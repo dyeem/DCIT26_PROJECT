@@ -1,14 +1,13 @@
 import { Link, useLoaderData, useNavigate} from "react-router-dom"
 import { useState, useEffect } from "react"
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast'
 import { useAuth } from './Auth/AuthContext';
-
+import axios from "axios";
 
 export default function ProductDetails() {
     const navigate = useNavigate();
     const { setIsLogin, user } = useAuth(); // grab context setters
     const product = useLoaderData()
-    console.log("data: ", product)
 
     useEffect(() => {
         document.title = `Loop | ${product.product_name} | ${product.product_category}`;
@@ -16,7 +15,17 @@ export default function ProductDetails() {
 
     const [color, setColor] = useState("");
     const [size, setSize] = useState("");
-
+    const [checkoutData, setCheckoutData] = useState({
+        product_id: '',
+        product_quantity: 1,
+        user_id: '',
+        product_size: '',
+        product_color: '',
+        product_price: '',
+        product_name: '',
+        product_image: '',
+        product_category: '',
+    });
     const AddToCart = () => toast.success('Successfully added to Cart!');
 
     function handleAddToCart(id, name, img, size, color, price, category) {
@@ -50,34 +59,65 @@ export default function ProductDetails() {
         setSize(e.target.value);
     }
 
-    function handleCheckout(id, name, img, size, color, price, category) {
-
+    function handleCheckout(id, name, size, color, price, image, category) {
         if (size === "") {
-            toast.error("Please select a size")
-            return
+            toast.error("Please select a size");
+            return;
         }
 
         if (color === "") {
-            toast.error("Please select a color")
-            return
+            toast.error("Please select a color");
+            return;
         }
 
-        console.log("checkout data: ", id, name, img, size, color, price, category)
+        if (user && user.id) {
+            const checkoutPayload = {
+                items: [
+                    {
+                    product_id: id,
+                    product_quantity: 1,
+                    user_id: user.id,
+                    product_size: size,
+                    product_color: color,
+                    product_price: price,
+                    product_name: name,
+                    product_image: image,
+                    product_category: category
+                    }
+                ]
+            };
+            console.log("Sending checkout data:", checkoutPayload);
+            axios.post(
+                'http://localhost/loop_backend/checkout_session_based.php',
+                checkoutPayload,
+                {
+                    withCredentials: true,
+                    headers: {
+                    'Content-Type': 'application/json'
+                    }
+                }
+            )
+            .then(res => {
+                if (res.data.success) {
+                    console.log("Checkout successful:", res.data);
+                    navigate('/products/checkout');
+                } else {
+                    console.error(res.data.message || 'Unknown error');
+                    toast.error("Something went wrong.");
+                }
+            })
+            .catch(err => {
+                console.error('Checkout error:', err);
+                toast.error("Checkout failed.");
+            });
 
-        if(setIsLogin === true) {
-            console.log("user: ", user)
-
-            
-        }else{
-            console.log("user: ", user)
-            toast.error("Please login to continue. You wil be redirected to login page")
-            // add a timer to redirect to login page
+        } else {
+            toast.error("Please login to continue. Redirecting to login...");
             setTimeout(() => {
-                navigate('/login')
+                navigate('/login');
             }, 2500);
         }
     }
-    
     return (
         <>
             <div className="w-full bg-white text-gray-900 py-4">
@@ -210,10 +250,10 @@ export default function ProductDetails() {
                                                 onClick={() => handleCheckout (
                                                     product.product_id,
                                                     product.product_name,
-                                                    mainImage,
                                                     size,
                                                     color,
                                                     product.product_price,
+                                                    mainImage,
                                                     product.product_category
                                                 )}
                                                 className="w-full text-black px-2 py-3 font-noto border border-[#69413D] rounded-md hover:bg-[#69413D] hover:text-white transition-colors duration-300"

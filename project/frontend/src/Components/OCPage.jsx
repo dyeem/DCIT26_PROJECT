@@ -1,97 +1,225 @@
 import checkicon from '../Assets/check.png'
 import housepin from '../Assets/housepin.png'
 import tel from '../Assets/tel.png'
-
 import barcode from '../Assets/barcode.png'
 
-import { useNavigate } from 'react-router-dom'
-
+import { useNavigate, useLocation } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useAuth } from './Auth/AuthContext'
 import BreadCrumbs from './BreadCrumbs'
 
 export default function OCPage() {
-
+    const { user } = useAuth()
+    const location = useLocation()
     const navigate = useNavigate()
 
-    function handleClearUserCart() {
-       
+    if (!user) {
+        navigate('/login')
+        return null
     }
+
+    useEffect(() => {
+        document.title = `Loop | Order Confirmation`;
+    }, []);
+
+    const { state } = location;
+    const formData = state?.formData;
+    const userCart = state?.userCart;
+
+    console.log("formData:", formData)
+    console.log("userCart:", userCart)
+
+    if (!formData || !userCart) {
+        console.log("Missing data, redirecting to checkout");
+        navigate('/checkout');
+        return null;
+    }
+
+    function handleClearUserCart() {
+        navigate('/');
+    }
+
+    const calculateSubtotal = () => {
+        return userCart.reduce((total, cart) => total + Number(cart.product_price), 0);
+    };
+
+    const orderNumber = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
     
     return (
         <>
-            <div className='bg-white xsm:grid xsm:grid-cols-1 xl:flex flex-col justify-center items-center max-w-full leading-relaxed xl:space-y-10 xl:px-16 xsm:px-3 py-8'>
-                <div className="self-start"><BreadCrumbs/></div>
-                <div className="flex flex-row items-center justify-center gap-x-2 py-1">
-                    <img src={checkicon} alt="" className='xl:w-10 xsm:w-12'/>
-                    <p className='text-gray-900 xl:text-3xl xsm:text-lg font-bold'>Thanks for your Order!</p>
+            <div className='min-h-screen bg-gray-100'>
+                {/* Header */}
+                <div className="bg-white shadow-sm border-b">
+                    <div className="container mx-auto px-4 py-4">
+                        <BreadCrumbs/>
+                    </div>
                 </div>
-                <div className="w-full">
-                    <div className="xsm:grid xsm:grid-cols-1 xsm:space-y-8 xl:flex flex-row gap-x-4 px-5 divide-x-2 divide-gray-300">
-                        <div className="w-full">
-                            <div className="flex flex-row justify-between border-b border-gray-400 text-lg font-bold text-gray-900 pb-2">
-                                <p>Order No.</p>
-                                <p className='text-red-700'>123465</p>
+
+                <div className="container mx-auto px-4 py-8">
+                    <div className="max-w-6xl mx-auto">
+                        {/* Success Header */}
+                        <div className="text-center mb-8">
+                            <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-4">
+                                <img src={checkicon} alt="" className='w-10 h-10'/>
                             </div>
-                            <div className="px-1 py-3 text-gray-800 space-y-5">
-                                <p>We've sent a confirmation email with your order details to <span className="font-bold">{currentUseremail}</span></p>
-                                <p>For in-store order pickups, please be sure to bring the confirmation email and your photo ID.</p>
-                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum commodi voluptates, mollitia delectus corporis quisquam consequatur quibusdam obcaecati at totam eos ratione. Dolores reprehenderit, beatae itaque vero suscipit architecto rem?</p>
+                            <h1 className='text-4xl font-bold text-gray-900 mb-2'>Order Confirmed!</h1>
+                            <p className="text-lg text-gray-600">Thank you for your purchase. Your order has been successfully placed.</p>
+                        </div>
+
+                        {/* Order Number Card */}
+                        <div className="bg-white rounded-xl shadow-sm border p-6 mb-8">
+                            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                                <div>
+                                    <h2 className="text-lg font-semibold text-gray-900 mb-1">Order Number</h2>
+                                    <p className="text-2xl font-bold text-[#885b56]">#{orderNumber}</p>
+                                </div>
+                                <div className="mt-4 md:mt-0">
+                                    <p className="text-sm text-gray-600">Order Date</p>
+                                    <p className="font-semibold text-gray-900">{new Date().toLocaleDateString('en-US', { 
+                                        year: 'numeric', 
+                                        month: 'long', 
+                                        day: 'numeric' 
+                                    })}</p>
+                                </div>
                             </div>
-                            <div className="space-y-3">
-                                <p className='text-xl text-gray-900 font-bold'><span>Order</span> Details</p>
-                                <div className="flex flex-wrap items-center gap-x-2 text-gray-900 font-bold">
-                                    <img src={housepin} alt="" className="w-8"/>
-                                    <p>Home Shipping</p>
+                        </div>
+
+                        <div className="grid lg:grid-cols-3 gap-8">
+                            {/* Left Column - Order Details */}
+                            <div className="lg:col-span-2 space-y-6">
+                                {/* Confirmation Message */}
+                                <div className="bg-white rounded-xl shadow-sm border p-6">
+                                    <h2 className="text-xl font-semibold text-gray-900 mb-4">Confirmation Details</h2>
+                                    <div className="space-y-4 text-gray-700">
+                                        <div className="flex items-start space-x-3">
+                                            <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                                            <p>We've sent a confirmation email with your order details to <span className="font-semibold text-gray-900">{formData.email}</span></p>
+                                        </div>
+                                        <div className="flex items-start space-x-3">
+                                            <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                                            <p>For in-store order pickups, please bring the confirmation email and your photo ID.</p>
+                                        </div>
+                                        <div className="flex items-start space-x-3">
+                                            <div className="w-2 h-2 bg-purple-500 rounded-full mt-2 flex-shrink-0"></div>
+                                            <p>You can track your order status by logging into your account or using the order number provided above.</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="text-gray-900">
-                                    <p><span className='font-semibold'>Shipping to:</span> street, city, province, postal code</p>
-                                    <p><span className='font-semibold'>Arrives in:</span> 3-4 Business Days</p>
+
+                                {/* Shipping Information */}
+                                <div className="bg-white rounded-xl shadow-sm border p-6">
+                                    <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                                        <img src={housepin} alt="" className="w-6 h-6 mr-3"/>
+                                        Shipping Information
+                                    </h2>
+                                    <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <span className="font-semibold text-gray-900">Home Delivery</span>
+                                            <span className="px-3 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-full">Standard</span>
+                                        </div>
+                                        <p className="text-gray-700 mb-2">
+                                            <span className='font-medium'>Shipping to:</span><br/>
+                                            {formData.address}<br/>
+                                            {formData.street && `${formData.street}, `}
+                                            {formData.city}, {formData.province} {formData.postalCode}
+                                        </p>
+                                        <p className="text-sm text-gray-600">
+                                            <span className='font-medium'>Estimated Delivery:</span> 3-4 Business Days
+                                        </p>
+                                    </div>
                                 </div>
-                                <div className="flex flex-col gap-y-4">
-                                    {!userCart || userCart.length === 0 ? navigate("/products/sales") 
-                                    :
-                                        userCart.map((cart) => (
-                                            <div className="flex flex-row gap-x-4" key={cart.id}>
-                                                <img src={cart.img[0]} alt="" className='w-28 rounded-md'/>
-                                                <div className="text-gray-900">
-                                                    <p className='font-semibold'>Name: {cart.name}</p>
-                                                    <p className='font-semibold'>Category: {cart.category}</p>
-                                                    <p className='font-semibold'>Size: {cart.size}</p>
-                                                    <p className='font-semibold'>Color: {cart.color}</p>
-                                                    <p className='font-semibold'>Price: ₱{cart.price}</p>
+
+                                {/* Order Items */}
+                                <div className="bg-white rounded-xl shadow-sm border p-6">
+                                    <h2 className="text-xl font-semibold text-gray-900 mb-4">Order Items</h2>
+                                    <div className="space-y-4">
+                                        {userCart.map((cart, index) => (
+                                            <div key={index} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                                                <img 
+                                                    src={`/Assets/Products/${cart.product_category}/${cart.product_image}`} 
+                                                    alt={cart.product_name} 
+                                                    className='w-20 h-20 object-cover rounded-lg'
+                                                />
+                                                <div className="flex-1">
+                                                    <h3 className="font-semibold text-gray-900 mb-1">{cart.product_name}</h3>
+                                                    <div className="text-sm text-gray-600 space-y-1">
+                                                        <p><span className="font-medium">Category:</span> {cart.product_category}</p>
+                                                        <p><span className="font-medium">Size:</span> {cart.product_size}</p>
+                                                        <p><span className="font-medium">Color:</span> {cart.product_color}</p>
+                                                    </div>
+                                                </div>
+                                                <div className="text-right">
+                                                    <p className="font-bold text-lg text-[#885b56]">₱{cart.product_price}</p>
+                                                    <p className="text-sm text-gray-500">Qty: {cart.product_quantity || 1}</p>
                                                 </div>
                                             </div>
-                                        ))  
-                                    }
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="w-full px-3">
-                            <p className='text-gray-900 text-xl font-bold'>Order Summary</p>
-                            <div className="divide-y-2 divide-gray-300 font-semibold">
-                                <div className="flex flex-wrap justify-between py-4 text-gray-900">
-                                    <p className='font-semibold'>Subtotal:</p>
-                                    <p>₱{userCart.reduce((total, cart) => cart.price ? total + cart.price : total, 0)}</p>
-                                </div>
-                                <div className="flex flex-wrap justify-between py-4 text-gray-900">
-                                    <p className='font-semibold'>Shipping:</p>
-                                    <p>₱36.00</p>
-                                </div>
-                                <div className="flex flex-wrap justify-between py-4 text-gray-900">
-                                    <p className='font-semibold'>Tax:</p>
-                                    <p>None</p>
-                                </div>
-                                <div className="flex flex-wrap justify-between py-4 text-gray-900">
-                                    <p className='font-semibold'>Order Total:</p>
-                                    <p>₱{userCart.reduce((total, cart) => cart.price ? total + cart.price : total, 0) +36}</p>
+
+                            {/* Right Column - Order Summary & Actions */}
+                            <div className="lg:col-span-1 space-y-6">
+                                {/* Order Summary */}
+                                <div className="bg-white rounded-xl shadow-sm border p-6 sticky top-4">
+                                    <h2 className="text-xl font-semibold text-gray-900 mb-4">Order Summary</h2>
+                                    <div className="space-y-3 mb-4">
+                                        <div className="flex justify-between text-gray-700">
+                                            <span>Subtotal:</span>
+                                            <span className="font-semibold">₱{calculateSubtotal()}</span>
+                                        </div>
+                                        <div className="flex justify-between text-gray-700">
+                                            <span>Shipping:</span>
+                                            <span className="font-semibold">₱30.00</span>
+                                        </div>
+                                        <div className="flex justify-between text-gray-700">
+                                            <span>Tax:</span>
+                                            <span className="font-semibold">₱0.00</span>
+                                        </div>
+                                        <div className="border-t pt-3">
+                                            <div className="flex justify-between text-lg font-bold text-gray-900">
+                                                <span>Total:</span>
+                                                <span className="text-[#885b56]">₱{calculateSubtotal() + 30}.00</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Payment Method */}
+                                    <div className="border-t pt-4 mb-6">
+                                        <p className="text-sm text-gray-600 mb-1">Payment Method</p>
+                                        <p className="font-semibold text-gray-900 capitalize">{formData.paymentMethod?.replace('-', ' ')}</p>
+                                    </div>
+
+                                    {/* Barcode */}
+                                    <div className="text-center mb-6">
+                                        <img src={barcode} alt="Order Barcode" className="mx-auto mb-2"/>
+                                        <p className="text-xs text-gray-500">Scan for quick reference</p>
+                                    </div>
+
+                                    {/* Action Buttons */}
+                                    <div className="space-y-3">
+                                        <button className='w-full py-3 px-4 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors duration-200'>
+                                            📄 Print Order Details
+                                        </button>
+                                        <button 
+                                            onClick={() => navigate('/products')} 
+                                            className='w-full py-3 px-4 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors duration-200'
+                                        >
+                                             Continue Shopping
+                                        </button>
+                                        <button className='w-full py-3 px-4 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors duration-200 flex items-center justify-center'>
+                                            <img src={tel} alt="" className='w-4 h-4 mr-2'/>
+                                            +63 13456798
+                                        </button>
+                                        <button 
+                                            onClick={() => handleClearUserCart()} 
+                                            className='w-full py-3 px-4 bg-[#885b56] text-white rounded-lg font-semibold hover:bg-[#69413D] transition-colors duration-200'
+                                        >
+                                             Back to Home
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="w-full flex flex-col gap-y-3 items-center px-4">
-                            <img src={barcode} alt="" />
-                            <button className='font-semibold rounded-md border border-gray-600 text-black w-full py-4 text-lg font-noto'>Print Order Details</button>
-                            <button onClick={() => navigate('/products')} className='font-semibold rounded-md border border-gray-600 text-black w-full py-4 text-lg font-noto'>Cancel Order</button>
-                            <button className='font-semibold flex flex-row justify-center gap-x-1 items-center rounded-md border border-gray-600 text-black w-full py-4 text-lg font-noto'><img src={tel} alt="" className='w-5 '/> +63 13456798</button>
-                            <button onClick={() => handleClearUserCart() } className='font-semibold rounded-md bg-[#885b56] text-white w-full py-4 text-lg font-noto'>Back to Home</button>
                         </div>
                     </div>
                 </div>

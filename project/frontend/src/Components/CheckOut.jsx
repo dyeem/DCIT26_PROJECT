@@ -1,5 +1,7 @@
-import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from './Auth/AuthContext';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 //assets
 import carticon from '../Assets/cart.png'
@@ -7,288 +9,372 @@ import BreadCrumbs from './BreadCrumbs';
 
 export default function CheckOut() {
     const navigate = useNavigate()
-
-    const userCart = useSelector((state) => {
-        const currentUserEmail = state.user.currentUser?.email; 
-        const user = state.user.usersList.find(user => user.email === currentUserEmail); 
-        return user?.cart || []; 
+    const[userCart, setUserCart] = useState([])
+    const [formData, setFormData] = useState({
+        email: '',
+        phone: '',
+        paymentMethod: '',
+        address: '',
+        street: '',
+        city: '',
+        province: '',
+        postalCode: '',
+        saveBilling: false
     });
 
-    const userCartlength = userCart.length;
+    useEffect(() => {
+        document.title = `Loop | Checkout`;
+    }, []);
 
-    return(
-        <>
-            <div className="min-h-screen flex flex-col justify-center items-center bg-white">
+    
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(
+                    `http://localhost/loop_backend/checkout_session_based.php`,
+                    {
+                        withCredentials: true,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+                console.log("Fetched checkout data:", response.data);
                 
-                <div className="w-full container p-4 flex flex-row justify-between">
-                    <BreadCrumbs/>
-                    <p onClick={() => navigate("/products")} className='text-gray-800 cursor-pointer px-2 py-2 font-semibold'>{"<"} Back to Products</p>
+                if (response.data.success && response.data.items) {
+                    setUserCart(response.data.items);
+                    console.log("user Cart data:", userCart);
+
+                } else {
+                    console.log("No checkout data found");
+                    setUserCart([]);
+                }
+            } catch (error) {
+                console.error("Error fetching checkout data:", error);
+                setUserCart([]);
+            }
+        };
+        
+        fetchData();
+    }, []);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Add form validation here
+        if (!formData.email || !formData.phone || !formData.paymentMethod || !formData.address) {
+            alert('Please fill in all required fields');
+            return;
+        }
+        
+        // Pass both formData and userCart to OCPage
+        navigate('/products/checkout/orderconfirmationpage', { 
+            state: { 
+                formData: formData,
+                userCart: userCart 
+            } 
+        });
+    };
+
+    function handleInputChange(e) {
+        const { name, value, type, checked } = e.target;
+        setFormData({
+            ...formData,
+            [name]: type === 'checkbox' ? checked : value
+        });
+    }
+    
+    function calculateSubtotal() {
+        let subtotal = 0;
+        userCart.forEach(item => {
+            subtotal += item.product_price * item.product_quantity;
+        });
+        return subtotal;
+    }
+
+    function calculateShipping() {
+        return 30; 
+    }
+
+    function calculateTotal() {
+        return calculateSubtotal() + calculateShipping();
+    }
+    return (
+        <>
+            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+                {/* Header */}
+                <div className="bg-white shadow-sm border-b">
+                    <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+                        <BreadCrumbs/>
+                        <button 
+                            onClick={() => navigate("/products")} 
+                            className='flex items-center text-gray-600 hover:text-[#885b56] transition-colors duration-200 font-medium'
+                        >
+                            ← Back to Products
+                        </button>
+                    </div>
                 </div>
-                <div className="max-w-[90rem] w-full m-5 rounded-2xl shadow-xl bg-white">
-                    {/*grid container */}
-                    <div className="grid lg:grid-cols-2 xsm:grid-cols-1 lg:grid-flow-col xsm:grid-flow-row">
-                        {/*left side */}
-                        <div className="lg:order-1 xsm:order-2 lg:p-10 xsm:p-10">
-                                {/*Payment details */}
-                            <p className="text-balance xl:text-[2rem] font-normal tracking-tight text-gray-900 xsm:text-3xl text-left">Contact Information</p>
-                            <form className="max-w-lg mx-auto">
-                                <div className="mt-[2rem]">
-                                    <div class="relative z-0 w-full mb-5 group">
-                                        <input 
-                                            type="email" 
-                                            name="email" 
-                                            id="floating_email" 
-                                            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
-                                            placeholder=" " 
-                                            required 
-                                        />
-                                    
-                                        <label 
-                                            for="floating_email" 
-                                            class="peer-focus:font-medium text-left absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-[#885b56] peer-focus:dark:text-[#885b56] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                            >
-                                            Email Address
-                                        </label>
-                                    </div>
-                                    <div class="relative z-0 w-full mb-5 group">
-                                        <input 
-                                            type="tel" 
-                                            name="tel" 
-                                            id="floating_email" 
-                                            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
-                                            placeholder=" " 
-                                            required 
-                                        />
-                                    
-                                        <label 
-                                            for="floating_email" 
-                                            class="peer-focus:font-medium text-left absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-[#885b56] peer-focus:dark:text-[#885b56] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                            >
-                                            Phone Number
-                                        </label>
-                                    </div>
-                                </div>
-                                {/*Payment details */}
-                                <div className="mt-[3rem]">
-                                    <div className="mb-[2rem]">
-                                        <p className="text-balance lg:text-[1.5rem] font-normal tracking-tight text-gray-900 xsm:text-3xl text-left">Payment Details</p>
-                                    </div>
-                                    <fieldset className="mt-4">
-                                        <legend className="block text-left text-sm/6 font-semibold text-gray-600">Select Payment Method</legend>
-                                        <div className="mt-2.5 space-y-2">
-                                            <div className="flex items-center">
-                                                <input
-                                                    id="cash"
-                                                    name="payment-method"
-                                                    type="radio"
-                                                    value="cash"
-                                                    className="h-4 w-4 border-gray-300 text-[#885b56] focus:ring-[#885b56]"
-                                                />
-                                                <label htmlFor="cash" className="ml-3 block text-sm font-medium text-gray-700">
-                                                    Cash
-                                                </label>
-                                            </div>
-                                            <div className="flex items-center">
-                                                <input
-                                                    id="gcash"
-                                                    name="payment-method"
-                                                    type="radio"
-                                                    value="gcash"
-                                                    className="h-4 w-4 border-gray-300 text-[#885b56] focus:ring-[#885b56]"
-                                                />
-                                                <label htmlFor="gcash" className="ml-3 block text-sm font-medium text-gray-700">
-                                                    GCash
-                                                </label>
-                                            </div>
-                                            <div className="flex items-center">
-                                                <input
-                                                    id="credit-card"
-                                                    name="payment-method"
-                                                    type="radio"
-                                                    value="credit-card"
-                                                    className="h-4 w-4 border-gray-300 text-[#885b56] focus:ring-[#885b56]"
-                                                />
-                                                <label htmlFor="credit-card" className="ml-3 block text-sm font-medium text-gray-700">
-                                                    Credit Card
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </fieldset>
-                                </div>
-                                <div className="mt-[2rem]">
-                                    <div className="mb-[2rem]">
-                                        <p className="text-balance lg:text-[1.5rem] font-normal tracking-tight text-gray-900 xsm:text-3xl text-left">
-                                            Shipping Address
-                                        </p>
-                                    </div>
-                                    {/* Address */}
-                                    <div class="relative z-0 w-full mb-5 group">
-                                        <input 
-                                            type="address" 
-                                            name="address" 
-                                            id="floating_email" 
-                                            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
-                                            placeholder=" " 
-                                            required 
-                                        />
-                                    
-                                        <label 
-                                            for="floating_email" 
-                                            class="peer-focus:font-medium text-left absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-[#885b56] peer-focus:dark:text-[#885b56] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                            >
-                                            Address
-                                        </label>
-                                    </div>
 
-                                    {/* Street */}
-                                    <div class="relative z-0 w-full mb-5 group">
-                                        <input 
-                                            type="address" 
-                                            name="street" 
-                                            id="street" 
-                                            class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
-                                            placeholder=" " 
-                                            required 
-                                        />
-                                    
-                                        <label 
-                                            for="street" 
-                                            class="peer-focus:font-medium text-left absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-[#885b56] peer-focus:dark:text-[#885b56] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                            >
-                                            Street, Address, Etc.
-                                        </label>
-                                    </div>
-
-                                    {/* City, Province, Postal Code */}
-                                    <div className="mt-4 flex xms:flex-wrap gap-2">
-                                        {/* City */}
-                                        <div class="relative z-0 w-full mb-5 group">
-                                            <input 
-                                                type="address" 
-                                                name="city" 
-                                                id="city" 
-                                                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
-                                                placeholder=" " 
-                                                required 
-                                            />
-                                        
-                                            <label 
-                                                for="city" 
-                                                class="peer-focus:font-medium text-left absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-[#885b56] peer-focus:dark:text-[#885b56] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                                >
-                                                City
-                                            </label>
-                                        </div>
-
-                                        {/* Province */}
-                                        <div class="relative z-0 w-full mb-5 group">
-                                            <input 
-                                                type="address" 
-                                                name="province" 
-                                                id="province" 
-                                                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
-                                                placeholder=" " 
-                                                required 
-                                            />
-                                        
-                                            <label 
-                                                for="province" 
-                                                class="peer-focus:font-medium text-left absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-[#885b56] peer-focus:dark:text-[#885b56] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                                >
-                                            Province
-                                            </label>
-                                        </div>
-
-                                        {/* Postal Code */}
-                                        <div class="relative z-0 w-full mb-5 group">
-                                            <input 
-                                                type="address" 
-                                                name="postal-code" 
-                                                id="postal-code" 
-                                                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-[#885b56] appearance-none dark:text-white focus:outline-none focus:ring-0 focus:border-[#885b56] peer" 
-                                                placeholder=" " 
-                                                required 
-                                            />
-                                        
-                                            <label 
-                                                for="postal-code" 
-                                                class="peer-focus:font-medium text-left absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-[#885b56] peer-focus:dark:text-[#885b56] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                                                >
-                                                Postal Code
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="mt-[2rem]">
-                                    <div className="mb-[2rem]">
-                                        <p className="text-balance lg:text-[1.5rem] font-normal tracking-tight text-gray-900 xsm:text-3xl text-left">Billing Information</p>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <input
-                                            id="save-billing-info"
-                                            name="billing-info"
-                                            type="checkbox"
-                                            value="save-billing-info"
-                                            className="h-4 w-4 border-gray-300 text-[#885b56] focus:ring-[#885b56] rounded-xl"
-                                        />
-                                        <label htmlFor="save-billing-info" className="ml-2 block text-sm font-medium text-gray-700">
-                                            Save as billing information
-                                        </label>
-                                    </div>
-                                </div>
-                                <div className="mt-[2rem]">
-                                    <hr className="my-6 border-t-2 border-[#885b56]" />
-                                </div>
-                                <div className="mt-[2rem] flex justify-center items-center">
-                                    <button onClick={() => navigate("/products/checkout/orderconfirmationpage")} className="bg-[#885b56] text-lg text-white px-3 py-2 font-noto">Checkout</button>
-                                </div>
-                            </form>
+                <div className="container mx-auto px-4 py-8">
+                    <div className="max-w-7xl mx-auto">
+                        {/* Page Title */}
+                        <div className="text-center mb-8">
+                            <h1 className="text-3xl font-bold text-gray-900 mb-2">Checkout</h1>
+                            <p className="text-gray-600">Complete your order details below</p>
                         </div>
-                        {/*right side */}
-                        <div className="lg:order-2 xsm:order-1 lg:p-10 xsm:p-10 bg-gray-100 rounded-2xl shadow-xl">
-                            <p className="text-balance xl:text-[2] font-normal tracking-tight text-gray-900 xsm:text-3xl text-left">Order Summary</p>
-                            <hr className="my-4 border-t-2 border-[#885b56]" />
-                            <div className="flex flex-wrap items-center">
-                                <img src={carticon} alt="" className="w-8"/>
-                                <p className='text-gray-800 font-semibold text-base'>{userCartlength} item(s) in cart</p>
-                            </div>
-                            <div className="mt-5">
-                                <div className="divide-y divide-[#885b56]">
-                                    {!userCart || userCart.length === 0 ? 
-                                        navigate("/login")
-                                    :
-                                        userCart.map((cart) => (
-                                            <div key={cart.id} className="flex items-center py-4">
-                                                <img
-                                                    src={Array.isArray(cart.img) ? cart.img[0] : cart.img}
-                                                    alt={cart.name}
-                                                    className="lg:h-20 lg:w-20 xsm:h-14 xsm:w-14 object-cover rounded-md"/>
-                                                <div className="ml-4 flex-grow text-left">
-                                                        <p className="lg:text-lg xsm:text-base font-semibold text-gray-900">{cart.name}</p>
-                                                        <p className="lg:text-sm xsm:text-sm text-gray-500">{cart.category}</p>
-                                                        <p className="lg:text-sm xsm:text-sm text-gray-500">{cart.size}</p>
-                                                        <p className="lg:text-sm xsm:text-sm text-gray-500">{cart.color}</p>
-                                                </div>
-                                                <p className="lg:text-lg xsm:text-base font-medium text-gray-900">₱{cart.price.toFixed(2)}</p>
+
+                        <div className="grid lg:grid-cols-3 gap-8">
+                            {/* Left side - Form */}
+                            <div className="lg:col-span-2">
+                                <form onSubmit={handleSubmit} className="space-y-8">
+                                    {/* Contact Information */}
+                                    <div className="bg-white rounded-xl shadow-sm border p-6">
+                                        <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                                            <div className="w-8 h-8 bg-[#885b56] text-white rounded-full flex items-center justify-center text-sm font-bold mr-3">1</div>
+                                            Contact Information
+                                        </h2>
+                                        <div className="grid md:grid-cols-2 gap-6">
+                                            <div className="space-y-2">
+                                                <label className="block text-sm font-medium text-gray-700">
+                                                    Email Address *
+                                                </label>
+                                                <input
+                                                    type="email"
+                                                    name="email"
+                                                    value={formData.email}
+                                                    onChange={handleInputChange}
+                                                    required
+                                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#885b56] focus:border-transparent transition-all duration-200"
+                                                    placeholder="your@email.com"
+                                                />
                                             </div>
-                                            
-                                        ))
-                                    }
-                                    <div className="py-3">
-                                        <div className="flex justify-between text-base text-gray-800">
-                                            <p className='font-semibold'>Subtotal: </p>
-                                            <p>₱{userCart.reduce((total, cart) => cart.price ? total + cart.price : total, 0)}.00</p>
-                                        </div>
-                                        <div className="flex justify-between text-base text-gray-800">
-                                            <p className='font-semibold'>Shipping: </p>
-                                            <p>₱36.00</p>
+                                            <div className="space-y-2">
+                                                <label className="block text-sm font-medium text-gray-700">
+                                                    Phone Number *
+                                                </label>
+                                                <input
+                                                    type="tel"
+                                                    name="phone"
+                                                    value={formData.phone}
+                                                    onChange={handleInputChange}
+                                                    required
+                                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#885b56] focus:border-transparent transition-all duration-200"
+                                                    placeholder="+63 912 345 6789"
+                                                />
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="pt-2 flex justify-between text-lg font-semibold text-gray-900">
-                                        <p>Total:</p>
-                                        <p>₱{userCart.reduce((total, cart) => cart.price ? total + cart.price : total, 0) +36}.00</p>
+
+                                    {/* Payment Method */}
+                                    <div className="bg-white rounded-xl shadow-sm border p-6">
+                                        <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                                            <div className="w-8 h-8 bg-[#885b56] text-white rounded-full flex items-center justify-center text-sm font-bold mr-3">2</div>
+                                            Payment Method
+                                        </h2>
+                                        <div className="grid md:grid-cols-3 gap-4">
+                                            {[
+                                                { id: 'cash', label: 'Cash on Delivery', icon: '💵' },
+                                                { id: 'gcash', label: 'GCash', icon: '📱' },
+                                                { id: 'credit-card', label: 'Credit Card', icon: '💳' }
+                                            ].map((method) => (
+                                                <label key={method.id} className="relative">
+                                                    <input
+                                                        type="radio"
+                                                        name="paymentMethod"
+                                                        value={method.id}
+                                                        checked={formData.paymentMethod === method.id}
+                                                        onChange={handleInputChange}
+                                                        className="sr-only"
+                                                    />
+                                                    <div className={`p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 ${
+                                                        formData.paymentMethod === method.id 
+                                                            ? 'border-[#885b56] bg-[#885b56]/5' 
+                                                            : 'border-gray-200 hover:border-gray-300'
+                                                    }`}>
+                                                        <div className="text-center">
+                                                            <div className="text-2xl mb-2">{method.icon}</div>
+                                                            <div className="text-sm font-medium text-gray-900">{method.label}</div>
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            ))}
+                                        </div>
                                     </div>
+
+                                    {/* Shipping Address */}
+                                    <div className="bg-white rounded-xl shadow-sm border p-6">
+                                        <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                                            <div className="w-8 h-8 bg-[#885b56] text-white rounded-full flex items-center justify-center text-sm font-bold mr-3">3</div>
+                                            Shipping Address
+                                        </h2>
+                                        <div className="space-y-6">
+                                            <div className="space-y-2">
+                                                <label className="block text-sm font-medium text-gray-700">
+                                                    Street Address *
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    name="address"
+                                                    value={formData.address}
+                                                    onChange={handleInputChange}
+                                                    required
+                                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#885b56] focus:border-transparent transition-all duration-200"
+                                                    placeholder="123 Main Street"
+                                                />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="block text-sm font-medium text-gray-700">
+                                                    Apartment, suite, etc. (optional)
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    name="street"
+                                                    value={formData.street}
+                                                    onChange={handleInputChange}
+                                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#885b56] focus:border-transparent transition-all duration-200"
+                                                    placeholder="Apartment, suite, unit, building, floor, etc."
+                                                />
+                                            </div>
+                                            <div className="grid md:grid-cols-3 gap-4">
+                                                <div className="space-y-2">
+                                                    <label className="block text-sm font-medium text-gray-700">
+                                                        City *
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="city"
+                                                        value={formData.city}
+                                                        onChange={handleInputChange}
+                                                        required
+                                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#885b56] focus:border-transparent transition-all duration-200"
+                                                        placeholder="Tanza"
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="block text-sm font-medium text-gray-700">
+                                                        Province *
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="province"
+                                                        value={formData.province}
+                                                        onChange={handleInputChange}
+                                                        required
+                                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#885b56] focus:border-transparent transition-all duration-200"
+                                                        placeholder="Cavite"
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="block text-sm font-medium text-gray-700">
+                                                        Postal Code *
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        name="postalCode"
+                                                        value={formData.postalCode}
+                                                        onChange={handleInputChange}
+                                                        required
+                                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#885b56] focus:border-transparent transition-all duration-200"
+                                                        placeholder="4108"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Billing Information */}
+                                    <div className="bg-white rounded-xl shadow-sm border p-6">
+                                        <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                                            <div className="w-8 h-8 bg-[#885b56] text-white rounded-full flex items-center justify-center text-sm font-bold mr-3">4</div>
+                                            Billing Information
+                                        </h2>
+                                        <label className="flex items-center space-x-3 cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                name="saveBilling"
+                                                checked={formData.saveBilling}
+                                                onChange={handleInputChange}
+                                                className="w-4 h-4 text-[#885b56] border-gray-300 rounded focus:ring-[#885b56]"
+                                            />
+                                            <span className="text-sm text-gray-700">Same as shipping address</span>
+                                        </label>
+                                    </div>
+                                </form>
+                            </div>
+
+                            {/* Right side - Order Summary */}
+                            <div className="lg:col-span-1">
+                                <div className="bg-white rounded-xl shadow-sm border p-6 sticky top-4">
+                                    <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                                        <img src={carticon} alt="" className="w-6 h-6 mr-3"/>
+                                        Order Summary
+                                    </h2>
+                                    
+                                    <div className="space-y-4 mb-6">
+                                        {!userCart || userCart.length === 0 ? (
+                                            <div className="text-center py-8">
+                                                <div className="text-gray-400 mb-4">
+                                                    <div className="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center text-3xl">
+                                                        🛒
+                                                    </div>
+                                                </div>
+                                                <p className="text-gray-500 mb-4">No items in cart</p>
+                                                <button 
+                                                    onClick={() => navigate("/products")}
+                                                    className="text-[#885b56] hover:underline font-medium"
+                                                >
+                                                    Continue Shopping
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            userCart.map((item, index) => (
+                                                <div key={index} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                                                    <img
+                                                        src={`/Assets/Products/${item.product_category}/${item.product_image}`}
+                                                        alt={item.product_name}
+                                                        className="w-16 h-16 object-cover rounded-lg"
+                                                    />
+                                                    <div className="flex-1">
+                                                        <h3 className="font-medium text-gray-900">{item.product_name}</h3>
+                                                        <p className="text-sm text-gray-500">
+                                                            {item.product_color} • {item.product_size}
+                                                        </p>
+                                                        <p className="text-sm text-gray-500">Qty: {item.product_quantity}</p>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <p className="font-semibold text-gray-900">₱{item.product_price}</p>
+                                                    </div>
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+
+                                    {userCart && userCart.length > 0 && (
+                                        <>
+                                            {/* Order Totals */}
+                                            <div className="border-t pt-4 space-y-3">
+                                                <div className="flex justify-between text-sm">
+                                                    <span className="text-gray-600">Subtotal</span>
+                                                    <span className="text-gray-900">₱{calculateSubtotal().toFixed(2)}</span>
+                                                </div>
+                                                <div className="flex justify-between text-sm">
+                                                    <span className="text-gray-600">Shipping</span>
+                                                    <span className="text-gray-900">₱{calculateShipping().toFixed(2)}</span>
+                                                </div>
+                                                <div className="flex justify-between text-lg font-semibold border-t pt-3">
+                                                    <span className="text-gray-900">Total</span>
+                                                    <span className="text-[#885b56]">₱{calculateTotal().toFixed(2)}</span>
+                                                </div>
+                                            </div>
+
+                                            {/* Place Order Button */}
+                                            <button
+                                                onClick={handleSubmit}
+                                                className="w-full mt-6 bg-[#885b56] text-white py-4 px-6 rounded-lg font-semibold hover:bg-[#69413D] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#885b56] focus:ring-offset-2"
+                                            >
+                                                Place Order
+                                            </button>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </div>

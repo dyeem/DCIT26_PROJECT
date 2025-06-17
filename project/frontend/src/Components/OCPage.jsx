@@ -7,16 +7,24 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useAuth } from './Auth/AuthContext'
 import BreadCrumbs from './BreadCrumbs'
+import axios from 'axios'
 
 export default function OCPage() {
-    const { user } = useAuth()
+    const { user, refreshCart } = useAuth()
     const location = useLocation()
     const navigate = useNavigate()
 
-    if (!user) {
-        navigate('/login')
-        return null
-    }
+    useEffect(() => {
+        axios.get('http://localhost/loop_backend/session_check_users.php', {
+            withCredentials: true,
+        })
+        .then(res => {
+            if (!res.data.loggedIn) {
+                navigate('/login');
+            }
+        })
+        .catch(err => console.error("Session check failed:", err));
+    }, []);
 
     useEffect(() => {
         document.title = `Loop | Order Confirmation`;
@@ -24,26 +32,45 @@ export default function OCPage() {
 
     const { state } = location;
     const formData = state?.formData;
-    const userCart = state?.userCart;
+    const checkoutItems = state?.checkoutItems; 
+    const checkoutSource = state?.checkoutSource; 
 
     console.log("formData:", formData)
-    console.log("userCart:", userCart)
+    console.log("checkoutItems:", checkoutItems)
+    console.log("checkoutSource:", checkoutSource)
 
-    if (!formData || !userCart) {
+    if (!formData || !checkoutItems || checkoutItems.length === 0) {
         console.log("Missing data, redirecting to checkout");
         navigate('/checkout');
         return null;
     }
 
-    function handleClearUserCart() {
+    async function handleClearUserCart() {
+        if (checkoutSource === 'cart') {
+            try {
+                await fetch('http://localhost/loop_backend/checkout_session_based.php', {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+                await refreshCart();
+            } catch (error) {
+                console.error('Error clearing cart:', error);
+            }
+        }
         navigate('/');
     }
 
     const calculateSubtotal = () => {
-        return userCart.reduce((total, cart) => total + Number(cart.product_price), 0);
+        return checkoutItems.reduce((total, item) => {
+            const price = parseFloat(item.product_price) || 0;
+            const quantity = parseInt(item.product_quantity) || 1;
+            return total + (price * quantity);
+        }, 0);
     };
 
     const orderNumber = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+
+    
     
     return (
         <>
@@ -131,26 +158,36 @@ export default function OCPage() {
 
                                 {/* Order Items */}
                                 <div className="bg-white rounded-xl shadow-sm border p-6">
-                                    <h2 className="text-xl font-semibold text-gray-900 mb-4">Order Items</h2>
+                                    <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center justify-between">
+                                        <span>Order Items</span>
+                                        <span className="text-sm font-normal text-gray-500">
+                                            {checkoutItems.length} item{checkoutItems.length > 1 ? 's' : ''}
+                                        </span>
+                                    </h2>
                                     <div className="space-y-4">
-                                        {userCart.map((cart, index) => (
+                                        {checkoutItems.map((item, index) => (
                                             <div key={index} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
                                                 <img 
-                                                    src={`/Assets/Products/${cart.product_category}/${cart.product_image}`} 
-                                                    alt={cart.product_name} 
+                                                    src={`/Assets/Products/${item.product_category}/${item.product_image}`} 
+                                                    alt={item.product_name} 
                                                     className='w-20 h-20 object-cover rounded-lg'
                                                 />
                                                 <div className="flex-1">
-                                                    <h3 className="font-semibold text-gray-900 mb-1">{cart.product_name}</h3>
+                                                    <h3 className="font-semibold text-gray-900 mb-1">{item.product_name}</h3>
                                                     <div className="text-sm text-gray-600 space-y-1">
-                                                        <p><span className="font-medium">Category:</span> {cart.product_category}</p>
-                                                        <p><span className="font-medium">Size:</span> {cart.product_size}</p>
-                                                        <p><span className="font-medium">Color:</span> {cart.product_color}</p>
+                                                        <p><span className="font-medium">Category:</span> {item.product_category}</p>
+                                                        <p><span className="font-medium">Size:</span> {item.product_size}</p>
+                                                        <p><span className="font-medium">Color:</span> {item.product_color}</p>
                                                     </div>
                                                 </div>
                                                 <div className="text-right">
-                                                    <p className="font-bold text-lg text-[#885b56]">₱{cart.product_price}</p>
-                                                    <p className="text-sm text-gray-500">Qty: {cart.product_quantity || 1}</p>
+                                                    <p className="font-bold text-lg text-[#885b56]">₱{item.product_price}</p>
+                                                    <p className="text-sm text-gray-500">Qty: {item.product_quantity || 1}</p>
+                                                    {(item.product_quantity || 1) > 1 && (
+                                                        <p className="text-xs text-gray-400">
+                                                            ₱{item.product_price} × {item.product_quantity || 1}
+                                                        </p>
+                                                    )}
                                                 </div>
                                             </div>
                                         ))}
@@ -166,7 +203,7 @@ export default function OCPage() {
                                     <div className="space-y-3 mb-4">
                                         <div className="flex justify-between text-gray-700">
                                             <span>Subtotal:</span>
-                                            <span className="font-semibold">₱{calculateSubtotal()}</span>
+                                            <span className="font-semibold">₱{calculateSubtotal().toFixed(2)}</span>
                                         </div>
                                         <div className="flex justify-between text-gray-700">
                                             <span>Shipping:</span>
@@ -176,10 +213,14 @@ export default function OCPage() {
                                             <span>Tax:</span>
                                             <span className="font-semibold">₱0.00</span>
                                         </div>
+                                        <div className="flex justify-between text-gray-700">
+                                            <span>Items:</span>
+                                            <span className="font-semibold">{checkoutItems.length}</span>
+                                        </div>
                                         <div className="border-t pt-3">
                                             <div className="flex justify-between text-lg font-bold text-gray-900">
                                                 <span>Total:</span>
-                                                <span className="text-[#885b56]">₱{calculateSubtotal() + 30}.00</span>
+                                                <span className="text-[#885b56]">₱{(calculateSubtotal() + 30).toFixed(2)}</span>
                                             </div>
                                         </div>
                                     </div>

@@ -1,6 +1,9 @@
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import  emptyCartPic from '../Assets/empty-cart-pic.png'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import { useAuth } from './Auth/AuthContext'
 
 //redux
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 export default function Cart({open, setOpen, NavLink}) {
 
     const navigate = useNavigate()
+    const { userCart, user } = useAuth()
 
     function handleRemoveCart(id) {
        
@@ -45,7 +49,7 @@ export default function Cart({open, setOpen, NavLink}) {
 
                                 <div className="mt-8">
                                     <div className="flow-root">
-                                        {/* <ul role="list" className="-my-6 divide-y divide-gray-200 ">
+                                        <ul role="list" className="-my-6 divide-y divide-gray-200 ">
                                             {
                                                 !userCart || userCart.length === 0 ? 
                                                     <div className="text-center flex flex-col justify-center items-center">
@@ -56,27 +60,31 @@ export default function Cart({open, setOpen, NavLink}) {
                                                 : 
                                                 <div className="">
                                                     {userCart.map((cart) => (
-                                                        <li key={cart.cartId} className="flex py-6">
+                                                        <li key={cart.product_id} className="flex py-6">
                                                             <div className="lg:size-24 xsm:size-20 shrink-0 overflow-hidden rounded-md border border-gray-200">
-                                                                <img alt={cart.img} src={Array.isArray(cart.img) ? cart.img[0] : cart.img} className="lg:size-full object-cover xsm:size-20"/>
+                                                                <img
+                                                                    alt={`${cart.product_name}`} 
+                                                                    src={`/Assets/Products/${cart.product_category}/${Array.isArray(cart.product_image) ? cart.product_image[0] : cart.product_image}`}
+                                                                    className="lg:size-full object-cover xsm:size-20"
+                                                                />
                                                             </div>
                                                             <div className="ml-4 flex flex-1 flex-col">
                                                                 <div>
                                                                     <div className="flex justify-between lg:text-base font-medium text-gray-900 xsm:text-sm">
                                                                         <h3>
-                                                                            <a > {cart.name}</a>
+                                                                            <a > {cart.product_name}</a>
                                                                         </h3>
-                                                                        <p className="ml-4"> {cart ? `₱ ${cart.price}` : ""}</p>
+                                                                        <p className="ml-4"> {cart ? `₱ ${cart.product_price}` : ""}</p>
                                                                     </div>
-                                                                    <p className="mt-1 text-sm text-gray-500">{cart.category}</p>
-                                                                    <p className="mt-1 text-sm text-gray-500">color: {cart.color}</p>
+                                                                    <p className="mt-1 text-sm text-gray-500">{cart.product_category}</p>
+                                                                    <p className="mt-1 text-sm text-gray-500">color: {cart.product_color}</p>
                                                                     <div className="flex flex-1 items-end justify-between text-sm">
-                                                                        <p className="mt-1 text-sm text-gray-500">size: {cart.size}</p>
+                                                                        <p className="mt-1 text-sm text-gray-500">size: {cart.product_size}</p>
                                                                         <div className="flex">
                                                                             <button 
                                                                                 type="button" 
                                                                                 className="font-medium text-[#885b56] hover:text-[#c78d87]"
-                                                                                onClick={() => handleRemoveCart(cart.cartId)}>
+                                                                                onClick={() => handleRemoveCart(cart.product_id)}>
                                                                                 Remove
                                                                             </button>
                                                                         </div>
@@ -87,7 +95,7 @@ export default function Cart({open, setOpen, NavLink}) {
                                                     ))}
                                                 </div>
                                             }
-                                        </ul> */}
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
@@ -95,11 +103,11 @@ export default function Cart({open, setOpen, NavLink}) {
                             <div className="border-t border-gray-200 px-4 py-6 xsm:px-6 leading-relaxed">
                                 <div className="flex justify-between text-base font-medium text-gray-900">
                                     <p>Subtotal</p>
-                                    {/* <p>&#8369; {userCart.reduce((total, cart) => cart.price ? total + cart.price : total, 0)}</p> */}
+                                    <p>&#8369; {userCart.reduce((total, cart) => total + Number(cart.product_price), 0)}.00</p>
                                 </div>
                                 <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
                                 <div className="mt-6">
-                                    {/* {userCart.length === 0 ? '' :
+                                    {userCart.length === 0 ? '' :
                                         <div className="">
                                             <p
                                                 className="flex items-center justify-center rounded-md border border-transparent bg-[#885b56] px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-[#c78d87]"
@@ -121,7 +129,7 @@ export default function Cart({open, setOpen, NavLink}) {
                                                 </p>
                                             </div>
                                         </div>
-                                    } */}
+                                    }
                                 </div>
                             </div>
                         </div>

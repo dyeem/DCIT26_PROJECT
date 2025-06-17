@@ -3,6 +3,12 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Modal, Box, Typography, Button } from '@mui/material';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import loading from '../../Assets/Animations/loading.mp4'
+import { Menu } from '@headlessui/react';
+import { ChevronDown } from 'lucide-react';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import SortIcon from '@mui/icons-material/Sort';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 import dayjs from 'dayjs';
 import axios from 'axios';
@@ -67,6 +73,9 @@ export default function OrderList() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+
+  const [filteredOrders, setFilteredOrders] = useState([]);
+  const [selectedStatusFilter, setSelectedStatusFilter] = useState('All');
   const [toastError, setToastError] = useState(
     {
       message: '',
@@ -98,7 +107,8 @@ export default function OrderList() {
     })
       .then((res) => {
         setOrders(res.data);
-        console.log(res.data);
+        setFilteredOrders(res.data); // Initialize filtered orders
+        console.log('all orders: ', res.data);
       })
       .catch((err) => {
         console.error('Failed to fetch orders:', err);
@@ -156,10 +166,19 @@ export default function OrderList() {
     setCancelModalOpen(false);
     setIsOpen(false);
 
+    // Update both orders and filteredOrders
     const updatedOrders = orders.map((order) =>
       order.order_id === orderId ? { ...order, status: newStatus } : order
     );
     setOrders(updatedOrders);
+
+    // Update filtered orders based on current filter
+    if (selectedStatusFilter === 'All') {
+      setFilteredOrders(updatedOrders);
+    } else {
+      const filtered = updatedOrders.filter(order => order.status === selectedStatusFilter);
+      setFilteredOrders(filtered);
+    }
 
     axios.post('http://localhost/loop_backend/admin/order/update_status_order.php', {
       order_id: orderId,
@@ -179,9 +198,163 @@ export default function OrderList() {
 
   };
 
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  function handleRefresh() {
+    setIsRefreshing(true);
+
+    axios.get('http://localhost/loop_backend/admin/order/get_all_orders.php', {
+      withCredentials: true
+    })
+      .then((res) => {
+        setOrders(res.data);
+        
+        // Apply current filter to refreshed data
+        if (selectedStatusFilter === 'All') {
+          setFilteredOrders(res.data);
+        } else {
+          const filtered = res.data.filter(order => order.status === selectedStatusFilter);
+          setFilteredOrders(filtered);
+        }
+        
+        console.log('All orders:', res.data);
+      })
+      .catch((err) => {
+        console.error('Failed to fetch orders:', err);
+        toast.error('Failed to refresh orders.');
+      })
+      .finally(() => {
+        setTimeout(() => setIsRefreshing(false), 1000); 
+      });
+  }
+
+  function handleSortByDate(order = 'desc') {
+    const sorted = [...filteredOrders].sort((a, b) => {
+      if (order === 'desc') {
+        return new Date(b.order_date) - new Date(a.order_date);
+      } else {
+        return new Date(a.order_date) - new Date(b.order_date);
+      }
+    });
+    setFilteredOrders(sorted);
+  }
+
+  function handleSortByStatus() {
+    const statusPriority = {
+      'Pending': 1,
+      'Shipped': 2,
+      'Completed': 3,
+      'Cancelled': 4,
+    };
+
+    const sorted = [...orders].sort((a, b) => {
+      return (statusPriority[a.status] || 99) - (statusPriority[b.status] || 99);
+    });
+
+    setOrders(sorted);
+  }
+  function handleFilterByStatus(status) {
+    setSelectedStatusFilter(status);
+    
+    if (status === 'All') {
+      setFilteredOrders(orders);
+    } else {
+      const filtered = orders.filter(order => order.status === status);
+      setFilteredOrders(filtered);
+    }
+  }
+
+
   return (
     <>
+      {isRefreshing && (
+        <div className="fixed inset-0 z-50 bg-white bg-opacity-90 flex flex-col items-center justify-center">
+            <p className="mb-4 text-lg font-medium text-gray-700">Hang tight, fetching the latest data...</p>
+            <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-32 h-32 object-contain"
+                >
+                <source src={loading} type="video/webm" />
+            </video>
+        </div>
+      )}
       <div className="px-12 py-4">
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-2xl font-bold mb-4 text-gray-800">Order List</h1>
+          <div className="flex gap-3 flex-wrap items-center">
+            <Menu as="div" className="relative inline-block text-left">
+              <Menu.Button className="inline-flex items-center gap-2 px-3 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600">
+                <CalendarTodayIcon fontSize="small" />
+                Sort by Date
+                <ChevronDown className="w-4 h-4" />
+              </Menu.Button>
+              <Menu.Items className="text-white absolute mt-2 w-44 origin-top-right bg-blue-500 border rounded-md shadow-lg z-10">
+                <Menu.Item>
+                  {({ active }) => (
+                    <button
+                      onClick={() => handleSortByDate('asc')}
+                      className={`w-full text-left px-4 py-2 ${active ? 'bg-blue-100 text-gray-700' : ''}`}
+                    >
+                      Oldest First
+                    </button>
+                  )}
+                </Menu.Item>
+                <Menu.Item>
+                  {({ active }) => (
+                    <button
+                      onClick={() => handleSortByDate('desc')}
+                      className={`w-full text-left px-4 py-2 ${active ? 'bg-blue-100 text-gray-700' : ''}`}
+                    >
+                      Newest First
+                    </button>
+                  )}
+                </Menu.Item>
+              </Menu.Items>
+            </Menu>
+
+            <Menu as="div" className="relative inline-block text-left">
+              <Menu.Button className="inline-flex items-center gap-2 px-3 py-2 bg-yellow-500 text-white rounded-lg shadow hover:bg-yellow-600">
+                <SortIcon fontSize="small" />
+                Filter by Status ({selectedStatusFilter})
+                <ChevronDown className="w-4 h-4" />
+              </Menu.Button>
+              <Menu.Items className="absolute mt-2 w-44 origin-top-right text-white bg-yellow-500 border rounded-md shadow-lg z-10">
+                <Menu.Item>
+                  {({ active }) => (
+                    <button
+                      onClick={() => handleFilterByStatus('All')}
+                      className={`w-full text-left px-4 py-2 ${active ? 'bg-yellow-100 text-gray-700' : ''} ${selectedStatusFilter === 'All' ? 'font-bold' : ''}`}
+                    >
+                      All Orders
+                    </button>
+                  )}
+                </Menu.Item>
+                {['Pending', 'Shipped', 'Completed', 'Cancelled'].map((status) => (
+                  <Menu.Item key={status}>
+                    {({ active }) => (
+                      <button
+                        onClick={() => handleFilterByStatus(status)}
+                        className={`w-full text-left px-4 py-2 ${active ? 'bg-yellow-100 text-gray-700' : ''} ${selectedStatusFilter === status ? 'font-bold' : ''}`}
+                      >
+                        {status} Only
+                      </button>
+                    )}
+                  </Menu.Item>
+                ))}
+              </Menu.Items>
+            </Menu>
+            <button
+              onClick={handleRefresh}
+              className="flex items-center gap-2 px-3 py-2 bg-green-500 rounded-lg shadow text-white hover:bg-green-600"
+            >
+              <RefreshIcon fontSize="small" />
+              Refresh List
+            </button>
+          </div>
+        </div>
         <table className="min-w-full text-sm text-left bg-white rounded-lg shadow">
           <thead className="bg-[#7E62FF] text-white">
             <tr>
@@ -194,7 +367,7 @@ export default function OrderList() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 text-gray-900">
-            {orders?.map((order) => (
+            {filteredOrders?.map((order) => (
               <tr key={order.order_id} className="hover:bg-gray-50">
                 <td className="px-6 py-4">{order.order_id}</td>
                 <td className="px-6 py-4">{order.customer_id}</td>
@@ -294,8 +467,13 @@ export default function OrderList() {
                                 <p>{selectedOrder.customer_first_name}</p>
                                 <p>{selectedOrder.customer_last_name}</p>
                               </div>
-                              <p>{selectedOrder.customer_email}</p>
-                              <p>{selectedOrder.customer_contact}</p>
+                              <div className="flex flex-col items-center justify-center text-sm text-gray-500">
+                                <p>{selectedOrder.customer_email}</p>
+                                <p>{selectedOrder.shipping.phone}</p>
+                                <p>{selectedOrder.shipping.address}</p>
+                                <p>{selectedOrder.shipping.city}, {selectedOrder.shipping.province}</p>
+                                <p>{selectedOrder.shipping.postal_code}</p>
+                              </div>
                             </div>
                           </div>
                         )}
@@ -328,7 +506,7 @@ export default function OrderList() {
                           </div>
                           <div className="flex justify-between items-center">
                             <p className="text-sm text-gray-700">Shipping:</p>
-                            <p className="text-sm font-semibold text-gray-700">₱0.00</p>
+                            <p className="text-sm font-semibold text-gray-700">₱30.00</p>
                           </div>
                           <div className="flex justify-between items-center">
                             <p className="text-sm text-gray-700">Tax:</p>
@@ -336,7 +514,9 @@ export default function OrderList() {
                           </div>
                           <div className="flex justify-between items-center">
                             <p className="text-sm font-bold text-gray-700">Total:</p>
-                            <p className="text-sm font-semibold text-gray-700">₱{(selectedOrder?.total_amount?? 0).toLocaleString('en-PH', { minimumFractionDigits: 2 })}</p>
+                            <p className="text-sm font-semibold text-gray-700">
+                              ₱{(parseFloat(selectedOrder?.total_amount ?? 0) + 30).toLocaleString('en-PH', { minimumFractionDigits: 2 })}
+                            </p>
                           </div>
                         </div>
                       </div>

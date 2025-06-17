@@ -6,118 +6,223 @@ import axios from "axios";
 
 export default function ProductDetails() {
     const navigate = useNavigate();
-    const { setIsLogin, user } = useAuth(); // grab context setters
+    const { user, refreshCart, cartLoading} = useAuth();
     const product = useLoaderData()
+    
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [formData, setFormData] = useState({
+        product_id: product?.product_id || '',
+        product_name: product?.product_name || '',
+        product_category: product?.product_category || '',
+        product_price: product?.product_price || '',
+        product_image: '',
+        product_quantity: 1,
+        product_size: '',
+        product_color: '',
+        user_id: user?.id || ''
+    });
 
     useEffect(() => {
         document.title = `Loop | ${product.product_name} | ${product.product_category}`;
-    }, []);
-
-    const [color, setColor] = useState("");
-    const [size, setSize] = useState("");
-    const [checkoutData, setCheckoutData] = useState({
-        product_id: '',
-        product_quantity: 1,
-        user_id: '',
-        product_size: '',
-        product_color: '',
-        product_price: '',
-        product_name: '',
-        product_image: '',
-        product_category: '',
-    });
-    const AddToCart = () => toast.success('Successfully added to Cart!');
-
-    function handleAddToCart(id, name, img, size, color, price, category) {
-       console.log(" data: ", id, name, img, size, color, price, category)
-
-       if (size === "") {
-           toast.error("Please select a size")
-           return
-       }
-
-       if (color === "") {
-           toast.error("Please select a color")
-           return
-       }
-
-        AddToCart()
-
-    }
+        
+        // Update form data when product or user changes
+        setFormData(prev => ({
+            ...prev,
+            product_id: product?.product_id || '',
+            product_name: product?.product_name || '',
+            product_category: product?.product_category || '',
+            product_price: product?.product_price || '',
+            user_id: user?.id || ''
+        }));
+    }, [product, user]);
 
     const [mainImage, setMainImage] = useState(
         Array.isArray(product.product_image) && product.product_image.length > 0 
             ? product.product_image[0] 
             : (product.product_image || '')
-    )
+    );
 
+    // Handle form input changes
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    // Handle image click
     function handleClickImage(img) {
-        setMainImage(img)
+        setMainImage(img);
+        setFormData(prev => ({
+            ...prev,
+            product_image: img
+        }));
     }
 
-    function handleSizeChange(e) {
-        setSize(e.target.value);
-    }
+    // Handle Add to Cart form submission
+    const handleAddToCartSubmit = async (e) => {
+        e.preventDefault();
+        
+        if (!user) {
+            toast.error("Please login to add items to cart");
+            setTimeout(() => {
+                navigate('/login');
+            }, 2000);
+            return;
+        } 
 
-    function handleCheckout(id, name, size, color, price, image, category) {
-        if (size === "") {
+        // Validation
+        if (!formData.product_size) {
             toast.error("Please select a size");
             return;
         }
 
-        if (color === "") {
+        if (!formData.product_color) {
             toast.error("Please select a color");
             return;
         }
 
-        if (user && user.id) {
-            const checkoutPayload = {
-                items: [
-                    {
-                    product_id: id,
-                    product_quantity: 1,
-                    user_id: user.id,
-                    product_size: size,
-                    product_color: color,
-                    product_price: price,
-                    product_name: name,
-                    product_image: image,
-                    product_category: category
-                    }
-                ]
-            };
-            console.log("Sending checkout data:", checkoutPayload);
-            axios.post(
-                'http://localhost/loop_backend/checkout_session_based.php',
-                checkoutPayload,
-                {
-                    withCredentials: true,
-                    headers: {
-                    'Content-Type': 'application/json'
-                    }
-                }
-            )
-            .then(res => {
-                if (res.data.success) {
-                    console.log("Checkout successful:", res.data);
-                    navigate('/products/checkout');
-                } else {
-                    console.error(res.data.message || 'Unknown error');
-                    toast.error("Something went wrong.");
-                }
-            })
-            .catch(err => {
-                console.error('Checkout error:', err);
-                toast.error("Checkout failed.");
-            });
+        setIsSubmitting(true);
 
-        } else {
-            toast.error("Please login to continue. Redirecting to login...");
+        try {
+            // Prepare cart item data
+            const cartItem = {
+                items: [{
+                    product_id: formData.product_id,
+                    product_name: formData.product_name,
+                    product_category: formData.product_category,
+                    product_price: parseFloat(formData.product_price),
+                    product_image: mainImage,
+                    product_quantity: parseInt(formData.product_quantity),
+                    product_size: formData.product_size,
+                    product_color: formData.product_color,
+                    user_id: formData.user_id,
+                    added_at: new Date().toISOString()
+                }]
+            };
+
+            console.log("Adding to cart:", cartItem);
+
+            // Submit to backend
+            // const response = await axios.post(
+            //     'http://localhost/loop_backend/checkout_session_based.php',
+            //     cartItem,
+            //     {
+            //         withCredentials: true,
+            //         headers: {
+            //             'Content-Type': 'application/json'
+            //         },
+            //         timeout: 10000
+            //     }
+            // );
+
+            console.log("Add to cart response:", response.data);
+
+            if (response.data.success) {
+                toast.success('Successfully added to Cart!');
+                
+                // Refresh cart data immediately
+                await refreshCart();
+                
+                // Reset form selections
+                setFormData(prev => ({
+                    ...prev,
+                    product_size: '',
+                    product_color: '',
+                    product_quantity: 1
+                }));
+                
+            } else {
+                toast.error(response.data.message || "Failed to add item to cart");
+            }
+
+        } catch (error) {
+            console.error("Error adding to cart:", error);
+            
+            if (error.code === 'ECONNABORTED') {
+                toast.error("Request timeout. Please try again.");
+            } else if (error.response?.status === 401) {
+                toast.error("Please login to continue");
+                navigate('/login');
+            } else {
+                toast.error("Failed to add item to cart. Please try again.");
+            }
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    // Handle Checkout Now form submission
+    const handleCheckoutSubmit = async (e) => {
+        e.preventDefault();
+        
+        if (!user) {
+            toast.error("Please login to continue");
             setTimeout(() => {
                 navigate('/login');
-            }, 2500);
+            }, 2000);
+            return;
         }
-    }
+
+        if (!formData.product_size) {
+            toast.error("Please select a size");
+            return;
+        }
+
+        if (!formData.product_color) {
+            toast.error("Please select a color");
+            return;
+        }
+
+        setIsSubmitting(true);
+
+        try {
+            const checkoutData = {
+                items: [{
+                    product_id: formData.product_id,
+                    product_name: formData.product_name,
+                    product_category: formData.product_category,
+                    product_price: parseFloat(formData.product_price),
+                    product_image: mainImage,
+                    product_quantity: parseInt(formData.product_quantity),
+                    product_size: formData.product_size,
+                    product_color: formData.product_color,
+                    user_id: formData.user_id
+                }]
+            };
+
+            console.log("Direct checkout:", checkoutData.items);
+            navigate('/products/checkout', { state: { checkoutData } });
+
+            // // Submit to backend
+            // const response = await axios.post(
+            //     'http://localhost/loop_backend/checkout_item.php',
+            //     checkoutData,
+            //     {
+            //         withCredentials: true,
+            //         headers: {
+            //             'Content-Type': 'application/json'
+            //         },
+            //         timeout: 10000
+            //     }
+            // );
+
+            // if (response.data.success) {
+            //     toast.success("Proceeding to checkout...");
+                
+            // } else {
+            //     toast.error(response.data.message || "Failed to proceed to checkout");
+            // }
+
+        } catch (error) {
+            console.error("Error during checkout:", error);
+            toast.error("Failed to proceed to checkout. Please try again.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     return (
         <>
             <div className="w-full bg-white text-gray-900 py-4">
@@ -150,7 +255,9 @@ export default function ProductDetails() {
                                                     key={index}
                                                     src={`/Assets/Products/${product.product_category}/${img}`}
                                                     alt={`${product.product_name} ${index + 1}`}
-                                                    className="w-32 cursor-pointer hover:scale-110 transition-transform duration-100 rounded-md "
+                                                    className={`w-32 cursor-pointer hover:scale-110 transition-transform duration-100 rounded-md ${
+                                                        mainImage === img ? 'ring-2 ring-[#885B56]' : ''
+                                                    }`}
                                                     title={`${product.product_name} - Image ${index + 1}`}
                                                     onClick={() => handleClickImage(img)}
                                                 />
@@ -162,20 +269,21 @@ export default function ProductDetails() {
                                                     alt={product.product_name}
                                                     className="w-32 cursor-pointer hover:scale-110 transition-transform duration-100 rounded-md bg-gray-100 p-3"
                                                     title={product.product_name}
+                                                    onClick={() => handleClickImage(product.product_image)}
                                                 />
                                             )
                                         )}
                                     </div>
                                 </div>
                                 
-                                <div className="p-3 flex flex-col xl:gap-y-2 xsm:gap-y-2 ">
+                                <div className="p-3 flex flex-col xl:gap-y-2 xsm:gap-y-2">
                                     <div className="flex flex-col xl:gap-y-4 xsm:gap-y-2 mb-5">
                                         <p className="font-noto text-gray-500">Loop {product.product_category}</p>
                                         <p className="xl:text-5xl xsm:text-2xl font-noto font-semibold">{product.product_name}</p>
                                         <div className="flex flex-row justify-between items-center">
                                             <p className="font-noto font-semibold text-3xl">₱{product.product_price}</p>
                                             <div className="flex flex-wrap gap-x-1 text-3xl">
-                                                <p className="text-yellow-400 ">⭐</p>
+                                                <p className="text-yellow-400">⭐</p>
                                                 <p>{product.product_rating}</p>
                                             </div>
                                         </div>
@@ -190,78 +298,90 @@ export default function ProductDetails() {
 
                                     <hr className="xl:w-full xsm:w-full xl:mb-4 xsm:mb-2" />
 
-                                    <div className="flex flex-row gap-x-4">
+                                    {/* Product Selection Form */}
+                                    <form className="space-y-4">
+                                        <div className="flex flex-row gap-x-4">
+                                            <div className="w-full">
+                                                <label htmlFor="product_size" className="font-semibold text-gray-500">Sizes:</label>
+                                                <select 
+                                                    name="product_size" 
+                                                    value={formData.product_size}
+                                                    onChange={handleInputChange}
+                                                    required 
+                                                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#885B56] focus:border-transparent"
+                                                >
+                                                    <option value="" disabled className="xl:text-base xsm:text-sm">
+                                                        Select a size
+                                                    </option>
+                                                    {product.product_size && Array.isArray(product.product_size) ? (
+                                                        product.product_size.map((size, index) => (
+                                                            <option key={index} value={size}>
+                                                                {size}
+                                                            </option>
+                                                        ))
+                                                    ) : (
+                                                        <option disabled>No sizes available</option>
+                                                    )}
+                                                </select>
+                                            </div>
+                                            
+                                            <div className="w-full">
+                                                <label htmlFor="product_color" className="font-semibold text-gray-500">Colors:</label>
+                                                <select 
+                                                    name="product_color" 
+                                                    value={formData.product_color}
+                                                    onChange={handleInputChange}
+                                                    required 
+                                                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#885B56] focus:border-transparent"
+                                                >
+                                                    <option value="" disabled className="xl:text-base xsm:text-sm">
+                                                        Select a color
+                                                    </option>
+                                                    {product.product_color && Array.isArray(product.product_color) ? (
+                                                        product.product_color.map((color, index) => (
+                                                            <option key={index} value={color}>
+                                                                {color}
+                                                            </option>
+                                                        ))
+                                                    ) : (
+                                                        <option disabled>No colors available</option>
+                                                    )}
+                                                </select>
+                                            </div>
+                                        </div>
+
                                         <div className="w-full">
-                                            <label htmlFor="" className="font-semibold text-gray-500">Sizes:</label>
-                                            <select required name="size" className="w-full" onChange={(e) => handleSizeChange(e)}>
-                                                <option value="" disabled selected className="xl:text-base xsm:text-sm">
-                                                    Select a size
-                                                </option>
-                                                {product.product_size && Array.isArray(product.product_size) ? (
-                                                    product.product_size.map((size, index) => (
-                                                        <option key={index} value={size}>
-                                                            {size}
-                                                        </option>
-                                                    ))
-                                                ) : (
-                                                    <option disabled>No sizes available</option>
-                                                )}
-                                            </select>
+                                            <label htmlFor="product_quantity" className="font-semibold text-gray-500">Quantity:</label>
+                                            <input
+                                                type="number"
+                                                name="product_quantity"
+                                                value={formData.product_quantity}
+                                                onChange={handleInputChange}
+                                                min="1"
+                                                max={product.product_quantity || 10}
+                                                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#885B56] focus:border-transparent"
+                                            />
                                         </div>
                                         
-                                        <div className="w-full">
-                                            <label htmlFor="" className="font-semibold text-gray-500">Colors:</label>
-                                            <select required name="color" className="w-full" onChange={(e) => setColor(e.target.value)}>
-                                                <option value="" disabled selected className="xl:text-base xsm:text-sm">
-                                                    Select a color
-                                                </option>
-                                                {product.product_color && Array.isArray(product.product_color) ? (
-                                                    product.product_color.map((color, index) => (
-                                                        <option key={index} value={color}>
-                                                            {color}
-                                                        </option>
-                                                    ))
-                                                ) : (
-                                                    <option disabled>No colors available</option>
-                                                )}
-                                            </select>
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="flex flex-row justify-between mt-8 gap-x-2">
-                                        <div className="w-full">
+                                        <div className="flex flex-row justify-between mt-8 gap-x-2">
                                             <button
-                                                onClick={() => handleAddToCart(
-                                                    product.product_id,
-                                                    product.product_name,
-                                                    mainImage,
-                                                    size,
-                                                    color,
-                                                    product.product_price,
-                                                    product.product_category
-                                                )}
-                                                className="w-full bg-[#885B56] text-white  px-2 py-3 font-semibold font-noto rounded-md hover:bg-[#69413D] transition-colors duration-300"
+                                                type="button"
+                                                onClick={handleAddToCartSubmit}
+                                                disabled={isSubmitting || cartLoading}
+                                                className="w-full bg-[#885B56] text-white px-2 py-3 font-semibold font-noto rounded-md hover:bg-[#69413D] transition-colors duration-300"
                                             >
                                                 Add To Cart
                                             </button>
-                                        </div>
-                                        <div className="w-full">
                                             <button
-                                                onClick={() => handleCheckout (
-                                                    product.product_id,
-                                                    product.product_name,
-                                                    size,
-                                                    color,
-                                                    product.product_price,
-                                                    mainImage,
-                                                    product.product_category
-                                                )}
-                                                className="w-full text-black px-2 py-3 font-noto border border-[#69413D] rounded-md hover:bg-[#69413D] hover:text-white transition-colors duration-300"
+                                                type="button"
+                                                onClick={handleCheckoutSubmit}
+                                                disabled={isSubmitting || cartLoading}
+                                                className="w-full  text-black px-2 py-3 font-noto rounded-md hover:bg-[#69413D] border border-gray-400 transition-colors duration-300"
                                             >
                                                 Checkout Now
                                             </button>
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>

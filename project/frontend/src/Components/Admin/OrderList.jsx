@@ -53,13 +53,17 @@ export default function OrderList() {
   
   //FETCHING ALL ORDERS FROM ORDER TABLE
   useEffect(() => {
+    setIsRefreshing(true);
     axios.get('http://localhost/loop_backend/admin/order/get_all_orders.php', {
       withCredentials: true
     })
       .then((res) => {
         setOrders(res.data);
-        setFilteredOrders(res.data); // Initialize filtered orders
+        setFilteredOrders(res.data); 
         console.log('all orders: ', res.data);
+        setTimeout(() => {
+          setIsRefreshing(false);
+        }, 1500);
       })
       .catch((err) => {
         console.error('Failed to fetch orders:', err);
@@ -95,7 +99,7 @@ export default function OrderList() {
   };
 
   const handleCancelConfirm = () => {
-    updateOrderStatus(selectedOrderId, 'Active', 'Cancelled'); // 'Active' could be dynamic if needed
+    updateOrderStatus(selectedOrderId, 'Active', 'Cancelled'); 
   };
 
   const updateOrderStatus = (orderId, currentStatus, newStatus) => {
@@ -158,7 +162,6 @@ export default function OrderList() {
       .then((res) => {
         setOrders(res.data);
         
-        // Apply current filter to refreshed data
         if (selectedStatusFilter === 'All') {
           setFilteredOrders(res.data);
         } else {

@@ -229,9 +229,9 @@ export default function NavBar() {
                                         </a>
                                     </li>
                                     <li>
-                                        <a className="justify-between text-base">
+                                        <Link to="/orders" className="justify-between text-base">
                                             Orders 
-                                        </a>
+                                        </Link>
                                     </li>
                                     <hr />
                                     <li>

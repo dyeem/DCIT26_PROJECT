@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import toast, { Toaster } from 'react-hot-toast';
+import loading from '../../Assets/Animations/loading.mp4'
 
 
 // material ui for modal
@@ -13,6 +14,8 @@ import imageAlt from '../../Assets/image_alt.png';
 export default function ProductList() {
     const [products, setProducts] = useState([]);
     const [colorInput, setColorInput] = useState('');
+    const [isRefreshing, setIsRefreshing] = useState(false);
+    
 
     // INITIAL STATE FOR FORM DATA
     const [formData, setFormData] = useState({
@@ -115,12 +118,16 @@ export default function ProductList() {
 
     //FETCHING DATA
     useEffect(() => {
+        setIsRefreshing(true);
         axios.get('http://localhost/loop_backend/admin/products/fetchproducts.php', {
             withCredentials: true,
         })
         .then(res => {
             console.log(res.data);
             setProducts(res.data.products);
+            setTimeout(() => {
+                setIsRefreshing(false);
+            }, 2000);
         })
         .catch(err => console.error(err));
     }, []);
@@ -385,6 +392,20 @@ export default function ProductList() {
 
     return (
         <>
+            {isRefreshing && (
+              <div className="fixed inset-0 z-50 bg-white bg-opacity-90 flex flex-col items-center justify-center">
+                  <p className="mb-4 text-lg font-medium text-gray-700">Hang tight, fetching the latest data...</p>
+                  <video
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="w-32 h-32 object-contain"
+                      >
+                      <source src={loading} type="video/webm" />
+                  </video>
+              </div>
+            )}
             {/*ADD PRODUCT MODAL */}
             <div>
                 <Modal

@@ -46,6 +46,8 @@ import AdminLogin from "../Components/Admin/Admin_Login.jsx";
 import AdminSignUp from "../Components/Admin/Admin_Signup.jsx";
 import OrderList from "../Components/Admin/OrderList.jsx";
 import OrderDetails from "../Components/Admin/OrderDetails.jsx";
+import OrderLayout from "./OrderLayout.jsx";
+import UserOrders from "../Components/UserOrders.jsx";
 const router = createBrowserRouter(createRoutesFromElements(
   <>
     <Route path="/" element={<RootLayout/>}>
@@ -69,6 +71,11 @@ const router = createBrowserRouter(createRoutesFromElements(
         </Route>
         {/* Handle missing/mismatched page */}
         <Route path="*" element={<ErrorPage/>}/> 
+      </Route>
+
+      {/* Orders Route */}
+      <Route path="orders" element={<OrderLayout />} errorElement={<ErrorPage/>}>
+        <Route index element={<UserOrders />} />
       </Route>
 
       {/* HELP ROUTE */}

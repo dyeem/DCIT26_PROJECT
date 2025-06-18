@@ -255,26 +255,24 @@ export default function ProductList() {
             return;
         }
 
-        // Validate the form data
         if (!validateForm()) return;
 
         console.log('Form Data:', formData);
 
         try {
-            // Prepare the edited product data
             const editedProduct = {
                 product_id: formData.product_id,
                 product_name: formData.product_name,
                 product_category: formData.product_category,
                 product_color: formData.product_color, 
-                product_price: formData.product_price, // Added: include price
+                product_price: formData.product_price, 
                 product_description: formData.product_description,
                 product_quantity: formData.product_quantity,
-                product_image: formData.product_image_names.join(','),
+                product_image: formData.product_image_names,
                 product_size: formData.product_size, 
             };
 
-            console.log('Sending edit data:', editedProduct); // Debug log
+            console.log('Sending edit data:', editedProduct); 
 
             const response = await axios.put(
                 `http://localhost/loop_backend/admin/products/updateproduct.php`,
@@ -288,31 +286,27 @@ export default function ProductList() {
             );
             console.log('Response:', response.data);
 
-            // Check if the response indicates success
             if (response.data.success) {
-                // Update the product list in state
                 setProducts(prevProducts =>
                     prevProducts.map(product =>
                         product.product_id === editedProduct.product_id
-                            ? response.data.product // Update the product with the response data
+                            ? response.data.product 
                             : product
                     )
                 );
 
-                // Reset the form data
                 setFormData({
                     product_id: '',
                     product_name: '',
                     product_category: '',
                     product_color: [],
                     product_price: '',
-                    product_image_names: [], // Changed: reset to empty array
+                    product_image_names: [], 
                     product_description: '',
                     product_quantity: '',
                     product_size: [],
                 });
 
-                // Clean up image previews
                 if (Array.isArray(imagePreviews)) {
                     imagePreviews.forEach(url => {
                         if (url.startsWith('blob:')) {
@@ -322,7 +316,6 @@ export default function ProductList() {
                 }
                 setImagePreviews([]);
 
-                // Close the edit modal
                 handleCloseEdit();
                 toast.success('Product Updated Successfully!');
             } else {
@@ -330,11 +323,30 @@ export default function ProductList() {
             }
         } catch (error) {
             console.error('Error updating product:', error);
-            toast.error('Failed to update product: ' + error.message);
+            
+            // More detailed error logging
+            if (error.response) {
+                console.error('Response status:', error.response.status);
+                console.error('Response data:', error.response.data);
+                console.error('Response headers:', error.response.headers);
+                
+                if (error.response.status === 404) {
+                    toast.error('Product not found or endpoint not available');
+                } else if (error.response.status === 400) {
+                    toast.error('Invalid data: ' + (error.response.data.message || 'Bad request'));
+                } else {
+                    toast.error('Server error: ' + (error.response.data.message || error.message));
+                }
+            } else if (error.request) {
+                console.error('Request made but no response:', error.request);
+                toast.error('No response from server. Check if the backend is running.');
+            } else {
+                console.error('Error setting up request:', error.message);
+                toast.error('Failed to update product: ' + error.message);
+            }
         }
     }
 
-    //VALIDATION FOR FORM USING TOAST
     function validateForm() {
         const errors = [];
 
@@ -947,8 +959,8 @@ export default function ProductList() {
                                             <td className="px-6 py-4 whitespace-nowrap">{product.product_id}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <img
-                                                    src={`/Assets/Products/${product.product_category}/${product.product_image}`}
-                                                    alt={product.product_name}
+                                                    src={`/Assets/Products/${product.product_category}/${product.product_image.split(',')[0]}`}
+                                                    alt="Product image"
                                                     className="object-cover w-12 h-12 mx-auto rounded-md"
                                                 />
                                             </td>

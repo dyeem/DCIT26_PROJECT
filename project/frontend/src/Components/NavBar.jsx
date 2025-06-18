@@ -228,6 +228,11 @@ export default function NavBar() {
                                             {user.first_name} 
                                         </a>
                                     </li>
+                                    <li>
+                                        <a className="justify-between text-base">
+                                            Orders 
+                                        </a>
+                                    </li>
                                     <hr />
                                     <li>
                                         {loggingOut ? (

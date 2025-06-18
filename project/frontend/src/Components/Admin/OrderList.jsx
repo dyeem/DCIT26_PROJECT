@@ -19,55 +19,6 @@ import completed from '../../Assets/admin/completed.png'
 import cancelled  from '../../Assets/admin/cancelled.png'
 import refund from '../../Assets/admin/refund.png'
 
-// Mock Data for demonstration
-const mockOrders = [
-  {
-    order_id: 'ORD001',
-    customer_id: 'CUST101',
-    total_amount: 599.98,
-    order_date: '2025-01-15',
-    status: 'Completed',
-    items: [
-      { product_name: 'Shirt', quantity: 2, price: 199.99 },
-      { product_name: 'Cap', quantity: 1, price: 199.99 }
-    ]
-  },
-  {
-    order_id: 'ORD002',
-    customer_id: 'CUST102',
-    total_amount: 599.98,
-    order_date: '2025-01-15',
-    status: 'Shipped',
-    items: [
-      { product_name: 'Shirt', quantity: 2, price: 199.99 },
-      { product_name: 'Cap', quantity: 1, price: 199.99 }
-    ]
-  },
-  {
-    order_id: 'ORD003',
-    customer_id: 'CUST103',
-    total_amount: 599.98,
-    order_date: '2025-01-15',
-    status: 'Pending',
-    items: [
-      { product_name: 'Shirt', quantity: 2, price: 199.99 },
-      { product_name: 'Cap', quantity: 1, price: 199.99 }
-    ]
-  },
-  {
-    order_id: 'ORD004',
-    customer_id: 'CUST104',
-    total_amount: 599.98,
-    order_date: '2025-01-15',
-    status: 'Cancelled',
-    items: [
-      { product_name: 'Shirt', quantity: 2, price: 199.99 },
-      { product_name: 'Cap', quantity: 1, price: 199.99 }
-    ]
-  }
-  
-];
-
 export default function OrderList() {
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -166,13 +117,11 @@ export default function OrderList() {
     setCancelModalOpen(false);
     setIsOpen(false);
 
-    // Update both orders and filteredOrders
     const updatedOrders = orders.map((order) =>
       order.order_id === orderId ? { ...order, status: newStatus } : order
     );
     setOrders(updatedOrders);
 
-    // Update filtered orders based on current filter
     if (selectedStatusFilter === 'All') {
       setFilteredOrders(updatedOrders);
     } else {
@@ -238,21 +187,7 @@ export default function OrderList() {
     });
     setFilteredOrders(sorted);
   }
-
-  function handleSortByStatus() {
-    const statusPriority = {
-      'Pending': 1,
-      'Shipped': 2,
-      'Completed': 3,
-      'Cancelled': 4,
-    };
-
-    const sorted = [...orders].sort((a, b) => {
-      return (statusPriority[a.status] || 99) - (statusPriority[b.status] || 99);
-    });
-
-    setOrders(sorted);
-  }
+  
   function handleFilterByStatus(status) {
     setSelectedStatusFilter(status);
     
@@ -332,7 +267,7 @@ export default function OrderList() {
                     </button>
                   )}
                 </Menu.Item>
-                {['Pending', 'Shipped', 'Completed', 'Cancelled'].map((status) => (
+                {['Pending', 'Shipped', 'Completed', 'Cancelled', 'Refunded'].map((status) => (
                   <Menu.Item key={status}>
                     {({ active }) => (
                       <button
@@ -362,6 +297,8 @@ export default function OrderList() {
               <th className="px-6 py-3">Customer ID</th>
               <th className="px-6 py-3">Total Amount</th>
               <th className="px-6 py-3">Order Date</th>
+              <th className="px-6 py-3">City</th>
+              <th className="px-6 py-3">Province</th>
               <th className="px-6 py-3">Status</th>
               <th className="px-6 py-3 text-center"></th>
             </tr>
@@ -373,12 +310,14 @@ export default function OrderList() {
                 <td className="px-6 py-4">{order.customer_id}</td>
                 <td className="px-6 py-4">₱ {order.total_amount.toLocaleString('en-PH', { minimumFractionDigits: 2 })}</td>
                 <td className="px-6 py-4">{dayjs(order.order_date).format('MMMM D, YYYY h:mm A')}</td>
+                <td className="px-6 py-4">{order.shipping.city}</td>
+                <td className="px-6 py-4">{order.shipping.province}</td>
                 <td className="px-6 py-4">
                   <span className={`px-2 py-1 rounded-full 
                     ${order.status === 'Completed' ? 'p-2 bg-green-200 text-green-600' 
                     : order.status === 'Shipped' ? 'p-2 bg-blue-200 text-blue-600' 
                     : order.status === 'Pending' ? 'p-2 bg-yellow-200 text-yellow-600' 
-                    : order.status === 'Refund' ? 'p-2 bg-gray-200 text-gray-600' 
+                    : order.status === 'Refunded' ? 'p-2 bg-gray-200 text-gray-600' 
                     : 'p-2 bg-red-200 text-red-600'}`}>
                     {order.status}
                   </span>
@@ -485,7 +424,11 @@ export default function OrderList() {
                               <li key={i} className="pt-3 first:pt-0">
                                 <div className="flex justify-between items-center">
                                   <div className="flex items-center space-x-2">
-                                    <img src={`/Assets/Products/${item.category}/${item.image}`} alt={item.image} className="w-20 h-20 object-cover rounded-md bg-gray-100 p-2" />
+                                    <img
+                                      src={`/Assets/Products/${item.category}/${item.image.split(',')[0]}`}
+                                      alt="Product image"
+                                      className="w-20 h-20 object-cover rounded-md"
+                                    />
                                     <div className="flex flex-col">
                                       <p className="font-medium text-gray-900">{item.product_name}</p>
                                       <p className="font-medium text-gray-900">{item.category}</p>
@@ -549,7 +492,7 @@ export default function OrderList() {
                             </button>
                           </div>
                           <button 
-                            onClick={() => updateOrderStatus(selectedOrder.order_id, selectedOrder.status, 'Refund')}
+                            onClick={() => updateOrderStatus(selectedOrder.order_id, selectedOrder.status, 'Refunded')}
                             className="flex flex-row justify-center items-center gap-x-1 bg-gray-600 hover:bg-gray-700 text-white py-2 px-3 rounded-lg transition-all shadow-sm hover:shadow-md">
                             Refund
                             <img src={refund} alt="" className='w-6 h-6' />

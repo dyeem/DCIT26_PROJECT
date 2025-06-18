@@ -14,10 +14,12 @@ export default function CheckOut() {
     const { state } = location;
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
+    const [dataLoading, setDataLoading] = useState(true); // Add loading state for data fetching
 
     // Get data from both sources
-    const checkoutData = state?.checkoutData; // From ProductDetails (single item)
-    const { userCart } = useAuth(); // From cart (multiple items)
+    const checkoutData = state?.checkoutData; // From ProductDetails technically also session based but for single item
+    const { userCart } = useAuth(); // From cart session based (multiple items)
+    console.log("User Cart:", userCart);
 
     // Determine which data source to use
     const [checkoutItems, setCheckoutItems] = useState([]);
@@ -37,21 +39,48 @@ export default function CheckOut() {
 
     useEffect(() => {
         document.title = `Loop | Checkout`;
+        initializeCheckoutData();
+    }, [checkoutData, userCart]);
+
+    const initializeCheckoutData = async () => {
+        setDataLoading(true);
         
-        if (checkoutData && checkoutData.items && checkoutData.items.length > 0) {
-            console.log("Using direct checkout data:", checkoutData.items);
-            setCheckoutItems(checkoutData.items);
-            setCheckoutSource('direct');
-        } else if (userCart && userCart.length > 0) {
-            console.log("Using cart data:", userCart);
-            setCheckoutItems(userCart);
-            setCheckoutSource('cart');
-        } else {
-            console.log("No items found for checkout");
+        try {
+            if (checkoutData && checkoutData.items && checkoutData.items.length > 0) {
+                console.log("Using direct checkout data:", checkoutData.items);
+                setCheckoutItems(checkoutData.items);
+                setCheckoutSource('direct');
+                setDataLoading(false);
+            } else {
+                // Always fetch fresh cart data from session
+                console.log("Fetching cart data from session...");
+                
+                const response = await axios.get('http://localhost/loop_backend/session_cart.php', {
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.data.success && response.data.cart.length > 0) {
+                    console.log("Using cart data:", response.data.cart);
+                    setCheckoutItems(response.data.cart);
+                    setCheckoutSource('cart');
+                } else {
+                    console.log("No items found for checkout");
+                    setCheckoutItems([]);
+                    setCheckoutSource('empty');
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching cart items:', error);
             setCheckoutItems([]);
             setCheckoutSource('empty');
+            toast.error('Failed to load checkout data');
+        } finally {
+            setDataLoading(false);
         }
-    }, [checkoutData, userCart]);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -79,7 +108,8 @@ export default function CheckOut() {
 
             if (response.data.success) {
                 setTimeout(() => {
-                    setIsLoading(false); 
+                    setIsLoading(false);
+                    clearSessionCart(); // Clear entire cart session
                     navigate('/products/checkout/orderconfirmationpage', {
                         state: {
                             formData,
@@ -100,6 +130,26 @@ export default function CheckOut() {
         }
     };
 
+    const clearSessionCart = async () => {
+        try {
+            const response = await axios.post('http://localhost/loop_backend/session_cart.php', {
+                action: 'clear_cart'
+            }, {
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.data.success) {
+                console.log('Cart cleared successfully');
+            } else {
+                console.error('Failed to clear cart:', response.data.message);
+            }
+        } catch (error) {
+            console.error('Error clearing cart:', error);
+        }
+    }
         
     function handleInputChange(e) {
         const { name, value, type, checked } = e.target;
@@ -138,6 +188,25 @@ export default function CheckOut() {
                 return 'Checkout';
         }
     };
+
+    // Get first image from comma-separated string
+    const getFirstImage = (imageString) => {
+        if (!imageString) return null;
+        const images = imageString.split(',');
+        return images[0].trim();
+    };
+
+    // Show loading state while data is being fetched
+    if (dataLoading) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#885b56] mx-auto"></div>
+                    <p className="mt-4 text-lg font-medium text-gray-700">Loading checkout data...</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <>
@@ -320,7 +389,7 @@ export default function CheckOut() {
                                                         onChange={handleInputChange}
                                                         required
                                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#885b56] focus:border-transparent transition-all duration-200"
-                                                        placeholder="Manila"
+                                                        placeholder="Tanza"
                                                     />
                                                 </div>
                                                 <div className="space-y-2">
@@ -334,7 +403,7 @@ export default function CheckOut() {
                                                         onChange={handleInputChange}
                                                         required
                                                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#885b56] focus:border-transparent transition-all duration-200"
-                                                        placeholder="Metro Manila"
+                                                        placeholder="Cavite"
                                                     />
                                                 </div>
                                                 <div className="space-y-2">

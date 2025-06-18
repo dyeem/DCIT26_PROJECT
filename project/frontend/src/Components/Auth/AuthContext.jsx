@@ -56,10 +56,9 @@ export function AuthProvider({ children }) {
                 console.log("Fetching cart data for user:", user.id);
                 
                 const response = await axios.get(
-                    'http://localhost/loop_backend/checkout_session_based.php',
+                    'http://localhost/loop_backend/session_cart.php',
                     {
                         withCredentials: true,
-                        timeout: 10000,
                         headers: {
                             'Content-Type': 'application/json'
                         }
@@ -70,7 +69,7 @@ export function AuthProvider({ children }) {
                 
                 // Handle both success cases (with items and empty cart)
                 if (response.data.success) {
-                    const items = response.data.items || [];
+                    const items = response.data.cart ?? response.data.items ?? [];
                     setUserCart(items);
                     console.log("User cart updated:", items);
                 } else {

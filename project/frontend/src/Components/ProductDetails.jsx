@@ -104,18 +104,18 @@ export default function ProductDetails() {
 
             console.log("Adding to cart:", cartItem);
 
-            // Submit to backend
-            // const response = await axios.post(
-            //     'http://localhost/loop_backend/checkout_session_based.php',
-            //     cartItem,
-            //     {
-            //         withCredentials: true,
-            //         headers: {
-            //             'Content-Type': 'application/json'
-            //         },
-            //         timeout: 10000
-            //     }
-            // );
+            // Submit to session-based cart backend
+            const response = await axios.post(
+                'http://localhost/loop_backend/session_cart.php',
+                cartItem,
+                {
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    timeout: 10000
+                }
+            );
 
             console.log("Add to cart response:", response.data);
 
@@ -195,26 +195,6 @@ export default function ProductDetails() {
             console.log("Direct checkout:", checkoutData.items);
             navigate('/products/checkout', { state: { checkoutData } });
 
-            // // Submit to backend
-            // const response = await axios.post(
-            //     'http://localhost/loop_backend/checkout_item.php',
-            //     checkoutData,
-            //     {
-            //         withCredentials: true,
-            //         headers: {
-            //             'Content-Type': 'application/json'
-            //         },
-            //         timeout: 10000
-            //     }
-            // );
-
-            // if (response.data.success) {
-            //     toast.success("Proceeding to checkout...");
-                
-            // } else {
-            //     toast.error(response.data.message || "Failed to proceed to checkout");
-            // }
-
         } catch (error) {
             console.error("Error during checkout:", error);
             toast.error("Failed to proceed to checkout. Please try again.");
@@ -278,7 +258,7 @@ export default function ProductDetails() {
                                 
                                 <div className="p-3 flex flex-col xl:gap-y-2 xsm:gap-y-2">
                                     <div className="flex flex-col xl:gap-y-4 xsm:gap-y-2 mb-5">
-                                        <p className="font-noto text-gray-500">Loop {product.product_category}</p>
+                                        <p className="font-noto text-gray-500">Loop | {product.product_category}</p>
                                         <p className="xl:text-5xl xsm:text-2xl font-noto font-semibold">{product.product_name}</p>
                                         <div className="flex flex-row justify-between items-center">
                                             <p className="font-noto font-semibold text-3xl">₱{product.product_price}</p>
@@ -376,7 +356,7 @@ export default function ProductDetails() {
                                                 type="button"
                                                 onClick={handleCheckoutSubmit}
                                                 disabled={isSubmitting || cartLoading}
-                                                className="w-full  text-black px-2 py-3 font-noto rounded-md hover:bg-[#69413D] border border-gray-400 transition-colors duration-300"
+                                                className="w-full  text-black px-2 py-3 font-noto rounded-md hover:bg-[#69413D] hover:text-white border border-gray-400 transition-colors duration-300"
                                             >
                                                 Checkout Now
                                             </button>

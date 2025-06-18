@@ -365,7 +365,7 @@ export default function OrderList() {
                   <Dialog.Panel className="w-screen max-w-md rounded-l-2xl bg-[#FFFFFF] shadow-xl">
                     <div className="flex flex-col h-[calc(100vh-9rem)] py-6 overflow-y-auto">
                       <div className="px-6">
-                        <Dialog.Title className="space-y-4">
+                        <Dialog.Title className="space-y-2">
                           {selectedOrder ? (
                             <>
                               <div className="flex items-center justify-between">
@@ -380,7 +380,7 @@ export default function OrderList() {
                                 </button>
                               </div>
 
-                              <div className="flex items-center gap-2">
+                              <div className="flex flex-row items-center gap-2">
                                 <span className={`px-3 py-1 rounded-full text-xs font-semibold capitalize 
                                   ${selectedOrder.status === 'Completed' ? 'p-2 bg-green-100 text-green-700 border border-green-300'
                                     : selectedOrder.status === 'Shipped' ? 'p-2 bg-blue-100 text-blue-700 border border-blue-300'
@@ -389,8 +389,12 @@ export default function OrderList() {
                                     : 'bg-gray-100 text-gray-700'}`}>
                                   {selectedOrder.status}
                                 </span>
-                                <span className="text-sm text-gray-600">{dayjs(selectedOrder.order_date).format('MMMM D, YYYY h:mm A')}</span>
+                                <span>|</span>
+                                <span className="text-sm text-gray-600">
+                                  {dayjs(selectedOrder.order_date).format('MMMM D, YYYY h:mm A')}
+                                </span>
                               </div>
+                              <div className="text-gray-600">MOP: <span className='capitalize font-semibold'>{selectedOrder.payment_method}</span></div>
                             </>
                           ) : (
                             <p>Loading...</p>

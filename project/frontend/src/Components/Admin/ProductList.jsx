@@ -124,7 +124,7 @@ export default function ProductList() {
         })
         .then(res => {
             console.log(res.data);
-            setProducts(res.data.products);
+        setProducts(res.data.products);
             setTimeout(() => {
                 setIsRefreshing(false);
             }, 2000);

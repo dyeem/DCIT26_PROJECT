@@ -9,18 +9,30 @@ import toast from 'react-hot-toast'
 
 export default function Cart({open, setOpen, NavLink}) {
     const navigate = useNavigate()
-    const { user } = useAuth()
+    const { user, setUserCart, isLogin } = useAuth()
     const [cartItems, setCartItems] = useState([])
     const [loading, setLoading] = useState(false)
 
-    // Fetch cart items when cart opens
     useEffect(() => {
-        if (open && user) {
+        if (open && user && isLogin) {
             fetchCartItems()
+        } else if (open && (!user || !isLogin)) {
+            setCartItems([])
         }
-    }, [open, user])
+    }, [open, user, isLogin])
+
+    useEffect(() => {
+        if (!user || !isLogin) {
+            setCartItems([])
+        }
+    }, [user, isLogin])
 
     const fetchCartItems = async () => {
+        if (!user || !isLogin) {
+            setCartItems([])
+            return
+        }
+
         setLoading(true)
         try {
             const response = await axios.get('http://localhost/loop_backend/session_cart.php', {
@@ -45,6 +57,11 @@ export default function Cart({open, setOpen, NavLink}) {
     }
 
     const handleRemoveCart = async (productId, size, color) => {
+        if (!user || !isLogin) {
+            toast.error('Please login to manage cart items')
+            return
+        }
+
         try {
             const response = await axios.delete('http://localhost/loop_backend/session_cart.php', {
                 data: {
@@ -72,6 +89,11 @@ export default function Cart({open, setOpen, NavLink}) {
     }
 
     const handleUpdateQuantity = async (productId, size, color, newQuantity) => {
+        if (!user || !isLogin) {
+            toast.error('Please login to manage cart items')
+            return
+        }
+
         if (newQuantity < 1) return
 
         try {
@@ -100,6 +122,13 @@ export default function Cart({open, setOpen, NavLink}) {
     }
     
     function handleCheckout() {
+        if (!user || !isLogin) {
+            toast.error('Please login to checkout')
+            setOpen(false)
+            navigate('/login')
+            return
+        }
+
         if (cartItems.length === 0) {
             toast.error('Your cart is empty')
             return
@@ -123,6 +152,39 @@ export default function Cart({open, setOpen, NavLink}) {
         return images[0].trim()
     }
 
+    // Show login prompt when not logged in
+    const renderLoginPrompt = () => (
+        <div className="text-center flex flex-col justify-center items-center py-8">
+            <div className="mb-4">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-16 h-16 text-gray-400 mx-auto"
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+                    />
+                </svg>
+            </div>
+            <p className='p-3 text-gray-800 font-bold text-xl'>Please login to view your cart</p>
+            <p className='p-1 text-gray-500 mb-4'>Sign in to access your saved items and continue shopping!</p>
+            <button
+                onClick={() => {
+                    setOpen(false)
+                    navigate('/login')
+                }}
+                className="bg-[#885b56] text-white px-6 py-2 rounded-md hover:bg-[#c78d87] transition-colors"
+            >
+                Login Now
+            </button>
+        </div>
+    )
+
     return (
         <Dialog open={open} onClose={() => setOpen(false)} className="relative z-50">
             <DialogBackdrop transition className="fixed inset-0 bg-gray-700/75 transition-opacity duration-500 ease-in-out data-[closed]:opacity-0" />
@@ -134,7 +196,7 @@ export default function Cart({open, setOpen, NavLink}) {
                                 <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                                     <div className="flex items-start justify-between">
                                         <DialogTitle className="text-xl font-medium text-gray-900 leading-relaxed">
-                                            Shopping cart ({cartItems.length})
+                                            Shopping cart ({user && isLogin ? cartItems.length : 0})
                                         </DialogTitle>
                                         <div className="ml-3 flex h-7 items-center">
                                             <button
@@ -151,7 +213,9 @@ export default function Cart({open, setOpen, NavLink}) {
 
                                     <div className="mt-8">
                                         <div className="flow-root">
-                                            {loading ? (
+                                            {!user || !isLogin ? (
+                                                renderLoginPrompt()
+                                            ) : loading ? (
                                                 <div className="text-center py-8">
                                                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#885b56] mx-auto"></div>
                                                     <p className="mt-2 text-gray-500">Loading cart...</p>
@@ -244,36 +308,54 @@ export default function Cart({open, setOpen, NavLink}) {
                                 </div>
 
                                 <div className="border-t border-gray-200 px-4 py-6 xsm:px-6 leading-relaxed">
-                                    <div className="flex justify-between text-base font-medium text-gray-900">
-                                        <p>Subtotal</p>
-                                        <p>₱{calculateTotal().toFixed(2)}</p>
-                                    </div>
-                                    <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
-                                    <div className="mt-6">
-                                        {cartItems.length === 0 ? '' : (
-                                            <div>
-                                                <button
-                                                    className="flex w-full items-center justify-center rounded-md border border-transparent bg-[#885b56] px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-[#c78d87] transition-colors"
-                                                    onClick={handleCheckout}
-                                                >
-                                                    Checkout
-                                                </button>
-                                                <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
-                                                    <p>
-                                                        or{' '}
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => setOpen(false)}
-                                                            className="font-medium text-[#885b56] hover:text-[#c78d87]"
-                                                        >
-                                                            Continue Shopping
-                                                            <span aria-hidden="true"> &rarr;</span>
-                                                        </button>
-                                                    </p>
-                                                </div>
+                                    {user && isLogin ? (
+                                        <>
+                                            <div className="flex justify-between text-base font-medium text-gray-900">
+                                                <p>Subtotal</p>
+                                                <p>₱{calculateTotal().toFixed(2)}</p>
                                             </div>
-                                        )}
-                                    </div>
+                                            <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
+                                            <div className="mt-6">
+                                                {cartItems.length === 0 ? '' : (
+                                                    <div>
+                                                        <button
+                                                            className="flex w-full items-center justify-center rounded-md border border-transparent bg-[#885b56] px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-[#c78d87] transition-colors"
+                                                            onClick={handleCheckout}
+                                                        >
+                                                            Checkout
+                                                        </button>
+                                                        <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
+                                                            <p>
+                                                                or{' '}
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => setOpen(false)}
+                                                                    className="font-medium text-[#885b56] hover:text-[#c78d87]"
+                                                                >
+                                                                    Continue Shopping
+                                                                    <span aria-hidden="true"> &rarr;</span>
+                                                                </button>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
+                                            <p>
+                                                or{' '}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setOpen(false)}
+                                                    className="font-medium text-[#885b56] hover:text-[#c78d87]"
+                                                >
+                                                    Continue Shopping
+                                                    <span aria-hidden="true"> &rarr;</span>
+                                                </button>
+                                            </p>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </DialogPanel>

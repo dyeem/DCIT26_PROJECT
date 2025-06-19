@@ -16,6 +16,11 @@ export default function ProductList() {
     const [colorInput, setColorInput] = useState('');
     const [isRefreshing, setIsRefreshing] = useState(false);
     
+    const [filteredProducts, setFilteredProducts] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [sortBy, setSortBy] = useState('newest');
+    const [filterCategory, setFilterCategory] = useState('all');
+    const categories = ['all', 'Dolls', 'Flowers', 'Hairclips', 'Hat', 'Keychain', 'Miscellaneous', 'Wearables'];
 
     // INITIAL STATE FOR FORM DATA
     const [formData, setFormData] = useState({
@@ -102,6 +107,7 @@ export default function ProductList() {
         setImagePreviews([]);
     }
 
+    /// HANDLING CLOSE MODAL FOR ADDING PRODUCT
     function handleCloseAdd() {
         setAddOpen(false);
         // Clean up preview URLs - add safety check
@@ -124,10 +130,8 @@ export default function ProductList() {
         })
         .then(res => {
             console.log(res.data);
-        setProducts(res.data.products);
-            setTimeout(() => {
-                setIsRefreshing(false);
-            }, 2000);
+            setProducts(res.data.products);
+            setIsRefreshing(false);
         })
         .catch(err => console.error(err));
     }, []);
@@ -186,7 +190,6 @@ export default function ProductList() {
 
     };
 
-
     //HANDLING SUBMIT FOR ADDING PRODUCT
     async function handleSubmit(e) {
         e.preventDefault();
@@ -196,18 +199,34 @@ export default function ProductList() {
             return;
         }
 
+        // Validate colors
+        if (!formData.product_color || formData.product_color.length === 0) {
+            toast.error('Please add at least one color');
+            return;
+        }
+
         const timestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-        // Create regular object (not FormData) since we're only sending names
+        // Ensure colors are properly formatted
+        const colorsArray = Array.isArray(formData.product_color) 
+            ? formData.product_color 
+            : [formData.product_color].filter(Boolean);
+
+        const sizesArray = Array.isArray(formData.product_size)
+            ? formData.product_size
+            : typeof formData.product_size === 'string'
+            ? formData.product_size.split(',').map(s => s.trim()).filter(Boolean)
+            : [];
+
         const productData = {
             product_name: formData.product_name,
             product_category: formData.product_category,
-            product_color: formData.product_color,
+            product_color: colorsArray.join(','), // Convert array to comma-separated string
             product_price: formData.product_price,
             product_description: formData.product_description,
             product_quantity: formData.product_quantity,
-            product_size: formData.product_size,
-            product_image: formData.product_image_names.join(','), // Send as comma-separated string
+            product_size: sizesArray.join(','), // Convert array to comma-separated string
+            product_image: formData.product_image_names.join(','),
             product_rating: 0,
             created_at: timestamp,
         };
@@ -215,11 +234,11 @@ export default function ProductList() {
         try {
             const response = await axios.post(
                 'http://localhost/loop_backend/admin/products/addproduct.php',
-                JSON.stringify(productData), // Send as JSON
+                JSON.stringify(productData),
                 {
                     withCredentials: true,
                     headers: {
-                        'Content-Type': 'application/json', // JSON content type
+                        'Content-Type': 'application/json',
                     },
                 }
             );
@@ -390,6 +409,57 @@ export default function ProductList() {
         
     }
 
+    /// HANDLING SEARCH AND FILTER
+    useEffect(() => {
+        let filtered = [...products];
+
+        // Search filter
+        if (searchTerm) {
+            filtered = filtered.filter(product =>
+                product.product_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                product.product_category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                product.product_color.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                product.product_id.toString().includes(searchTerm)
+            );
+        }
+
+        // Category filter
+        if (filterCategory !== 'all') {
+            filtered = filtered.filter(product => product.product_category === filterCategory);
+        }
+
+        // Sort logic
+        switch (sortBy) {
+            case 'newest':
+                filtered.sort((a, b) => new Date(b.product_created_at) - new Date(a.product_created_at));
+                break;
+            case 'oldest':
+                filtered.sort((a, b) => new Date(a.product_created_at) - new Date(b.product_created_at));
+                break;
+            case 'name-asc':
+                filtered.sort((a, b) => a.product_name.localeCompare(b.product_name));
+                break;
+            case 'name-desc':
+                filtered.sort((a, b) => b.product_name.localeCompare(a.product_name));
+                break;
+            case 'price-low':
+                filtered.sort((a, b) => parseFloat(a.product_price) - parseFloat(b.product_price));
+                break;
+            case 'price-high':
+                filtered.sort((a, b) => parseFloat(b.product_price) - parseFloat(a.product_price));
+                break;
+            case 'stock-low':
+                filtered.sort((a, b) => parseInt(a.product_quantity) - parseInt(b.product_quantity));
+                break;
+            case 'stock-high':
+                filtered.sort((a, b) => parseInt(b.product_quantity) - parseInt(a.product_quantity));
+                break;
+            default:
+                break;
+        }
+
+        setFilteredProducts(filtered);
+    }, [products, searchTerm, sortBy, filterCategory]);
     return (
         <>
             {isRefreshing && (
@@ -947,13 +1017,101 @@ export default function ProductList() {
                 </Modal>
             </div>
             
-            
-            <div className="flex items-center justify-center w-full px-4 py-4 text-gray-700 sm:px-8 lg:px-12 font-poppins">
+            <div className="flex items-center justify-center w-full px-4 py-5 text-gray-700 sm:px-8 lg:px-12 font-poppins">
                 <div className="flex flex-col gap-y-2 mt-[2rem] w-full max-w-8xl">
                     <div className="flex place-content-end">
-                        <button onClick={handleOpenAdd} className='px-3 py-2 text-white transition-all bg-green-500 rounded-lg hover:bg-green-600 place-items-end'>
-                            Add A Product
-                        </button>
+                        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-3">
+                                {/* Search and Filter Section */}
+                                <div className="flex flex-col sm:flex-row gap-3 flex-1">
+                                    {/* Search Bar */}
+                                    <div className="relative flex-1 max-w-md">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                            </svg>
+                                        </div>
+                                        <input
+                                            type="text"
+                                            placeholder="Search products..."
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7E62FF] focus:border-transparent text-sm"
+                                        />
+                                        {searchTerm && (
+                                            <button
+                                                onClick={() => setSearchTerm('')}
+                                                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                                            >
+                                                <svg className="h-4 w-4 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    {/* Category Filter */}
+                                    <select
+                                        value={filterCategory}
+                                        onChange={(e) => setFilterCategory(e.target.value)}
+                                        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7E62FF] focus:border-transparent text-sm min-w-[120px]"
+                                    >
+                                        {categories.map(category => (
+                                            <option key={category} value={category}>
+                                                {category === 'all' ? 'All Categories' : category}
+                                            </option>
+                                        ))}
+                                    </select>
+
+                                    {/* Sort Dropdown */}
+                                    <select
+                                        value={sortBy}
+                                        onChange={(e) => setSortBy(e.target.value)}
+                                        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#7E62FF] focus:border-transparent text-sm min-w-[140px]"
+                                    >
+                                        <option value="newest">Newest First</option>
+                                        <option value="oldest">Oldest First</option>
+                                        <option value="name-asc">Name A-Z</option>
+                                        <option value="name-desc">Name Z-A</option>
+                                        <option value="price-low">Price Low-High</option>
+                                        <option value="price-high">Price High-Low</option>
+                                        <option value="stock-low">Stock Low-High</option>
+                                        <option value="stock-high">Stock High-Low</option>
+                                    </select>
+                                </div>
+
+                                {/* Action Buttons */}
+                                <div className="flex items-center gap-3">
+                                    {/* Results Count */}
+                                    <span className="text-sm text-gray-600 whitespace-nowrap">
+                                        {filteredProducts.length} of {products.length} products
+                                    </span>
+
+                                    {/* Clear Filters */}
+                                    {(searchTerm || filterCategory !== 'all' || sortBy !== 'newest') && (
+                                        <button
+                                            onClick={() => {
+                                                setSearchTerm('');
+                                                setFilterCategory('all');
+                                                setSortBy('newest');
+                                            }}
+                                            className="px-3 py-2 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors whitespace-nowrap"
+                                        >
+                                            Clear Filters
+                                        </button>
+                                    )}
+
+                                    {/* Add Product Button */}
+                                    <button 
+                                        onClick={handleOpenAdd} 
+                                        className='px-4 py-2 text-white transition-all bg-green-500 rounded-lg hover:bg-green-600 whitespace-nowrap flex items-center gap-2'
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                        </svg>
+                                        Add Product
+                                    </button>
+                                </div>
+                            </div>
                     </div>
         
                     {/* Desktop Table View */}
@@ -975,15 +1133,17 @@ export default function ProductList() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
-                                    {products.map((product) => (
+                                    {filteredProducts.map((product) => (
                                         <tr key={product.product_id} className="hover:bg-gray-50">
                                             <td className="px-6 py-4 whitespace-nowrap">{product.product_id}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <img
-                                                    src={`/Assets/Products/${product.product_category}/${product.product_image.split(',')[0]}`}
-                                                    alt="Product image"
-                                                    className="object-cover w-12 h-12 mx-auto rounded-md"
-                                                />
+                                                <div className="py-2 bg-gray-200 rounded-full">
+                                                    <img
+                                                        src={`/Assets/Products/${product.product_category}/${product.product_image.split(',')[0]}`}
+                                                        alt="Product image"
+                                                        className="object-cover w-12 h-12 mx-auto rounded-full"
+                                                    />
+                                                </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">{product.product_name}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">{product.product_category}</td>

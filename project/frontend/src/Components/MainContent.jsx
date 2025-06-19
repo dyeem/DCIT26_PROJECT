@@ -40,7 +40,6 @@ export default function MainContent() {
             <FeaturedwVid/>
             <ShopByCategory/>
             <Gallery />
-            <CustomizePage/> 
             <AboutUs/>
             <OurTeam/> 
         </>

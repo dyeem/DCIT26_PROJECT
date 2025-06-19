@@ -4,7 +4,7 @@ import { HashLink } from 'react-router-hash-link';
 export default function Footer() {
     return (
         <>
-            <footer className="border-base-300 border-t footer bg-base-200 text-base-content p-10 grid grid-cols-1 lg:grid-cols-3 font-serif">
+            <footer className="footer bg-[#885B56] text-white p-10 grid grid-cols-1 lg:grid-cols-3 font-serif">
                 <nav className="justify-self-center justify-items-center">
                     <h6 className="footer-title font-serif text-xl lg:text-2xl relative group">Products
                     <span 
@@ -39,7 +39,7 @@ export default function Footer() {
                     <HashLink smooth to="/help/customize-order" className="text-sm leading-relaxed text-[1rem]">Customize Order</HashLink>
                 </nav>
             </footer>
-            <footer className="footer bg-base-200 text-base-content border-base-300 border-t px-10 py-4 xsm:justify-self-center">
+            <footer className="footer bg-[#885B56] text-white border border-t px-10 py-4 xsm:justify-self-center">
                 <aside className="grid-flow-col items-center md:place-self-start md:justify-self-start xsm:justify-self-center">
                     <HashLink smooth to="/"><img src={logo} alt="" className='size-14'/></HashLink>
                     <p>

@@ -36,6 +36,8 @@ export default function UserOrders() {
             if (res.data.loggedIn) {
                 fetchUserOrders()
             } else {
+                navigate('/login')
+                console.log('User not logged in')
             }
         } catch (err) {
             console.error("Session check failed:", err)

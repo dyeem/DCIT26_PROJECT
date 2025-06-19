@@ -53,6 +53,7 @@ export default function OrderList() {
   
   //FETCHING ALL ORDERS FROM ORDER TABLE
   useEffect(() => {
+    document.title = 'Loop | Manage Orders';
     setIsRefreshing(true);
     axios.get('http://localhost/loop_backend/admin/order/get_all_orders.php', {
       withCredentials: true
@@ -61,13 +62,12 @@ export default function OrderList() {
         setOrders(res.data);
         setFilteredOrders(res.data); 
         console.log('all orders: ', res.data);
-        setTimeout(() => {
-          setIsRefreshing(false);
-        }, 1500);
+        setIsRefreshing(false);
       })
       .catch((err) => {
         console.error('Failed to fetch orders:', err);
-      });
+      }
+    );
   }, []);
 
   //DIALOG VIEWING SPECIFIC ORDER
@@ -219,81 +219,62 @@ export default function OrderList() {
             </video>
         </div>
       )}
-      <div className="px-12 py-4">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold mb-4 text-gray-800">Order List</h1>
-          <div className="flex gap-3 flex-wrap items-center">
-            <Menu as="div" className="relative inline-block text-left">
-              <Menu.Button className="inline-flex items-center gap-2 px-3 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600">
-                <CalendarTodayIcon fontSize="small" />
-                Sort by Date
-                <ChevronDown className="w-4 h-4" />
-              </Menu.Button>
-              <Menu.Items className="text-white absolute mt-2 w-44 origin-top-right bg-blue-500 border rounded-md shadow-lg z-10">
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      onClick={() => handleSortByDate('asc')}
-                      className={`w-full text-left px-4 py-2 ${active ? 'bg-blue-100 text-gray-700' : ''}`}
-                    >
-                      Oldest First
-                    </button>
-                  )}
-                </Menu.Item>
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      onClick={() => handleSortByDate('desc')}
-                      className={`w-full text-left px-4 py-2 ${active ? 'bg-blue-100 text-gray-700' : ''}`}
-                    >
-                      Newest First
-                    </button>
-                  )}
-                </Menu.Item>
-              </Menu.Items>
-            </Menu>
+      <div className="px-12 py-12 rounded-xl">
+        <div className="flex justify-between items-center mb-3">
+          <h1 className="text-2xl font-bold mb-5 text-gray-800">Order List</h1>
+          <div className="flex flex-col sm:flex-row gap-3 items-center">
+            {/* Sort by Date Dropdown */}
+            <select
+              onChange={(e) => handleSortByDate(e.target.value)}
+              className="px-3 py-2 text-gray-800 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm min-w-[140px]"
+              defaultValue="desc"
+            >
+              <option value="desc"> Newest First</option>
+              <option value="asc"> Oldest First</option>
+            </select>
 
-            <Menu as="div" className="relative inline-block text-left">
-              <Menu.Button className="inline-flex items-center gap-2 px-3 py-2 bg-yellow-500 text-white rounded-lg shadow hover:bg-yellow-600">
-                <SortIcon fontSize="small" />
-                Filter by Status ({selectedStatusFilter})
-                <ChevronDown className="w-4 h-4" />
-              </Menu.Button>
-              <Menu.Items className="absolute mt-2 w-44 origin-top-right text-white bg-yellow-500 border rounded-md shadow-lg z-10">
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      onClick={() => handleFilterByStatus('All')}
-                      className={`w-full text-left px-4 py-2 ${active ? 'bg-yellow-100 text-gray-700' : ''} ${selectedStatusFilter === 'All' ? 'font-bold' : ''}`}
-                    >
-                      All Orders
-                    </button>
-                  )}
-                </Menu.Item>
-                {['Pending', 'Shipped', 'Completed', 'Cancelled', 'Refunded'].map((status) => (
-                  <Menu.Item key={status}>
-                    {({ active }) => (
-                      <button
-                        onClick={() => handleFilterByStatus(status)}
-                        className={`w-full text-left px-4 py-2 ${active ? 'bg-yellow-100 text-gray-700' : ''} ${selectedStatusFilter === status ? 'font-bold' : ''}`}
-                      >
-                        {status} Only
-                      </button>
-                    )}
-                  </Menu.Item>
-                ))}
-              </Menu.Items>
-            </Menu>
+            {/* Filter by Status Dropdown */}
+            <select
+              value={selectedStatusFilter}
+              onChange={(e) => handleFilterByStatus(e.target.value)}
+              className="px-3 py-2 text-gray-800 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm min-w-[140px]"
+            >
+              <option value="All"> All Orders</option>
+              <option value="Pending"> Pending Only</option>
+              <option value="Shipped"> Shipped Only</option>
+              <option value="Completed"> Completed Only</option>
+              <option value="Cancelled"> Cancelled Only</option>
+              <option value="Refunded"> Refunded Only</option>
+            </select>
+
+            {/* Results Count */}
+            <span className="text-sm text-gray-600 whitespace-nowrap">
+              {filteredOrders.length} of {orders.length} orders
+            </span>
+
+            {/* Clear Filters Button */}
+            {selectedStatusFilter !== 'All' && (
+              <button
+                onClick={() => handleFilterByStatus('All')}
+                className="px-3 py-2 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors whitespace-nowrap"
+              >
+                Clear Filters
+              </button>
+            )}
+
+            {/* Refresh Button */}
             <button
               onClick={handleRefresh}
-              className="flex items-center gap-2 px-3 py-2 bg-green-500 rounded-lg shadow text-white hover:bg-green-600"
+              className="flex items-center gap-2 px-4 py-2 bg-green-500 rounded-lg shadow text-white hover:bg-green-600 transition-colors whitespace-nowrap"
             >
-              <RefreshIcon fontSize="small" />
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
               Refresh List
             </button>
           </div>
         </div>
-        <table className="min-w-full text-sm text-left bg-white rounded-lg shadow">
+        <table className="min-w-full text-sm text-left bg-white shadow">
           <thead className="bg-[#7E62FF] text-white">
             <tr>
               <th className="px-6 py-3">Order ID</th>

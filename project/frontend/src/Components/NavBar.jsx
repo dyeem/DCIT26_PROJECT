@@ -8,8 +8,11 @@ export default function NavBar() {
     
     const navigate = useNavigate();
     const [isCartOpen, setIsCartOpen] = useState(false);
-    const {isLogin, loading, user, setIsLogin, setUser } = useAuth();
+    const {isLogin, loading, user, setIsLogin, setUser, userCart, cartLoading, setUserCart } = useAuth();
     const [loggingOut, setLoggingOut] = useState(false);
+
+    console.log('userCart: ', userCart)
+    console.log('cartLoading: ', cartLoading)
 
     function handleLogout() {
         setLoggingOut(true);
@@ -18,8 +21,10 @@ export default function NavBar() {
         })
         .then(res => {
             if (res.data.success) {
+                // Clear all user-related state
                 setIsLogin(false);
                 setUser(null);
+                setUserCart([]); // Clear cart state
                 navigate('/login');
             } else {
                 console.error("Logout failed:", res.data.message);
@@ -28,6 +33,12 @@ export default function NavBar() {
         .catch(err => console.error("Logout failed:", err))
         .finally(() => setLoggingOut(false));
     }
+
+    // Show loading state for cart badge
+    const getCartItemCount = () => {
+        if (cartLoading) return '...';
+        return userCart?.length || 0;
+    };
 
     return (
         <>
@@ -173,7 +184,9 @@ export default function NavBar() {
                                     strokeWidth="1"
                                     d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                 </svg>
-                                <span className="badge badge-sm indicator-item #150016">{}</span>
+                                <span className="badge badge-sm indicator-item #150016">
+                                    {getCartItemCount()}
+                                </span>
                             </div>
                         </div>
                     </div>

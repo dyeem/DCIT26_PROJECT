@@ -302,17 +302,12 @@ export default function Sales() {
                                         <p className="text-black xl:text-xl xsm:text-base font-noto ">{prod.name}</p>
                                         <p className="text-gray-800 xsm:text-sm font-semibold">₱{prod.price}.00</p>
                                       </div>
-                                      <div className="flex flex-row justify-between items-center px-2">
+                                      <div className="flex flex-col">
                                         <p className="text-gray-800 xsm:text-sm font-noto">{prod.category}</p>
                                         <p className="text-gray-800 xsm:text-sm font-noto">Qty: {prod.quantity}</p>
                                       </div>
-                                      <div className="flex flex-wrap xsm:text-sm">
-                                        <p>{prod.stars}</p>
-                                        <p>{prod.rating}</p>
-                                      </div>
                                     </div>
                                   </div>
-                                  
                                 )}
                               </div>
                           </div>
@@ -322,84 +317,6 @@ export default function Sales() {
                 </div>
               </div>
             </section>
-
-            {/* <div className={`${isOpen ? 'backdrop-blur-sm fixed z-30' : ''}  inset-0 bg-black/40 z-0`}>
-              <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50 text-gray-900">
-                <div className={`fixed inset-0 flex w-screen items-center justify-center transition-opacity duration-1000 ease-out 
-                  ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-                  }`}>
-                  <DialogPanel className="space-y-2 transition-all duration-300 ease-out transform bg-gray-100 border xl:max-w-5xl xsm:max-w-lg xl:h-5xl xl:px-8 xl:py-8">
-                    {selectedProductId && products.length > 0 ? (
-                      products
-                        .flatMap((category) => category.Items)
-                        .filter((prod) => prod.id === selectedProductId)
-                        .map((prod) => (
-                          <div key={prod.id}>
-                            <div className="flex flex-wrap justify-between xsm:px-3 xsm:py-2 xl:px-1 xl:py-1">
-                              <DialogTitle className="font-noto xl:text-base xsm:text-xs">Products {"/"} {prod.category} {"/"} {prod.name}</DialogTitle>
-                              <button title="close" className="text-2xl" onClick={() => setIsOpen(false)}>x</button>
-                            </div>
-                            <div className="flex xl:flex-row xsm:flex-col xsm:items-center gap-x-3">
-                              <img src={prod.image} alt="" className="xl:size-96 xsm:size-32"/>
-                              <div className="flex flex-col p-3 xl:gap-y-4 xsm:gap-y-2">
-                                <p className="xl:text-3xl xsm:text-2xl font-noto">{prod.name}</p>
-                                <p>₱{prod.price}.00</p>
-                                <div className="flex flex-row gap-x-4">
-                                  <select name="size" className="w-full" onChange={(e) => setSize(e.target.value)}>
-                                    <option value="none" disabled selected className="xl:text-base xsm:text-sm">
-                                      Select a size
-                                    </option>
-                                    {prod.size && Array.isArray(prod.size) ? (
-                                      prod.size.map((size, index) => (
-                                        <option key={index} value={size}>
-                                          {size}
-                                        </option>
-                                      ))
-                                    ) : (
-                                      <option disabled>No sizes available</option>
-                                    )}
-                                  </select>
-                                  <select name="color" className="w-full" onChange={(e) => setColor(e.target.value)}>
-                                    <option value="none" disabled selected className="xl:text-base xsm:text-sm">
-                                      Select a color
-                                    </option>
-                                    {prod.color && Array.isArray(prod.color) ? (
-                                      prod.color.map((color, index) => (
-                                        <option key={index} value={color}>
-                                          {color}
-                                        </option>
-                                      ))
-                                    ) : (
-                                      <option disabled>No colors available</option>
-                                    )}
-                                  </select>
-                                </div>
-                                <div className="flex flex-wrap gap-x-2">
-                                  <p className="text-yellow-400">{prod.stars}</p>
-                                  <p >{prod.rating}</p>
-                                </div>
-                                <div className="">
-                                  <p>Description</p>
-                                  <p className="xl:text-base xsm:text-sm">{prod.description}</p>
-                                </div>
-                                <div className="flex self-center">
-                                  <button onClick={() => handleAddToCart(prod.id, prod.name, prod.image, size, color, prod.price, prod.category)} className="bg-[#885B56] text-white font-light px-2 py-2 font-noto">Add To Cart</button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ))
-                    ) : (
-                      <p>No products available</p>
-                    )}
-                  </DialogPanel>
-                </div>
-              </Dialog>
-            </div>
-            <Toaster
-              position="top-right"
-              reverseOrder={false}
-            /> */}
           </main>
         </div>
       </div>

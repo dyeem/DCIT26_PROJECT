@@ -262,10 +262,6 @@ export default function ProductDetails() {
                                         <p className="xl:text-5xl xsm:text-2xl font-noto font-semibold">{product.product_name}</p>
                                         <div className="flex flex-row justify-between items-center">
                                             <p className="font-noto font-semibold text-3xl">₱{product.product_price}</p>
-                                            <div className="flex flex-wrap gap-x-1 text-3xl">
-                                                <p className="text-yellow-400">⭐</p>
-                                                <p>{product.product_rating}</p>
-                                            </div>
                                         </div>
                                     </div>
 

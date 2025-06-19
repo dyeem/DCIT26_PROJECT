@@ -219,16 +219,16 @@ export default function ProductDetails() {
                                 <Link to='/products' className="font-noto">{"<"} Back to Product Page</Link>
                             </div>
                             
-                            <div className="grid grid-cols-1 md:grid-cols-2 items-center justify-center px-5">
+                            <div className="grid grid-cols-1 md:grid-cols-2 items-center justify-center  space-x-12">
                                 <div className="">
                                     <div className="flex justify-center items-center">
                                         <img
                                             src={`/Assets/Products/${product.product_category}/${mainImage}`}
                                             alt={product.product_name}
-                                            className="xl:size-96 xsm:size-32 rounded-md"
+                                            className="xl:size-max xsm:size-32 rounded-md"
                                         />
                                     </div>
-                                    <div className="flex flex-row gap-x-3 mt-3 flex-wrap">
+                                    <div className="flex flex-row gap-x-3 mt-3 flex-wrap gap-y-2">
                                         {product.product_image && Array.isArray(product.product_image) ? (
                                             product.product_image.map((img, index) => (
                                                 <img

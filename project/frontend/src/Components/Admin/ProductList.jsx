@@ -221,11 +221,11 @@ export default function ProductList() {
         const productData = {
             product_name: formData.product_name,
             product_category: formData.product_category,
-            product_color: colorsArray.join(','), // Convert array to comma-separated string
+            product_color: colorsArray.join(','), 
             product_price: formData.product_price,
             product_description: formData.product_description,
             product_quantity: formData.product_quantity,
-            product_size: sizesArray.join(','), // Convert array to comma-separated string
+            product_size: sizesArray.join(','), 
             product_image: formData.product_image_names.join(','),
             product_rating: 0,
             created_at: timestamp,
@@ -1114,7 +1114,7 @@ export default function ProductList() {
                             </div>
                     </div>
         
-                    {/* Desktop Table View */}
+                    {/* Desktop View */}
                     <div className="hidden overflow-hidden bg-white rounded-lg shadow-md lg:block">
                         <div className="overflow-x-auto">
                             <table className="min-w-full text-sm text-left">
@@ -1165,7 +1165,7 @@ export default function ProductList() {
                         </div>
                     </div>
 
-                    {/* Tablet View - Simplified Table */}
+                    {/* Tablet View */}
                     <div className="hidden overflow-hidden bg-white rounded-lg shadow-md md:block lg:hidden">
                         <div className="overflow-x-auto">
                             <table className="min-w-full text-sm text-left">
@@ -1210,7 +1210,7 @@ export default function ProductList() {
                         </div>
                     </div>
 
-                    {/* Mobile View - Card Layout */}
+                    {/* Mobile View */}
                     <div className="block space-y-4 md:hidden">
                         {products.map((product) => (
                             <div key={product.product_id} className="p-4 bg-white rounded-lg shadow-md">

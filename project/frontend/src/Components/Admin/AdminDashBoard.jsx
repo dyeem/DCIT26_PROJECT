@@ -7,10 +7,12 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import money from './Components/SVG/money.svg';
 import cart from './Components/SVG/cart.svg';
-import user from './Components/SVG/users.svg';
-import order from './Components/SVG/orders.svg';
+import user from './Components/SVG/users-dash.svg';
+import order from './Components/SVG/order-dash.svg';
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
+dayjs.extend(relativeTime);
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -30,14 +32,15 @@ export default function AdminDashboard() {
   const [salesData, setSalesData] = useState([]);
   const [orderStatusData, setOrderStatusData] = useState([]);
   const [recentOrders, setRecentOrders] = useState([]);
+  const [latestProducts, setLatestProducts] = useState([]);
   
   useEffect(() => {
     document.title = "Loop | Admin - Dashboard";
     if (isAdminLogin) {
       fetchDashboardData();
-      // fetchSalesData();
       fetchOrderStatusData();
       fetchRecentOrders();
+      fetchLatestProducts();
     }
   }, [isAdminLogin]);
 
@@ -60,20 +63,6 @@ export default function AdminDashboard() {
       setLoading(false);
     }
   };
-
-  // const fetchSalesData = async () => {
-  //   try {
-  //     const response = await axios.get('http://localhost/loop_backend/admin/sales_chart_data.php', {
-  //       withCredentials: true
-  //     });
-
-  //     if (response.data.success) {
-  //       setSalesData(response.data.data);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching sales data:', error);
-  //   }
-  // };
 
   const fetchOrderStatusData = async () => {
     try {
@@ -104,13 +93,28 @@ export default function AdminDashboard() {
     }
   };
 
+  const fetchLatestProducts = async () => {
+    try {
+      const response = await axios.get('http://localhost/loop_backend/admin/statistics/fetch_latest_products.php', {
+        withCredentials: true
+      });
+
+      if (response.data.success) {
+        setLatestProducts(response.data.data);
+        console.log('latest products: ', response.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching latest products:', error);
+    }
+  };
+
   const handleRefresh = async () => {
     setLoading(true);
     await Promise.all([
       fetchDashboardData(),
-      // fetchSalesData(),
       fetchOrderStatusData(),
-      fetchRecentOrders()
+      fetchRecentOrders(),
+      fetchLatestProducts()
     ]);
     toast.success('Dashboard refreshed successfully');
   };
@@ -146,6 +150,7 @@ export default function AdminDashboard() {
   }
 
   return (
+    <>
       <div className="w-full px-10 font-roboto rounded-xl py-6">
         <div className="w-full flex flex-col justify-center items-start">
         {/* Refresh Button */}
@@ -162,31 +167,15 @@ export default function AdminDashboard() {
         </div>
 
         <div className="flex flex-wrap w-full">
-          <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid w-full grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 font-poppins">
             {/* Total Earnings Card */}
             <div className="flex flex-col gap-y-6 px-8 py-6 bg-[#faf8f8] shadow-lg rounded-lg">
               <div className="flex justify-between">
                 <p className="text-sm text-gray-500">TOTAL EARNINGS</p>
-                <p className="text-sm text-[#7E62FF] underline cursor-pointer">Detail</p>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-y-6">
-                  <p className="text-2xl font-bold text-gray-900 font-poppins">₱ {dashboardData.total_earnings}</p>
-                  <div className={`flex items-center gap-x-1 py-1 max-w-[7rem] justify-center rounded-full ${
-                    dashboardData.earnings_growth >= 0 ? 'bg-[#36c069]' : 'bg-[#D73A00]'
-                  }`}>
-                    <p>
-                      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-                        <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier"> 
-                          <path d={dashboardData.earnings_growth >= 0 ? "M12 20L12 4M12 4L18 10M12 4L6 10" : "M12 4L12 20M12 20L18 14M12 20L6 14"} 
-                                stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> 
-                        </g>
-                      </svg>
-                    </p>
-                    <p className="text-sm text-white">{dashboardData.earnings_growth >= 0 ? `+${dashboardData.earnings_growth}%` : `${dashboardData.earnings_growth}%`}</p>
-                  </div>
+                  <p className="text-3xl font-bold text-gray-900 font-poppins">₱ {dashboardData.total_earnings}</p>
                 </div>
                 <div className="p-2 bg-gray-200 rounded-full">
                   <img src={money} alt="Money icon" />
@@ -198,26 +187,10 @@ export default function AdminDashboard() {
             <div className="flex flex-col gap-y-6 px-8 py-6 bg-[#faf8f8] shadow-lg rounded-lg">
               <div className="flex justify-between">
                 <p className="text-sm text-gray-500">TOTAL ORDERS</p>
-                <p className="text-sm text-[#7E62FF] underline cursor-pointer">Detail</p>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-y-6">
-                  <p className="text-2xl font-bold text-gray-900 font-poppins">{dashboardData.total_orders} orders</p>
-                  <div className={`flex items-center gap-x-1 py-1 max-w-[7rem] justify-center rounded-full ${
-                    dashboardData.orders_growth >= 0 ? 'bg-[#36c069]' : 'bg-[#D73A00]'
-                  }`}>
-                    <p>
-                      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-                        <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier"> 
-                          <path d={dashboardData.orders_growth >= 0 ? "M12 20L12 4M12 4L18 10M12 4L6 10" : "M12 4L12 20M12 20L18 14M12 20L6 14"} 
-                                stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> 
-                        </g>
-                      </svg>
-                    </p>
-                    <p className="text-sm text-white">{dashboardData.orders_growth >= 0 ? `+${dashboardData.orders_growth}%` : `${dashboardData.orders_growth}%`}</p>
-                  </div>
+                  <p className="text-3xl font-bold text-gray-900 font-poppins">{dashboardData.total_orders} orders</p>
                 </div>
                 <div className="p-2 bg-gray-200 rounded-full">
                   <img src={cart} alt="Cart icon" />
@@ -229,26 +202,10 @@ export default function AdminDashboard() {
             <div className="flex flex-col gap-y-6 px-8 py-6 bg-[#faf8f8] shadow-lg rounded-lg">
               <div className="flex justify-between">
                 <p className="text-sm text-gray-500">TOTAL CUSTOMERS</p>
-                <p className="text-sm text-[#7E62FF] underline cursor-pointer">Detail</p>
               </div>
               <div className="flex flex-row items-center justify-between">
                 <div className="flex flex-col gap-y-6">
-                  <p className="text-2xl font-bold text-gray-900 font-poppins">{dashboardData.total_customers} Customers</p>
-                  <div className={`flex items-center gap-x-1 py-1 max-w-[7rem] justify-center rounded-full ${
-                    dashboardData.customers_growth >= 0 ? 'bg-[#36c069]' : 'bg-[#D73A00]'
-                  }`}>
-                    <p>
-                      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-                        <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier"> 
-                          <path d={dashboardData.customers_growth >= 0 ? "M12 20L12 4M12 4L18 10M12 4L6 10" : "M12 4L12 20M12 20L18 14M12 20L6 14"} 
-                                stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path> 
-                        </g>
-                      </svg>
-                    </p>
-                    <p className="text-sm text-white">{dashboardData.customers_growth >= 0 ? `+${dashboardData.customers_growth}%` : `${dashboardData.customers_growth}%`}</p>
-                  </div>
+                  <p className="text-3xl font-bold text-gray-900 font-poppins">{dashboardData.total_customers} Customers</p>
                 </div>
                 <div className="p-1 bg-gray-200 rounded-full">
                   <img src={user} alt="User icon" />
@@ -260,12 +217,11 @@ export default function AdminDashboard() {
             <div className="flex flex-col gap-y-6 px-8 py-6 bg-[#faf8f8] shadow-lg rounded-lg">
               <div className="flex justify-between">
                 <p className="text-sm text-gray-500">PENDING ORDERS</p>
-                <p className="text-sm text-[#7E62FF] underline cursor-pointer">Detail</p>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-y-6">
                   <p className="text-2xl font-bold text-gray-900 font-poppins">{dashboardData.pending_orders} Orders</p>
-                  <div className="flex items-center gap-x-1 bg-[#D73A00] py-1 max-w-[7rem] justify-center rounded-full">
+                  <div className="flex items-center gap-x-1 bg-yellow-400 py-1 max-w-[7rem] justify-center rounded-full">
                     <p className="text-sm text-white">Pending</p>
                   </div>
                 </div>
@@ -277,14 +233,14 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Charts and Recent Orders Section */}
+        {/* Recent Orders Section */}
         <div className="flex flex-wrap w-full py-8 gap-x-4 font-poppins">
           <div className="flex-1 min-w-0">
             {/* Recent Orders Section */}
             <div className="flex flex-col gap-y-4 bg-white p-6 rounded-lg shadow-sm">
               <div className="flex justify-between items-center">
                 <h3 className="text-lg font-bold text-gray-900">Recent Orders</h3>
-                <p className="text-sm text-[#7E62FF] underline cursor-pointer">View All</p>
+                <p onClick={() => navigate('/admin/orders')} className="text-sm text-[#7E62FF] underline cursor-pointer">View All</p>
               </div>
               
               {recentOrders.length === 0 ? (
@@ -329,9 +285,83 @@ export default function AdminDashboard() {
               )}
             </div>
           </div>
-          <OrderPieChart/>
+          <div className="w-full lg:w-1/3">
+              {/* Latest Added Products Section */}
+              <div className="flex flex-col gap-y-4 bg-white p-6 rounded-lg shadow-sm">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                    Latest Products
+                  </h3>
+                  <p 
+                    onClick={() => navigate('/admin/manage-product')} 
+                    className="text-sm text-[#7E62FF] underline cursor-pointer hover:text-[#624bc7] transition-colors"
+                  >
+                    View All
+                  </p>
+                </div>
+                
+                {latestProducts.length === 0 ? (
+                  <div className="text-center py-8">
+                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <span className="text-2xl">📦</span>
+                    </div>
+                    <p className="text-gray-500 text-sm">No products added yet</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3 max-h-96 overflow-y-auto">
+                    {latestProducts.slice(0, 6).map((product) => (
+                      <div key={product.product_id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                        <div className="flex-shrink-0 p-2 bg-gray-200 rounded-full">
+                          <img
+                            className="w-12 h-12 object-cover rounded-full"
+                            src={product.first_image ? 
+                              `/Assets/Products/${product.product_category}/${product.first_image}` : 
+                              '/Assets/placeholder-product.png'
+                            }
+                            alt={product.product_name}
+                            onError={(e) => {
+                              e.target.src = '/Assets/placeholder-product.png';
+                            }}
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate">
+                            {product.product_name}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {product.product_category}
+                          </p>
+                          <div className="flex items-center justify-between mt-1">
+                            <span className="text-sm font-semibold text-[#7E62FF]">
+                              ₱{product.product_price}
+                            </span>
+                            
+                          </div>
+                          <p className="text-xs text-gray-400 mt-1">
+                            Added {product.days_ago}
+                          </p>
+                        </div>
+                        <div className="flex-shrink-0">
+                          <div className="text-right">
+                            <p className="text-xs text-gray-500">Stock</p>
+                            <p className={`text-sm font-medium ${
+                              product.product_quantity > 10 ? 'text-green-600' : 
+                              product.product_quantity > 5 ? 'text-yellow-600' : 
+                              'text-red-600'
+                            }`}>
+                              {product.product_quantity}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
